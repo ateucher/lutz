@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 # lutz
 
-Look up timezones of point coordinates, as x, y pairs or from an `sf` object. It uses spatial data on timezones from: https://github.com/evansiroky/timezone-boundary-builder
+Input latitude and longitude values or an `sf` or `sfc` POINT object and get back the timezone in which they exist. This package uses the V8 package to access the [`tz-lookup.js` javascript library](https://github.com/darkskyapp/tz-lookup/).
 
 ## Installation
 
@@ -27,17 +27,15 @@ devtools::install_github("ateucher/lutz")
 
 ## Example
 
-```{r example}
+```{r example, eval=requireNamespace("sp")}
 library(lutz)
-tz_lookup(-123, 49.5)
+tz_lookup(49.5, -123.5)
 
-data(meuse, package = "sp")
-
-# numeric x and y
-tz_lookup(meuse$x, meuse$y, crs = 28992)
+tz_lookup(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
 
 # With a sf object:
+data(meuse, package = "sp")
 meuse_sf = sf::st_as_sf(meuse, coords = c("x", "y"), crs = 28992, agr = "constant")
 
-tz_lookup(meuse_sf)
+tz_lookup_sf(meuse_sf)
 ```
