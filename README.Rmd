@@ -1,0 +1,43 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# lutz
+
+Look up timezones of point coordinates, as x, y pairs or from an `sf` object. It uses spatial data on timezones from: https://github.com/rundel/timezone
+
+## Installation
+
+You can install lutz from github with:
+
+```{r gh-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("ateucher/lutz")
+```
+
+## Example
+
+```{r example}
+library(lutz)
+tz_lookup(-123, 49.5)
+
+data(meuse, package = "sp")
+
+# numeric x and y
+tz_lookup(meuse$x, meuse$y, crs = 28992)
+
+# With a sf object:
+meuse_sf = sf::st_as_sf(meuse, coords = c("x", "y"), crs = 28992, agr = "constant")
+
+tz_lookup(meuse_sf)
+```
