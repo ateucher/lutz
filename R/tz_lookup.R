@@ -37,12 +37,12 @@ tz_lookup.sf <- function(x, y, crs = NULL) {
     sf::st_crs(x) <- crs
   }
 
-  transform <- sf::st_crs(x) != sf::st_crs(rtz::tz)
+  transform <- sf::st_crs(x) != sf::st_crs(lutz::tz)
   if (transform) {
-    x <- sf::st_transform(x, crs = sf::st_crs(rtz::tz))
+    x <- sf::st_transform(x, crs = sf::st_crs(lutz::tz))
   }
-  intersect_ids <- suppressMessages(unlist(sf::st_intersects(x, rtz::tz)))
-  rtz::tz$tzid[intersect_ids]
+  intersect_ids <- suppressMessages(unlist(sf::st_intersects(x, lutz::tz)))
+  lutz::tz$tzid[intersect_ids]
 }
 
 #' @export
