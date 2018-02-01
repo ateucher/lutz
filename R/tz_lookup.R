@@ -1,33 +1,25 @@
 #' Lookup timezones of points
 #'
-#' @param x either an `sfc` or `sf` points object, or a numeric vector of x coordinates
-#' @param y if `x` is a numeric vector of x coordinates, `y` must be a numeric vector of
-#' y coordinates the same length as `x`. Ignored if `x` is an `sf` or `sfc` object.
+#' @param x either an `sfc` or `sf` points object
 #' @param crs the coordinate reference system: integer with the EPSG code, or character with proj4string.
-#' If not specified (i.e., `NULL`) and `x` and `y` are numeric vectors, or `x` is an `sf` or `sfc` object
-#' with no existing `crs`, EPSG: 4326 is assumed (lat/long).
+#' If not specified (i.e., `NULL`) and `x` has no existing `crs`, EPSG: 4326 is assumed (lat/long).
 #'
-#' @return character vector the same length as specifying the Timezone of the points.
+#' @return character vector the same length as `x` specifying the Timezone of the points.
 #' @export
 #'
 #' @examples
 #' if (requireNamespace("sp")) {
 #' data(meuse, package = "sp")
-#'
-#' # numeric:
-#' tz_lookup(meuse$x, meuse$y, 28992)
-#'
-#' # With a sf object:
 #' meuse_sf = sf::st_as_sf(meuse, coords = c("x", "y"), crs = 28992, agr = "constant")
-#' tz_lookup(meuse_sf)
+#' tz_lookup_sf(meuse_sf)
 #' }
 #'
-tz_lookup <- function(x, y, crs = NULL) {
-  UseMethod("tz_lookup")
-}
 
 #' @export
-tz_lookup.sf <- function(x, y, crs = NULL) {
+tz_lookup_sf <- function(x, crs = NULL) {
+  if (!requireNamespace("sf")) {
+    stop("You must have the sf package installed to use this function")
+  }
   if (!all(sf::st_geometry_type(x) == "POINT")) {
     stop("This only works with points")
   }
@@ -37,32 +29,49 @@ tz_lookup.sf <- function(x, y, crs = NULL) {
     sf::st_crs(x) <- crs
   }
 
-  transform <- sf::st_crs(x) != sf::st_crs(lutz::tz)
+  transform <- sf::st_crs(x) != sf::st_crs(4326)
   if (transform) {
-    x <- sf::st_transform(x, crs = sf::st_crs(lutz::tz))
+    x <- sf::st_transform(x, crs = 4326)
   }
-  intersect_ids <- suppressMessages(unlist(sf::st_intersects(x, lutz::tz)))
-  lutz::tz$tzid[intersect_ids]
+
+  coords <- sf::st_coordinates(x)
+  tz_lookup(coords[, 2], coords[, 1])
 }
 
+#' Lookup timezones of points
+#'
+#' @param lat numeric vector of latitudes
+#' @param lon numeric vector of longitudes the same length as `x`
+#'
+#' @return character vector the same length as x and y specifying the Timezone of the points.
 #' @export
-tz_lookup.sfc <- tz_lookup.sf
-
-#' @export
-tz_lookup.numeric <- function(x, y, crs = NULL) {
-
-  if (length(x) != length(y)) {
-    stop("x and y must be of equal length")
+#'
+#' @examples
+#' tz_lookup(42, -123)
+#' tz_lookup(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
+tz_lookup <- function(lat, lon) {
+  if (inherits(lat, c("sf", "sfc"))) {
+    stop("It looks like you are trying to get the tz of an sf/sfc object! Use tz_lookup_sf() instead.",
+         call. = FALSE)
   }
 
-  if (is.null(crs)) {
-    crs <- 4326
+  if (!identical(length(lat), length(lon)) || !all(is.numeric(lat) && is.numeric(lon))) {
+    stop("lat and lon must numeric vectors be of the same length")
   }
 
-  pts_list <- lapply(seq_along(x), function(i) {
-    sf::st_point(c(x[i], y[i]))
-  })
+  ctx <- make_ctx()
 
-  pts <- sf::st_sfc(pts_list, crs = crs)
-  tz_lookup(pts)
+  ctx$assign("lat", lat)
+  ctx$assign("lon", lon)
+  ctx$eval("
+if (Array.isArray(lat)) {
+  var out = [];
+  for (i = 0; i < lat.length; i++) {
+    out.push(tzlookup(lat[i], lon[i]));
+  }
+} else {
+  var out = tzlookup(lat, lon)
+}
+")
+  ctx$get("out")
 }

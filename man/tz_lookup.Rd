@@ -4,34 +4,20 @@
 \alias{tz_lookup}
 \title{Lookup timezones of points}
 \usage{
-tz_lookup(x, y, crs = NULL)
+tz_lookup(lat, lon)
 }
 \arguments{
-\item{x}{either an `sfc` or `sf` points object, or a numeric vector of x coordinates}
+\item{lat}{numeric vector of latitudes}
 
-\item{y}{if `x` is a numeric vector of x coordinates, `y` must be a numeric vector of
-y coordinates the same length as `x`. Ignored if `x` is an `sf` or `sfc` object.}
-
-\item{crs}{the coordinate reference system: integer with the EPSG code, or character with proj4string.
-If not specified (i.e., `NULL`) and `x` and `y` are numeric vectors, or `x` is an `sf` or `sfc` object
-with no existing `crs`, EPSG: 4326 is assumed (lat/long).}
+\item{lon}{numeric vector of longitudes the same length as \code{x}}
 }
 \value{
-character vector the same length as specifying the Timezone of the points.
+character vector the same length as x and y specifying the Timezone of the points.
 }
 \description{
 Lookup timezones of points
 }
 \examples{
-if (requireNamespace("sp")) {
-data(meuse, package = "sp")
-
-# numeric:
-tz_lookup(meuse$x, meuse$y, 28992)
-
-# With a sf object:
-meuse_sf = sf::st_as_sf(meuse, coords = c("x", "y"), crs = 28992, agr = "constant")
-tz_lookup(meuse_sf)
-}
-
+tz_lookup(42, -123)
+tz_lookup(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
 }
