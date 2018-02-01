@@ -3,18 +3,18 @@ Type: Package
 Title: Look up timezones of point coordinates
 Version: 0.1.0
 Authors@R: person("Andy", "Teucher", email = "andy.teucher@gmail.com", role = c("aut", "cre"))
-Description: Input latitude and longitude values or an 'sf/sfc' POINT object and get back the timezone
+Description: Look up timezones. Input latitude and longitude values or an 'sf/sfc' POINT object and get back the timezone
     in which they exist. This package uses the V8 package to access the 'tz-lookup.js' javascript library
     (<https://github.com/darkskyapp/tz-lookup/>).
 License: MIT + file LICENSE
 URL: https://github.com/ateucher/lutz
 BugReports: https://github.com/ateucher/lutz/issues
 Imports:
-  V8
+  V8 (>= 1.5)
 Suggests:
   testthat, 
-  sp,
-  sf
+  sf (>= 0.5),
+  datasets
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1

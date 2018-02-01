@@ -12,9 +12,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-# lutz
+# lutz (look up timezones)
 
-Input latitude and longitude values or an `sf` or `sfc` POINT object and get back the timezone in which they exist. This package uses the V8 package to access the [`tz-lookup.js` javascript library](https://github.com/darkskyapp/tz-lookup/).
+Input latitude and longitude values or an `sf` or `sfc` POINT object and get back the timezone in which they exist. This package uses the **V8** package to access the [`tz-lookup.js` javascript library](https://github.com/darkskyapp/tz-lookup/).
 
 ## Installation
 
@@ -27,15 +27,27 @@ devtools::install_github("ateucher/lutz")
 
 ## Example
 
-```{r example, eval=requireNamespace("sp")}
+```{r example, warning=FALSE}
 library(lutz)
 tz_lookup(49.5, -123.5)
 
 tz_lookup(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
 
 # With a sf object:
-data(meuse, package = "sp")
-meuse_sf = sf::st_as_sf(meuse, coords = c("x", "y"), crs = 28992, agr = "constant")
+library(sf)
+library(ggplot2) # this requires the devlopment version of ggplot2
 
-tz_lookup_sf(meuse_sf)
+# Create an sf object out of the included state.center dataset:
+pts <- lapply(seq_along(state.center$x), function(i) {
+  st_point(c(state.center$x[i], state.center$y[i]))
+})
+state_centers_sf <- st_sf(st_sfc(pts))
+
+# Use tz_lookup_sf to find the timezones
+state_centers_sf$tz <- tz_lookup_sf(state_centers_sf)
+
+ggplot() + 
+  geom_sf(data = state_centers_sf, aes(colour = tz)) + 
+  theme_minimal() + 
+  coord_sf(datum = NA)
 ```

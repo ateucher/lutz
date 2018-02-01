@@ -8,10 +8,17 @@
 #' @export
 #'
 #' @examples
-#' if (requireNamespace("sp")) {
-#' data(meuse, package = "sp")
-#' meuse_sf = sf::st_as_sf(meuse, coords = c("x", "y"), crs = 28992, agr = "constant")
-#' tz_lookup_sf(meuse_sf)
+#' if (require("sf")) {
+#'
+#' state_pts <- lapply(seq_along(state.center$x), function(i) {
+#'   st_point(c(state.center$x[i], state.center$y[i]))
+#' })
+#'
+#' state_centers_sf <- st_sf(st_sfc(state_pts))
+#'
+#' state_centers_sf$tz <- tz_lookup_sf(state_centers_sf)
+#'
+#' plot(state_centers_sf[, "tz"])
 #' }
 #'
 
