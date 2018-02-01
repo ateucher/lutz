@@ -3,7 +3,7 @@
 lutz
 ====
 
-Look up timezones of point coordinates, as x, y pairs or from an `sf` object. It uses spatial data on timezones from: <https://github.com/rundel/timezone>
+Look up timezones of point coordinates, as x, y pairs or from an `sf` object. It uses spatial data on timezones from: <https://github.com/evansiroky/timezone-boundary-builder>
 
 Installation
 ------------
