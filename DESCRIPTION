@@ -11,7 +11,7 @@ Depends:
   R (>= 2.10)
 Imports:
   sf (>= 0.5.0)
-Suggests: 
+Suggests:
   testthat, 
   sp
 Encoding: UTF-8
