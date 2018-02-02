@@ -37,7 +37,8 @@ test_that("tz_lookup.SpatialPoints works", {
   expect_equal(tz_lookup(pt), "Etc/GMT")
   expect_equal(tz_lookup(pts), c("Europe/Oslo", "Etc/GMT+2"))
   expect_error(tz_lookup_coords(pts), "It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object")
-  expect_equal(tz_lookup(pt, 3005), "Etc/GMT+9")
   expect_equal(tz_lookup(pt, "+proj=aea +lat_1=50 +lat_2=58.5 +lat_0=45 +lon_0=-126 +x_0=1000000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"),
                "Etc/GMT+9")
+  skip_on_travis() # Skip test on Travis due to broken EPSG code list
+  expect_equal(tz_lookup(pt, 3005), "Etc/GMT+9")
 })
