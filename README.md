@@ -1,9 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+[![Travis-CI Build Status](https://travis-ci.org/ateucher/lutz.svg?branch=master)](https://travis-ci.org/ateucher/lutz)
+
 lutz (look up timezones)
 ========================
 
-Input latitude and longitude values or an `sf` or `sfc` POINT object and get back the timezone in which they exist. This package uses the V8 package to access the [`tz-lookup.js` javascript library](https://github.com/darkskyapp/tz-lookup/).
+Input latitude and longitude values or an `sf` or `sfc` POINT object and get back the timezone in which they exist. This package uses the **V8** package to access the [`tz-lookup.js` javascript library](https://github.com/darkskyapp/tz-lookup/).
 
 Installation
 ------------

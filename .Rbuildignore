@@ -3,3 +3,4 @@
 ^README\.Rmd$
 ^README-.*\.png$
 ^\.V8history$
+^\.travis\.yml$
