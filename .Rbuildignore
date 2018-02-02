@@ -5,3 +5,4 @@
 ^\.V8history$
 ^\.travis\.yml$
 ^codecov\.yml$
+^appveyor\.yml$
