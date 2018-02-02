@@ -59,12 +59,12 @@ tz_lookup.SpatialPoints <- function(x, crs = NULL) {
   if (is.numeric(crs)) crs <- paste0("+init=EPSG:", crs)
 
   if (is.na(sp::proj4string(x))) {
-    if (is.null(crs)) crs <- "+init=EPSG:4326"
+    if (is.null(crs)) crs <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
     sp::proj4string(x) <- sp::CRS(crs)
   }
 
   if (!is_wgs84(x)) {
-    x <- sp::spTransform(x, sp::CRS("+init=EPSG:4326"))
+    x <- sp::spTransform(x, sp::CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
   }
 
   coords <- sp::coordinates(x)
