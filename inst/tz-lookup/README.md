@@ -1,9 +1,10 @@
-To add the browserified tz-lookup.js library to the package:
+## Updat the tz.js file from https://github.com/darkskyapp/tz-lookup to the package:
+
+tz-lookup is licensed CC0.
+
+Find the latest release (v6.1.4) at https://github.com/darkskyapp/tz-lookup/releases
 
 ```
-npm install -g browserify
-npm install tz-lookup
-echo "global.tzlookup = require('tz-lookup');" > in.js
-browserify in.js -o inst/tz-lookup/tz-lookup-browserify.js
-rm -r in.js node_modules package-lock.json 
+cd inst/tz-lookup
+wget https://raw.githubusercontent.com/darkskyapp/tz-lookup/v6.1.4/tz.js
 ```
