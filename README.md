@@ -20,18 +20,24 @@ devtools::install_github("ateucher/lutz")
 Example
 -------
 
+There are only two functions in this package: `tz_lookup()` which works with both `sf/sfc` and `SpatialPoints` objects, and `tz_lookup_coords` for looking up lat/long pairs.
+
+### With coordinates. They must be lat/long in decimal degrees:
+
 ``` r
 library(lutz)
-tz_lookup(49.5, -123.5)
+tz_lookup_coords(49.5, -123.5)
 #> [1] "America/Vancouver"
 
-tz_lookup(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
+tz_lookup_coords(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
 #> [1] "America/Vancouver"    "America/Denver"       "America/Rankin_Inlet"
 #> [4] "Australia/Darwin"
+```
 
-# With a sf object:
+### With `sf` objects:
+
+``` r
 library(sf)
-#> Linking to GEOS 3.6.2, GDAL 2.2.3, proj.4 4.9.3
 library(ggplot2) # this requires the devlopment version of ggplot2
 
 # Create an sf object out of the included state.center dataset:
@@ -41,7 +47,7 @@ pts <- lapply(seq_along(state.center$x), function(i) {
 state_centers_sf <- st_sf(st_sfc(pts))
 
 # Use tz_lookup_sf to find the timezones
-state_centers_sf$tz <- tz_lookup_sf(state_centers_sf)
+state_centers_sf$tz <- tz_lookup(state_centers_sf)
 
 ggplot() + 
   geom_sf(data = state_centers_sf, aes(colour = tz)) + 
@@ -49,4 +55,21 @@ ggplot() +
   coord_sf(datum = NA)
 ```
 
-![](README-example-1.png)
+![](README-unnamed-chunk-3-1.png)
+
+### With `SpatialPoints` objects:
+
+``` r
+library(sp)
+state_centers_sp <- as(state_centers_sf, "Spatial")
+
+state_centers_sp$tz <- tz_lookup(state_centers_sp)
+
+ggplot(cbind(as.data.frame(coordinates(state_centers_sp)), tz = state_centers_sp$tz), 
+       aes(x = coords.x1, y = coords.x2, colour = tz)) + 
+  geom_point() + 
+  coord_fixed() + 
+  theme_minimal()
+```
+
+![](README-unnamed-chunk-4-1.png)
