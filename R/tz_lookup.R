@@ -24,12 +24,14 @@
 
 #' @export
 tz_lookup_sf <- function(x, crs = NULL) {
-  if (!requireNamespace("sf")) {
-    stop("You must have the sf package installed to use this function")
-  }
-  if (!all(sf::st_geometry_type(x) == "POINT")) {
-    stop("This only works with points")
-  }
+  if (!requireNamespace("sf"))
+    stop("You must have the sf package installed to use this function", call. = FALSE)
+
+  if (!inherits(x, c("sf", "sfc")))
+    stop("x must of class sf or sfc")
+
+  if (!all(sf::st_geometry_type(x) == "POINT"))
+    stop("This only works with points", call. = FALSE)
 
   if (is.na(sf::st_crs(x))) {
     if (is.null(crs)) crs <- 4326
@@ -42,7 +44,8 @@ tz_lookup_sf <- function(x, crs = NULL) {
   }
 
   coords <- sf::st_coordinates(x)
-  tz_lookup(coords[, 2], coords[, 1])
+  # sf stores as x, y and tzlookup likes lat, lon (Which is the opposite)
+  tz_lookup(lat = coords[, 2], lon = coords[, 1])
 }
 
 #' Lookup timezones of points
