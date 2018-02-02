@@ -4,20 +4,32 @@
 \alias{tz_lookup}
 \title{Lookup timezones of points}
 \usage{
-tz_lookup(lat, lon)
+tz_lookup(x, crs = NULL)
 }
 \arguments{
-\item{lat}{numeric vector of latitudes}
+\item{x}{either an \code{sfc} or \code{sf} points or \code{SpatialPoints(DataFrame)} object}
 
-\item{lon}{numeric vector of longitudes the same length as \code{x}}
+\item{crs}{the coordinate reference system: integer with the EPSG code, or character with proj4string.
+If not specified (i.e., \code{NULL}) and \code{x} has no existing \code{crs}, EPSG: 4326 is assumed (lat/long).}
 }
 \value{
-character vector the same length as x and y specifying the Timezone of the points.
+character vector the same length as \code{x} specifying the Timezone of the points.
 }
 \description{
 Lookup timezones of points
 }
 \examples{
-tz_lookup(42, -123)
-tz_lookup(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
+if (require("sf")) {
+
+state_pts <- lapply(seq_along(state.center$x), function(i) {
+  st_point(c(state.center$x[i], state.center$y[i]))
+})
+
+state_centers_sf <- st_sf(st_sfc(state_pts))
+
+state_centers_sf$tz <- tz_lookup(state_centers_sf)
+
+plot(state_centers_sf[, "tz"])
+}
+
 }

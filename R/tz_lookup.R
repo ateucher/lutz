@@ -1,6 +1,6 @@
 #' Lookup timezones of points
 #'
-#' @param x either an `sfc` or `sf` points object
+#' @param x either an `sfc` or `sf` points or `SpatialPoints(DataFrame)` object
 #' @param crs the coordinate reference system: integer with the EPSG code, or character with proj4string.
 #' If not specified (i.e., `NULL`) and `x` has no existing `crs`, EPSG: 4326 is assumed (lat/long).
 #'
@@ -16,19 +16,19 @@
 #'
 #' state_centers_sf <- st_sf(st_sfc(state_pts))
 #'
-#' state_centers_sf$tz <- tz_lookup_sf(state_centers_sf)
+#' state_centers_sf$tz <- tz_lookup(state_centers_sf)
 #'
 #' plot(state_centers_sf[, "tz"])
 #' }
 #'
+tz_lookup <- function(x, crs = NULL) {
+  UseMethod("tz_lookup")
+}
 
 #' @export
-tz_lookup_sf <- function(x, crs = NULL) {
+tz_lookup.sf <- function(x, crs = NULL) {
   if (!requireNamespace("sf"))
     stop("You must have the sf package installed to use this function", call. = FALSE)
-
-  if (!inherits(x, c("sf", "sfc")))
-    stop("x must of class sf or sfc")
 
   if (!all(sf::st_geometry_type(x) == "POINT"))
     stop("This only works with points", call. = FALSE)
@@ -45,7 +45,31 @@ tz_lookup_sf <- function(x, crs = NULL) {
 
   coords <- sf::st_coordinates(x)
   # sf stores as x, y and tzlookup likes lat, lon (Which is the opposite)
-  tz_lookup(lat = coords[, 2], lon = coords[, 1])
+  tz_lookup_coords(lat = coords[, 2], lon = coords[, 1])
+}
+
+#' @export
+tz_lookup.sfc <- tz_lookup.sf
+
+#' @export
+tz_lookup.SpatialPoints <- function(x, crs = NULL) {
+  if (!requireNamespace("sp"))
+    stop("You must have the sp package installed to use this function", call. = FALSE)
+
+  if (is.numeric(crs)) crs <- paste0("+init=EPSG:", crs)
+
+  if (is.na(sp::proj4string(x))) {
+    if (is.null(crs)) crs <- "+init=EPSG:4326"
+    sp::proj4string(x) <- sp::CRS(crs)
+  }
+
+  if (!is_wgs84(x)) {
+    x <- sp::spTransform(x, sp::CRS("+init=EPSG:4326"))
+  }
+
+  coords <- sp::coordinates(x)
+  # sf stores as x, y and tzlookup likes lat, lon (Which is the opposite)
+  tz_lookup_coords(lat = coords[, 2], lon = coords[, 1])
 }
 
 #' Lookup timezones of points
@@ -57,11 +81,11 @@ tz_lookup_sf <- function(x, crs = NULL) {
 #' @export
 #'
 #' @examples
-#' tz_lookup(42, -123)
-#' tz_lookup(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
-tz_lookup <- function(lat, lon) {
-  if (inherits(lat, c("sf", "sfc"))) {
-    stop("It looks like you are trying to get the tz of an sf/sfc object! Use tz_lookup_sf() instead.",
+#' tz_lookup_coords(42, -123)
+#' tz_lookup_coords(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
+tz_lookup_coords <- function(lat, lon) {
+  if (inherits(lat, c("sf", "sfc", "SpatialPoints"))) {
+    stop("It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object! Use tz_lookup() instead.",
          call. = FALSE)
   }
 
@@ -84,4 +108,11 @@ if (Array.isArray(lat)) {
 }
 ")
   ctx$get("out")
+}
+
+is_wgs84 <- function(x) {
+  # The most minimal specification of WGS84
+  comp <- c("+proj=longlat", "+datum=WGS84", "+no_defs")
+  x_str <- strsplit(sp::CRS(sp::proj4string(x))@projargs, " +")[[1]]
+  all(comp %in% x_str)
 }
