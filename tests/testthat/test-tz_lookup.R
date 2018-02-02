@@ -15,6 +15,14 @@ test_that("tz_lookup_coords works", {
   expect_error(tz_lookup_coords(100, 500), "invalid coordinates")
 })
 
+test_that("tz_lookup_coords deals with NAs", {
+  expect_equal(tz_lookup_coords(NA_real_, NA_real_), NA_character_)
+  expect_equal(tz_lookup_coords(1, NA_real_), NA_character_)
+  expect_equal(tz_lookup_coords(rep(NA_real_, 2), rep(NA_real_, 2)), rep(NA, 2))
+  expect_equal(tz_lookup_coords(c(NA_real_, 1), c(NA_real_, 1)), c(NA, "Etc/GMT"))
+  expect_equal(tz_lookup_coords(c(NA_real_, 1), c(1, 1)), c(NA, "Etc/GMT"))
+})
+
 test_that("tz_lookup.sf works", {
   skip_if_not_installed("sf")
   pt <- sf::st_sfc(sf::st_point(c(1,1)))
