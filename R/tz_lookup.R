@@ -97,30 +97,7 @@ tz_lookup_coords <- function(lat, lon) {
 
   ctx$assign("lat", lat)
   ctx$assign("lon", lon)
-  ctx$eval("
-
-function is_missing(x) {
-  var missing = (typeof(x) === 'undefined' || typeof(x) !== 'number' || isNaN(x) || x === null);
-  return missing;
-}
-
-if (Array.isArray(lat)) {
-  var out = [];
-  for (i = 0; i < lat.length; i++) {
-    if (is_missing(lat[i]) | is_missing(lon[i])) {
-      out.push(null);
-    } else {
-      out.push(tzlookup(lat[i], lon[i]));
-    }
-  }
-} else {
-  if (is_missing(lat) | is_missing(lon)) {
-    var out = null;
-  } else {
-    var out = tzlookup(lat, lon)
-  }
-}
-")
+  ctx$eval("var out = Rtzlookup(lat, lon);")
   ret <- ctx$get("out")
   if (is.null(ret)) ret <- NA_character_
   ret
