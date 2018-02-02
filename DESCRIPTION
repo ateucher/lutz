@@ -10,11 +10,12 @@ License: MIT + file LICENSE
 URL: https://github.com/ateucher/lutz
 BugReports: https://github.com/ateucher/lutz/issues
 Imports:
-  V8 (>= 1.5)
+    V8 (>= 1.5)
 Suggests:
-  testthat, 
-  sf (>= 0.5),
-  datasets
+    testthat, 
+    sf (>= 0.5),
+    datasets,
+    covr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
