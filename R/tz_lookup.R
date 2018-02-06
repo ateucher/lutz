@@ -56,7 +56,7 @@ tz_lookup.SpatialPoints <- function(x, crs = NULL) {
   if (!requireNamespace("sp"))
     stop("You must have the sp package installed to use this function", call. = FALSE)
 
-  if (is.numeric(crs)) crs <- paste0("+init=EPSG:", crs)
+  if (is.numeric(crs)) crs <- paste0("+init=epsg:", crs)
 
   if (is.na(sp::proj4string(x))) {
     if (is.null(crs)) crs <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
