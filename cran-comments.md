@@ -1,7 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* fixed the condition causing the failing test on Ubuntu ('tz_lookup.SpatialPoints: Error: no system list, errno: 2')
+* fixed the condition causing the failing test ('tz_lookup.SpatialPoints: Error: no system list, errno: 2'). As far as I could discern this was only happening on Linux
 * Enabled tests to catch the error
 
 ## Test environments
