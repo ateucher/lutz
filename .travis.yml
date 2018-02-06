@@ -10,6 +10,7 @@ before_install:
 
 r:
   - release
+  - devel
   - oldrel
 
 warnings_are_errors: true
