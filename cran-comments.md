@@ -1,7 +1,7 @@
 ## Test environments
-* local OS X install, R 3.4.3
-* ubuntu 14.04 (on travis-ci - R 3.4.3, R-devel, R-oldrel)
-* win-builder (devel)
+* local OS X install (Sierra 10.12.6), R 3.4.3
+* win-builder (r-devel, r-release)
+* ubuntu 14.04 (on Travis-CI: R-release and R-oldrel)
 * Windows Server 2012 R2 x64 (on Appveyor - R 3.4.3 patched)
 
 ## R CMD check results
