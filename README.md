@@ -55,7 +55,7 @@ ggplot() +
   coord_sf(datum = NA)
 ```
 
-![](README-unnamed-chunk-3-1.png)
+![](tools/readme/unnamed-chunk-3-1.png)
 
 ### With `SpatialPoints` objects:
 
@@ -72,4 +72,4 @@ ggplot(cbind(as.data.frame(coordinates(state_centers_sp)), tz = state_centers_sp
   theme_minimal()
 ```
 
-![](README-unnamed-chunk-4-1.png)
+![](tools/readme/unnamed-chunk-4-1.png)
