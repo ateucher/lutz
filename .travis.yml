@@ -13,6 +13,10 @@ r:
   - devel
   - oldrel
 
+matrix:
+  allow_failures:
+    - r: devel
+
 warnings_are_errors: true
 
 after_success:
