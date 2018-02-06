@@ -2,7 +2,7 @@
 % Please edit documentation in R/tz_lookup.R
 \name{tz_lookup}
 \alias{tz_lookup}
-\title{Lookup timezones of points}
+\title{Lookup time zones of points}
 \usage{
 tz_lookup(x, crs = NULL)
 }
@@ -13,10 +13,10 @@ tz_lookup(x, crs = NULL)
 If not specified (i.e., \code{NULL}) and \code{x} has no existing \code{crs}, EPSG: 4326 is assumed (lat/long).}
 }
 \value{
-character vector the same length as \code{x} specifying the Timezone of the points.
+character vector the same length as \code{x} specifying the time zone of the points.
 }
 \description{
-Lookup timezones of points
+Lookup time zones of points
 }
 \examples{
 if (require("sf")) {

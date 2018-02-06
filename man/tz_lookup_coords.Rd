@@ -2,7 +2,7 @@
 % Please edit documentation in R/tz_lookup.R
 \name{tz_lookup_coords}
 \alias{tz_lookup_coords}
-\title{Lookup timezones of points}
+\title{Lookup time zones of points}
 \usage{
 tz_lookup_coords(lat, lon)
 }
@@ -12,10 +12,10 @@ tz_lookup_coords(lat, lon)
 \item{lon}{numeric vector of longitudes the same length as \code{x}}
 }
 \value{
-character vector the same length as x and y specifying the Timezone of the points.
+character vector the same length as x and y specifying the time zone of the points.
 }
 \description{
-Lookup timezones of points
+Lookup time zones of points
 }
 \examples{
 tz_lookup_coords(42, -123)

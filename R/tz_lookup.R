@@ -1,10 +1,10 @@
-#' Lookup timezones of points
+#' Lookup time zones of points
 #'
 #' @param x either an `sfc` or `sf` points or `SpatialPoints(DataFrame)` object
 #' @param crs the coordinate reference system: integer with the EPSG code, or character with proj4string.
 #' If not specified (i.e., `NULL`) and `x` has no existing `crs`, EPSG: 4326 is assumed (lat/long).
 #'
-#' @return character vector the same length as `x` specifying the Timezone of the points.
+#' @return character vector the same length as `x` specifying the time zone of the points.
 #' @export
 #'
 #' @examples
@@ -72,12 +72,12 @@ tz_lookup.SpatialPoints <- function(x, crs = NULL) {
   tz_lookup_coords(lat = coords[, 2], lon = coords[, 1])
 }
 
-#' Lookup timezones of points
+#' Lookup time zones of points
 #'
 #' @param lat numeric vector of latitudes
 #' @param lon numeric vector of longitudes the same length as `x`
 #'
-#' @return character vector the same length as x and y specifying the Timezone of the points.
+#' @return character vector the same length as x and y specifying the time zone of the points.
 #' @export
 #'
 #' @examples
