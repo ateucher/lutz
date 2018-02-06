@@ -1,3 +1,9 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* fixed the condition causing the failing test on Ubuntu ('tz_lookup.SpatialPoints: Error: no system list, errno: 2')
+* Enabled tests to catch the error
+
 ## Test environments
 * local OS X install (Sierra 10.12.6), R 3.4.3
 * win-builder (r-devel, r-release)
