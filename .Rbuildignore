@@ -7,3 +7,5 @@
 ^codecov\.yml$
 ^appveyor\.yml$
 ^cran-comments\.md$
+^data-raw$
+^scratch$
