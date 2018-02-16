@@ -2,7 +2,7 @@
 % Please edit documentation in R/tz_lookup.R
 \name{tz_lookup}
 \alias{tz_lookup}
-\title{Lookup time zones of points}
+\title{Lookup time zones of sf or sp points}
 \usage{
 tz_lookup(x, crs = NULL)
 }
@@ -16,7 +16,11 @@ If not specified (i.e., \code{NULL}) and \code{x} has no existing \code{crs}, EP
 character vector the same length as \code{x} specifying the time zone of the points.
 }
 \description{
-Lookup time zones of points
+This can very quickly look up the time zone of many thousands of points,
+however the underlying time zone map has been simplified to allow for this speed.
+As such when a point is near a time zone boundary and not near a populated centre,
+it may return the incorrect timezone. If accuracy is more important than speed,
+try \code{\link[=tz_lookup2]{tz_lookup2()}}.
 }
 \examples{
 if (require("sf")) {
