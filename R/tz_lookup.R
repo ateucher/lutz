@@ -86,13 +86,19 @@ tz_lookup_coords <- function(lat, lon) {
 
 
 
-#' A more accurate (but slower) version of tz_lookup
+#' A more accurate (but slower) version of [tz_lookup()].
+#'
+#' Compared to [tz_lookup()], this function overays points on a much
+#' more detailed timezone map from https://github.com/evansiroky/timezone-boundary-builder/
+#' using [sf::st_join()]. The timezone-boundary-builder map only has time zone
+#' bounaries over land, so this function uses [tz_lookup()] to fill in
+#' the gaps.
 #'
 #' @inheritParams tz_lookup
 #'
 #' @inherit tz_lookup return
 #' @export
-tz_lookup2 <- function(x, crs) {
+tz_lookup2 <- function(x, crs = NULL) {
   UseMethod("tz_lookup2")
 }
 
@@ -123,7 +129,13 @@ tz_lookup2.SpatialPoints <- function(x, crs = NULL) {
   tz_lookup2(x, crs)
 }
 
-#' More accurate (but slower) version of `tz_lookup_coords`
+#' More accurate (but slower) version of [tz_lookup_coords()]
+#'
+#' Compared to [tz_lookup_coords()], this function overays points on a much
+#' more detailed timezone map from https://github.com/evansiroky/timezone-boundary-builder/
+#' using [sf::st_join()]. The timezone-boundary-builder map only has time zone
+#' bounaries over land, so this function uses [tz_lookup_coords()] to fill in
+#' the gaps.
 #'
 #' @inheritParams tz_lookup_coords
 #'
@@ -133,7 +145,9 @@ tz_lookup_coords2 <- function(lat, lon) {
   check_for_spatial(lat, "2")
   check_coords(lat, lon)
   ll <- data.frame(lat = lat, lon = lon)
-  cc <- complete.cases(ll)
+  # check for NAs before converting to sf, only send valid lat/lon pairs
+  # into sf, recombine with NAs for output
+  cc <- stats::complete.cases(ll)
   ret <- rep(NA_character_, length(cc))
   if (sum(cc)) {
     ll_sf <- sf::st_as_sf(ll[cc, ], coords = c("lon", "lat"), crs = 4326)

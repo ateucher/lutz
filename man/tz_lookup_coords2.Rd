@@ -2,7 +2,7 @@
 % Please edit documentation in R/tz_lookup.R
 \name{tz_lookup_coords2}
 \alias{tz_lookup_coords2}
-\title{More accurate (but slower) version of \code{tz_lookup_coords}}
+\title{More accurate (but slower) version of \code{\link[=tz_lookup_coords]{tz_lookup_coords()}}}
 \usage{
 tz_lookup_coords2(lat, lon)
 }
@@ -15,5 +15,9 @@ tz_lookup_coords2(lat, lon)
 character vector the same length as x and y specifying the time zone of the points.
 }
 \description{
-More accurate (but slower) version of \code{tz_lookup_coords}
+Compared to \code{\link[=tz_lookup_coords]{tz_lookup_coords()}}, this function overays points on a much
+more detailed timezone map from https://github.com/evansiroky/timezone-boundary-builder/
+using \code{\link[sf:st_join]{sf::st_join()}}. The timezone-boundary-builder map only has time zone
+bounaries over land, so this function uses \code{\link[=tz_lookup_coords]{tz_lookup_coords()}} to fill in
+the gaps.
 }

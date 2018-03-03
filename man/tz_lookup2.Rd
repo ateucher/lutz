@@ -2,9 +2,9 @@
 % Please edit documentation in R/tz_lookup.R
 \name{tz_lookup2}
 \alias{tz_lookup2}
-\title{A more accurate (but slower) version of tz_lookup}
+\title{A more accurate (but slower) version of \code{\link[=tz_lookup]{tz_lookup()}}.}
 \usage{
-tz_lookup2(x, crs)
+tz_lookup2(x, crs = NULL)
 }
 \arguments{
 \item{x}{either an \code{sfc} or \code{sf} points or \code{SpatialPoints(DataFrame)} object}
@@ -16,5 +16,9 @@ If not specified (i.e., \code{NULL}) and \code{x} has no existing \code{crs}, EP
 character vector the same length as \code{x} specifying the time zone of the points.
 }
 \description{
-A more accurate (but slower) version of tz_lookup
+Compared to \code{\link[=tz_lookup]{tz_lookup()}}, this function overays points on a much
+more detailed timezone map from https://github.com/evansiroky/timezone-boundary-builder/
+using \code{\link[sf:st_join]{sf::st_join()}}. The timezone-boundary-builder map only has time zone
+bounaries over land, so this function uses \code{\link[=tz_lookup]{tz_lookup()}} to fill in
+the gaps.
 }
