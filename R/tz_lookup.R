@@ -75,9 +75,7 @@ tz_lookup_coords <- function(lat, lon) {
          call. = FALSE)
   }
 
-  if (!identical(length(lat), length(lon)) || !all(is.numeric(lat) && is.numeric(lon))) {
-    stop("lat and lon must numeric vectors be of the same length")
-  }
+  check_coords(lat, lon)
 
   ctx <- make_ctx()
 
