@@ -174,7 +174,19 @@ tz_lookup2.SpatialPoints <- function(x, crs) {
 #' @inherit tz_lookup_coords return description
 #' @export
 tz_lookup_coords2 <- function(lat, lon) {
+  check_coords(lat, lon)
   ll <- data.frame(lat = lat, lon = lon)
-  ll_sf <- sf::st_as_sf(ll, coords = c("lon", "lat"), crs = 4326)
-  tz_lookup2(ll_sf)
+  cc <- complete.cases(ll)
+  ret <- rep(NA_character_, length(cc))
+  if (sum(cc)) {
+    ll_sf <- sf::st_as_sf(ll[cc, ], coords = c("lon", "lat"), crs = 4326)
+    ret[cc] <- tz_lookup2(ll_sf)
+  }
+  ret
+}
+
+check_coords <- function(lat, lon) {
+  if (!identical(length(lat), length(lon)) || !all(is.numeric(lat) && is.numeric(lon))) {
+    stop("lat and lon must numeric vectors be of the same length")
+  }
 }
