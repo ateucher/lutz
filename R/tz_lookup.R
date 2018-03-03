@@ -70,10 +70,7 @@ tz_lookup.SpatialPoints <- function(x, crs = NULL) {
 #' tz_lookup_coords(42, -123)
 #' tz_lookup_coords(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
 tz_lookup_coords <- function(lat, lon) {
-  if (inherits(lat, c("sf", "sfc", "SpatialPoints"))) {
-    stop("It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object! Use tz_lookup() instead.",
-         call. = FALSE)
-  }
+  check_for_spatial(lat)
 
   check_coords(lat, lon)
 
@@ -162,7 +159,7 @@ tz_lookup2.sfc <- function(x, crs = NULL) {
 }
 
 #' @export
-tz_lookup2.SpatialPoints <- function(x, crs) {
+tz_lookup2.SpatialPoints <- function(x, crs = NULL) {
   x <- sf::st_as_sf(x)
   tz_lookup2(x, crs)
 }
@@ -174,6 +171,7 @@ tz_lookup2.SpatialPoints <- function(x, crs) {
 #' @inherit tz_lookup_coords return description
 #' @export
 tz_lookup_coords2 <- function(lat, lon) {
+  check_for_spatial(lat, "2")
   check_coords(lat, lon)
   ll <- data.frame(lat = lat, lon = lon)
   cc <- complete.cases(ll)
@@ -188,5 +186,13 @@ tz_lookup_coords2 <- function(lat, lon) {
 check_coords <- function(lat, lon) {
   if (!identical(length(lat), length(lon)) || !all(is.numeric(lat) && is.numeric(lon))) {
     stop("lat and lon must numeric vectors be of the same length")
+  }
+}
+
+check_for_spatial <- function(x, suffix = "") {
+  if (inherits(x, c("sf", "sfc", "SpatialPoints"))) {
+    stop(sprintf("It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object! Use tz_lookup%s() instead.",
+                 suffix),
+         call. = FALSE)
   }
 }
