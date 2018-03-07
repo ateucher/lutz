@@ -5,26 +5,32 @@ is_wgs84 <- function(x) {
   all(comp %in% x_str)
 }
 
+wgs84_string <- function() {
+  "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+}
+
 fix_sp <- function(x, crs) {
   if (!requireNamespace("sp"))
-    stop("You must have the sp package installed to use this function", call. = FALSE)
+    stop("You must have the sp package installed to use this function",
+         call. = FALSE)
 
   if (is.numeric(crs)) crs <- paste0("+init=epsg:", crs)
 
   if (is.na(sp::proj4string(x))) {
-    if (is.null(crs)) crs <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+    if (is.null(crs)) crs <- wgs84_string()
     sp::proj4string(x) <- sp::CRS(crs)
   }
 
   if (!is_wgs84(x)) {
-    x <- sp::spTransform(x, sp::CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+    x <- sp::spTransform(x, sp::CRS(wgs84_string()))
   }
   x
 }
 
 fix_sf <- function(x, crs) {
   if (!requireNamespace("sf"))
-    stop("You must have the sf package installed to use this function", call. = FALSE)
+    stop("You must have the sf package installed to use this function",
+         call. = FALSE)
 
   if (!all(sf::st_geometry_type(x) == "POINT"))
     stop("This only works with points", call. = FALSE)
@@ -42,14 +48,15 @@ fix_sf <- function(x, crs) {
 }
 
 check_coords <- function(lat, lon) {
-  if (!identical(length(lat), length(lon)) || !all(is.numeric(lat) && is.numeric(lon))) {
+  if (!identical(length(lat), length(lon)) ||
+      !all(is.numeric(lat) && is.numeric(lon))) {
     stop("lat and lon must numeric vectors be of the same length")
   }
 }
 
 check_for_spatial <- function(x, suffix = "") {
   if (inherits(x, c("sf", "sfc", "SpatialPoints"))) {
-    stop(sprintf("It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object! Use tz_lookup%s() instead.",
+    stop(sprintf("It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object! Use tz_lookup%s() instead.", # nolint
                  suffix),
          call. = FALSE)
   }
