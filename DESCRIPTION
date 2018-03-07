@@ -2,7 +2,6 @@ Package: lutz
 Type: Package
 Title: Look Up Time Zones of Point Coordinates
 Version: 0.1.0
-Date: 2018-02-05
 Authors@R: person("Andy", "Teucher", email = "andy.teucher@gmail.com", role = c("aut", "cre"))
 Description: Input latitude and longitude values or an 'sf/sfc' POINT 
     object and get back the timezone in which they exist. Two methods are implemented. 
