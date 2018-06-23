@@ -9,6 +9,7 @@ test_that("tz_lookup_coords works with method = accurate", {
   expect_error(tz_lookup_coords("a", "b", method = "accurate"),
                "lat and lon must numeric vectors be of the same length")
   expect_error(tz_lookup_coords(100, 500, method = "accurate"), "invalid coordinates")
+  expect_error(tz_lookup_coords(-100, -500, method = "accurate"), "invalid coordinates")
 })
 
 test_that("tz_lookup_coords deals with NAs", {
