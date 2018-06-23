@@ -53,7 +53,8 @@ check_coords <- function(lat, lon) {
     stop("lat and lon must numeric vectors be of the same length")
   }
 
-  if (any(abs(na.omit(lat)) > 90 | abs(na.omit(lon)) > 180)) {
+  if (any(abs(stats::na.omit(lat)) > 90 |
+          abs(stats::na.omit(lon)) > 180)) {
     stop("invalid coordinates", call. = FALSE)
   }
 }
