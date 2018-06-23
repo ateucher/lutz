@@ -52,6 +52,10 @@ check_coords <- function(lat, lon) {
       !all(is.numeric(lat) && is.numeric(lon))) {
     stop("lat and lon must numeric vectors be of the same length")
   }
+
+  if (any(abs(na.omit(lat)) > 90 | abs(na.omit(lon)) > 180)) {
+    stop("invalid coordinates", call. = FALSE)
+  }
 }
 
 check_for_spatial <- function(x) {
