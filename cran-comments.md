@@ -14,7 +14,7 @@ License components with restrictions and base license permitting such:
   MIT + file LICENSE
   
 * The LICENSE file contains MIT license details for the package code, as well as
-the timezone map data included in the package.
+license details for the timezone map data included in the package.
 
 ## Reverse dependencies
 
