@@ -2,7 +2,7 @@ library(sf)
 library(rmapshaper)
 # The data is from https://github.com/evansiroky/timezone-boundary-builder
 # And released under the Open Data Commons Open Database License (ODbL)
-download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2017c/timezones.geojson.zip",
+download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2018d/timezones.geojson.zip",
               destfile = "data-raw/tz.zip")
 unzip("data-raw/tz.zip", exdir = "data-raw", overwrite = TRUE)
 tz_full <- read_sf(list.files("data-raw", recursive = TRUE, pattern = "\\json$", full.names = TRUE))
