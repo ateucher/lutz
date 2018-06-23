@@ -39,6 +39,7 @@ tz_lookup <- function(x, crs = NULL, method = "fast") {
 }
 
 tz_lookup_fast <- function(x, crs = NULL) {
+  warn_for_fast()
   UseMethod("tz_lookup_fast")
 }
 
@@ -92,6 +93,7 @@ tz_lookup_coords <- function(lat, lon, method = "fast") {
 }
 
 tz_lookup_coords_fast <- function(lat, lon) {
+  warn_for_fast()
   ctx <- make_ctx()
 
   ctx$assign("lat", lat)
