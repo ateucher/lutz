@@ -54,10 +54,9 @@ check_coords <- function(lat, lon) {
   }
 }
 
-check_for_spatial <- function(x, suffix = "") {
+check_for_spatial <- function(x) {
   if (inherits(x, c("sf", "sfc", "SpatialPoints"))) {
-    stop(sprintf("It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object! Use tz_lookup%s() instead.", # nolint
-                 suffix),
+    stop("It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object! Use tz_lookup() instead.",
          call. = FALSE)
   }
 }
