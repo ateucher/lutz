@@ -16,27 +16,42 @@ knitr::opts_chunk$set(
 
 # lutz (look up timezones)
 
-Input latitude and longitude values or an `sf` or `sfc` POINT object and get back the timezone in which they exist. This package uses the **V8** package to access the [`tz-lookup.js` javascript library](https://github.com/darkskyapp/tz-lookup/).
+Input latitude and longitude values or an `sf/sfc` POINT object and get back 
+the timezone in which they exist. Two methods are implemented. One is very 
+fast and uses the *V8* package to access the 
+[`tz-lookup.js` javascript library](https://github.com/darkskyapp/tz-lookup/). 
+However, speed comes at the cost of accuracy - near time zone borders away from 
+populated centres there is a chance that it will return the incorrect time zone. 
 
-It also uses a simplified version of a global timezone map from https://github.com/evansiroky/timezone-boundary-builder, which is released under the [Open Data Commons Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/).
+The other method is slower but more accurate - it uses the sf package to 
+intersect points with a detailed map of time zones from 
+[here](https://github.com/evansiroky/timezone-boundary-builder).
 
 ## Installation
 
-You can install lutz from github with:
+You can install lutz from CRAN with:
+
+```{r eval=FALSE}
+install.packages("lutz")
+```
+
+Or you can install the development version from github with:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("ateucher/lutz")
 ```
 
-## Example
+## Examples
 
-There are only two functions in this package: `tz_lookup()` which works with both `sf/sfc` and `SpatialPoints` objects, and `tz_lookup_coords` for looking up lat/long pairs.
+There are only two functions in this package: `tz_lookup()` which works with both `sf/sfc` and `SpatialPoints` objects, and `tz_lookup_coords` for looking up lat/long pairs. Use the `method` argument to choose the `"fast"` or `"accurate"`
+method.
 
 ### With coordinates. They must be lat/long in decimal degrees:
 ```{r warning=FALSE}
 library(lutz)
-tz_lookup_coords(49.5, -123.5)
+tz_lookup_coords(49.5, -123.5, method = "fast")
+tz_lookup_coords(49.5, -123.5, method = "accurate")
 
 tz_lookup_coords(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
 ```
@@ -54,6 +69,7 @@ state_centers_sf <- st_sf(st_sfc(pts))
 
 # Use tz_lookup_sf to find the timezones
 state_centers_sf$tz <- tz_lookup(state_centers_sf)
+state_centers_sf$tz <- tz_lookup(state_centers_sf, method = "accurate")
 
 ggplot() + 
   geom_sf(data = state_centers_sf, aes(colour = tz)) + 
