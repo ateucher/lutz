@@ -4,23 +4,26 @@
 \alias{tz_lookup}
 \title{Lookup time zones of sf or sp points}
 \usage{
-tz_lookup(x, crs = NULL)
+tz_lookup(x, crs = NULL, method = "fast")
 }
 \arguments{
 \item{x}{either an \code{sfc} or \code{sf} points or \code{SpatialPoints(DataFrame)} object}
 
 \item{crs}{the coordinate reference system: integer with the EPSG code, or character with proj4string.
 If not specified (i.e., \code{NULL}) and \code{x} has no existing \code{crs}, EPSG: 4326 is assumed (lat/long).}
+
+\item{method}{method by which to do the lookup. Either \code{"fast"} (default)
+or \code{"accurate"}.}
 }
 \value{
 character vector the same length as \code{x} specifying the time zone of the points.
 }
 \description{
-This can very quickly look up the time zone of many thousands of points,
-however the underlying time zone map has been simplified to allow for this speed.
-As such when a point is near a time zone boundary and not near a populated centre,
-it may return the incorrect timezone. If accuracy is more important than speed,
-try \code{\link[=tz_lookup2]{tz_lookup2()}}.
+There are two methods - \code{"fast"}, and \code{"accurate"}. The \code{"fast"} version can
+look up many thousands of points very quickly, however  when a point is near
+a time zone boundary and not near a populated centre, it may return the
+incorrect timezone. If accuracy is more important than speed, use
+\code{method = "accurate"}.
 }
 \examples{
 if (require("sf")) {

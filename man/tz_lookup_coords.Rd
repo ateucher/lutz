@@ -4,22 +4,25 @@
 \alias{tz_lookup_coords}
 \title{Lookup time zones of lat/long pairs}
 \usage{
-tz_lookup_coords(lat, lon)
+tz_lookup_coords(lat, lon, method = "fast")
 }
 \arguments{
 \item{lat}{numeric vector of latitudes}
 
 \item{lon}{numeric vector of longitudes the same length as \code{x}}
+
+\item{method}{method by which to do the lookup. Either \code{"fast"} (default)
+or \code{"accurate"}.}
 }
 \value{
 character vector the same length as x and y specifying the time zone of the points.
 }
 \description{
-This can very quickly look up the time zone of many thousands of points,
-however the underlying time zone map has been simplified to allow for this speed.
-As such when a point is near a time zone boundary and not near a populated centre,
-it may return the incorrect timezone. If accuracy is more important than speed,
-try \code{\link[=tz_lookup_coords2]{tz_lookup_coords2()}}.
+There are two methods - \code{"fast"}, and \code{"accurate"}. The \code{"fast"} version can
+look up many thousands of points very quickly, however  when a point is near
+a time zone boundary and not near a populated centre, it may return the
+incorrect timezone. If accuracy is more important than speed, use
+\code{method = "accurate"}.
 }
 \examples{
 tz_lookup_coords(42, -123)
