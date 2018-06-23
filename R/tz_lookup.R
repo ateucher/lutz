@@ -11,6 +11,9 @@
 #' If not specified (i.e., `NULL`) and `x` has no existing `crs`, EPSG: 4326 is assumed (lat/long).
 #' @param method method by which to do the lookup. Either `"fast"` (default)
 #' or `"accurate"`.
+#' @param warn By default, if `method = "fast"` a warning is issued about
+#'   the potential for inaccurate results. Set `warn` to `FALSE` to turn
+#'   this off.
 #'
 #' @return character vector the same length as `x` specifying the time zone of the points.
 #' @export
@@ -29,35 +32,33 @@
 #' plot(state_centers_sf[, "tz"])
 #' }
 #'
-tz_lookup <- function(x, crs = NULL, method = "fast") {
-  fun <- switch(method,
-                fast = tz_lookup_fast,
-                accurate = tz_lookup_accurate,
-                stop("method mst be one of 'fast' or 'accurate'", call. = FALSE))
+tz_lookup <- function(x, crs = NULL, method = "fast", warn = TRUE) {
+  switch(method,
+         fast = tz_lookup_fast(x, crs, warn),
+         accurate = tz_lookup_accurate(x, crs),
+         stop("method mst be one of 'fast' or 'accurate'", call. = FALSE))
 
-  fun(x, crs)
 }
 
-tz_lookup_fast <- function(x, crs = NULL) {
-  warn_for_fast()
+tz_lookup_fast <- function(x, crs = NULL, warn) {
   UseMethod("tz_lookup_fast")
 }
 
-tz_lookup_fast.sf <- function(x, crs) {
+tz_lookup_fast.sf <- function(x, crs, warn) {
   x <- fix_sf(x, crs)
   coords <- sf::st_coordinates(x)
   # sf stores as x, y and tzlookup likes lat, lon (Which is the opposite)
-  tz_lookup_coords(lat = coords[, 2], lon = coords[, 1])
+  tz_lookup_coords_fast(lat = coords[, 2], lon = coords[, 1], warn = warn)
 }
 
 tz_lookup_fast.sfc <- tz_lookup_fast.sf
 
-tz_lookup_fast.SpatialPoints <- function(x, crs) {
+tz_lookup_fast.SpatialPoints <- function(x, crs, warn) {
   x <- fix_sp(x, crs)
 
   coords <- sp::coordinates(x)
   # sf stores as x, y and tzlookup likes lat, lon (Which is the opposite)
-  tz_lookup_coords(lat = coords[, 2], lon = coords[, 1])
+  tz_lookup_coords_fast(lat = coords[, 2], lon = coords[, 1], warn = warn)
 }
 
 #' Lookup time zones of lat/long pairs
@@ -70,30 +71,26 @@ tz_lookup_fast.SpatialPoints <- function(x, crs) {
 #'
 #' @param lat numeric vector of latitudes
 #' @param lon numeric vector of longitudes the same length as `x`
-#' @param method method by which to do the lookup. Either `"fast"` (default)
-#' or `"accurate"`.
-#'
+#' @inheritParams tz_lookup
 #' @return character vector the same length as x and y specifying the time zone of the points.
 #' @export
 #'
 #' @examples
 #' tz_lookup_coords(42, -123)
 #' tz_lookup_coords(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
-tz_lookup_coords <- function(lat, lon, method = "fast") {
+tz_lookup_coords <- function(lat, lon, method = "fast", warn = TRUE) {
   check_for_spatial(lat)
   check_coords(lat, lon)
 
-  fun <- switch(method,
-    fast = tz_lookup_coords_fast,
-    accurate = tz_lookup_coords_accurate,
+  switch(method,
+    fast = tz_lookup_coords_fast(lat, lon, warn),
+    accurate = tz_lookup_coords_accurate(lat, lon),
     stop("method mst be one of 'fast' or 'accurate'", call. = FALSE)
   )
-
-  fun(lat, lon)
 }
 
-tz_lookup_coords_fast <- function(lat, lon) {
-  warn_for_fast()
+tz_lookup_coords_fast <- function(lat, lon, warn) {
+  if (warn) warn_for_fast()
   ctx <- make_ctx()
 
   ctx$assign("lat", lat)
@@ -118,7 +115,7 @@ tz_lookup_accurate.sf <- function(x, crs = NULL) {
   if (!length(nas)) {
     return(ret)
   }
-  ret[nas] <- tz_lookup(x[nas, ])
+  ret[nas] <- tz_lookup_fast(x[nas, ], warn = FALSE)
   ret
 }
 

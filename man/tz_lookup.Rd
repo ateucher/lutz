@@ -4,7 +4,7 @@
 \alias{tz_lookup}
 \title{Lookup time zones of sf or sp points}
 \usage{
-tz_lookup(x, crs = NULL, method = "fast")
+tz_lookup(x, crs = NULL, method = "fast", warn = TRUE)
 }
 \arguments{
 \item{x}{either an \code{sfc} or \code{sf} points or \code{SpatialPoints(DataFrame)} object}
@@ -14,6 +14,10 @@ If not specified (i.e., \code{NULL}) and \code{x} has no existing \code{crs}, EP
 
 \item{method}{method by which to do the lookup. Either \code{"fast"} (default)
 or \code{"accurate"}.}
+
+\item{warn}{By default, if \code{method = "fast"} a warning is issued about
+the potential for inaccurate results. Set \code{warn} to \code{FALSE} to turn
+this off.}
 }
 \value{
 character vector the same length as \code{x} specifying the time zone of the points.

@@ -4,7 +4,7 @@
 \alias{tz_lookup_coords}
 \title{Lookup time zones of lat/long pairs}
 \usage{
-tz_lookup_coords(lat, lon, method = "fast")
+tz_lookup_coords(lat, lon, method = "fast", warn = TRUE)
 }
 \arguments{
 \item{lat}{numeric vector of latitudes}
@@ -13,6 +13,10 @@ tz_lookup_coords(lat, lon, method = "fast")
 
 \item{method}{method by which to do the lookup. Either \code{"fast"} (default)
 or \code{"accurate"}.}
+
+\item{warn}{By default, if \code{method = "fast"} a warning is issued about
+the potential for inaccurate results. Set \code{warn} to \code{FALSE} to turn
+this off.}
 }
 \value{
 character vector the same length as x and y specifying the time zone of the points.
