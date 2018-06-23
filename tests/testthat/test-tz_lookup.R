@@ -14,6 +14,13 @@ test_that("warn works with tz_lookup", {
                  "Using 'fast' method")
 })
 
+test_that("errors when method is not one of fast, accurate", {
+  expect_error(tz_lookup_coords(70,30, method = "great"),
+               "method mst be one of 'fast' or 'accurate'")
+  expect_error(tz_lookup(sf::st_sfc(sf::st_point(c(1,1))), method = "great"),
+               "method mst be one of 'fast' or 'accurate'")
+})
+
 test_that("tz_lookup_coords works", {
   expect_equal(tz_lookup_coords(70,30, warn = FALSE), "Europe/Oslo")
   expect_equal(tz_lookup_coords(c(70, -70), c(30, -30), warn = FALSE),

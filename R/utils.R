@@ -11,8 +11,8 @@ wgs84_string <- function() {
 
 fix_sp <- function(x, crs) {
   if (!requireNamespace("sp"))
-    stop("You must have the sp package installed to use this function",
-         call. = FALSE)
+    stop("You must have the sp package installed to use this function", # nocov
+         call. = FALSE) # nocov
 
   if (is.numeric(crs)) crs <- paste0("+init=epsg:", crs)
 
@@ -29,8 +29,8 @@ fix_sp <- function(x, crs) {
 
 fix_sf <- function(x, crs) {
   if (!requireNamespace("sf"))
-    stop("You must have the sf package installed to use this function",
-         call. = FALSE)
+    stop("You must have the sf package installed to use this function", # nocov
+         call. = FALSE) # nocov
 
   if (!all(sf::st_geometry_type(x) == "POINT"))
     stop("This only works with points", call. = FALSE)
@@ -56,7 +56,7 @@ check_coords <- function(lat, lon) {
 
 check_for_spatial <- function(x) {
   if (inherits(x, c("sf", "sfc", "SpatialPoints"))) {
-    stop("It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object! Use tz_lookup() instead.",
+    stop("It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object! Use tz_lookup() instead.", # nolint
          call. = FALSE)
   }
 }
