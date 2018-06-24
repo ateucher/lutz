@@ -14,10 +14,10 @@ library(rmapshaper)
 library(purrr)
 
 ## Get the full timezone geojson from https://github.com/evansiroky/timezone-boundary-builder
-download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2017c/timezones.geojson.zip",
+download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2018d/timezones-with-oceans.geojson.zip",
               destfile = "tz.zip")
 unzip("tz.zip", exdir = ".")
-tz_full <- read_sf("dist/combined.json")
+tz_full <- read_sf("dist/combined-with-oceans.json")
 ```
 
 A function that takes a vector of values to pass to the `keep` argument in 

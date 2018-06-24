@@ -10,17 +10,17 @@ library(lutz)
 library(sf)
 ```
 
-    ## Linking to GEOS 3.6.1, GDAL 2.1.3, proj.4 4.9.3
+    ## Linking to GEOS 3.6.2, GDAL 2.3.0, proj.4 5.1.0
 
 ``` r
 library(rmapshaper)
 library(purrr)
 
 ## Get the full timezone geojson from https://github.com/evansiroky/timezone-boundary-builder
-download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2017c/timezones.geojson.zip",
+download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2018d/timezones-with-oceans.geojson.zip",
               destfile = "tz.zip")
 unzip("tz.zip", exdir = ".")
-tz_full <- read_sf("dist/combined.json")
+tz_full <- read_sf("dist/combined-with-oceans.json")
 ```
 
 A function that takes a vector of values to pass to the `keep` argument
@@ -81,9 +81,9 @@ knitr::kable(tests)
 
 | keep\_arg | obj\_size | compressed\_size |   time | matches | mismatches |  accuracy | ref\_nas | simp\_nas |
 | --------: | --------: | ---------------: | -----: | ------: | ---------: | --------: | -------: | --------: |
-|     0.001 |    873288 |            97052 | 16.371 |  135216 |       2099 | 0.9847140 |   360785 |    361984 |
-|     0.010 |   1449888 |           322372 | 16.353 |  138805 |        224 | 0.9983888 |   360785 |    360936 |
-|     0.050 |   4399888 |          1220264 | 20.715 |  139169 |         30 | 0.9997845 |   360785 |    360801 |
-|     0.100 |   8300080 |          2372028 | 27.114 |  139200 |         12 | 0.9999138 |   360785 |    360788 |
-|     0.150 |  12304208 |          3555076 | 34.005 |  139209 |          6 | 0.9999569 |   360785 |    360785 |
-|     0.200 |  16372400 |          4735724 | 40.416 |  139210 |          5 | 0.9999641 |   360785 |    360785 |
+|     0.001 |   1140672 |           112396 | 13.665 |  494693 |       4305 | 0.9913727 |        0 |      1002 |
+|     0.010 |   1892720 |           387088 | 15.082 |  498569 |        429 | 0.9991403 |        0 |      1002 |
+|     0.050 |   5486944 |          1456332 | 24.563 |  498951 |         47 | 0.9999058 |        0 |      1002 |
+|     0.100 |   9989040 |          2788204 | 33.730 |  498982 |         16 | 0.9999679 |        0 |      1002 |
+|     0.150 |  14492336 |          4117892 | 42.901 |  498992 |          6 | 0.9999880 |        0 |      1002 |
+|     0.200 |  18996096 |          5418132 | 52.160 |  498993 |          5 | 0.9999900 |        0 |      1002 |
