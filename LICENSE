@@ -1,11 +1,2 @@
-This files lists the copyright holders and licenses (if known) of the
-code and data in the lutz package:
-
-lutz package code (MIT)
------------------
 YEAR: 2018
 COPYRIGHT HOLDER: Andy Teucher
-
-timezone map data
------------------
-The timezone map data is sourced from https://github.com/evansiroky/timezone-boundary-builder and made available under the Open Database License: http://opendatacommons.org/licenses/odbl/1.0/. Any rights in individual contents of the database are licensed under the Database Contents License: http://opendatacommons.org/licenses/dbcl/1.0/.
