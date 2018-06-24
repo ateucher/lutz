@@ -108,7 +108,15 @@ tz_lookup_accurate <- function(x, crs = NULL) {
 tz_lookup_accurate.sf <- function(x, crs = NULL) {
   x <- fix_sf(x, crs)
   x <- suppressMessages(sf::st_join(x, tz_sf))
-  x$tzid
+  ret <- x$tzid
+
+  # If any are NA, try to fill in with V8-based tzlookup
+  nas <- which(is.na(ret))
+  if (!length(nas)) {
+    return(ret)
+  }
+  ret[nas] <- tz_lookup_fast(x[nas, ], warn = FALSE)
+  ret
 }
 
 tz_lookup_accurate.sfc <- function(x, crs = NULL) {
