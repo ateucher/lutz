@@ -24,9 +24,6 @@ matrix:
       r: release
 
     - os: osx
-      r: devel
-
-    - os: osx
       r: release
 
 warnings_are_errors: true
