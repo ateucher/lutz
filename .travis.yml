@@ -8,14 +8,23 @@ before_install:
   - sudo apt-get install --yes libproj-dev libgeos-dev libgdal-dev
   - sudo apt-get install -y libv8-3.14-dev
 
-r:
-  - release
-  - devel
-  - oldrel
 
 matrix:
-  allow_failures:
-    - r: devel
+  include:
+    - os: linux
+      r: oldrel
+
+    - os: linux
+      r: devel
+
+    - os: linux
+      r: release
+
+    - os: osx
+      r: devel
+
+    - os: osx
+      r: release
 
 warnings_are_errors: true
 
