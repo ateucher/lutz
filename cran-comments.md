@@ -1,3 +1,9 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* changed LICENSE file to contain only YEAR and COPYRIGHT HOLDER for MIT license
+* Reduced packaged tarball size to < 5MB
+
 ## Test environments
 * Local macOS install (Sierra 10.12.6), R 3.4.4
 * macOS Sierra 10.12.6 on Travis-CI (R-release)
@@ -7,15 +13,7 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-There was 1 NOTE:
-
-License components with restrictions and base license permitting such:
-  MIT + file LICENSE
-  
-* The LICENSE file contains MIT license details for the package code, as well as
-license details for the timezone map data included in the package.
+0 errors | 0 warnings | 0 notes
 
 ## Reverse dependencies
 
