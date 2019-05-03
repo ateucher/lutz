@@ -6,6 +6,11 @@
 #' incorrect timezone. If accuracy is more important than speed, use
 #' `method = "accurate"`.
 #'
+#' Note that there are some regions in the world where a single point can land in
+#' two different overlapping timezones. The `"accurate"` method includes these,
+#' however the method used in the `"fast"` does not include overlapping timezones
+#' at this time.
+#'
 #' @param x either an `sfc` or `sf` points or `SpatialPoints(DataFrame)` object
 #' @param crs the coordinate reference system: integer with the EPSG code, or character with proj4string.
 #' If not specified (i.e., `NULL`) and `x` has no existing `crs`, EPSG: 4326 is assumed (lat/long).
@@ -36,7 +41,7 @@ tz_lookup <- function(x, crs = NULL, method = "fast", warn = TRUE) {
   switch(method,
          fast = tz_lookup_fast(x, crs, warn),
          accurate = tz_lookup_accurate(x, crs),
-         stop("method mst be one of 'fast' or 'accurate'", call. = FALSE))
+         stop("method must be one of 'fast' or 'accurate'", call. = FALSE))
 
 }
 

@@ -1,12 +1,19 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!-- badges: start -->
+
 [![Travis-CI Build
 Status](https://travis-ci.org/ateucher/lutz.svg?branch=master)](https://travis-ci.org/ateucher/lutz)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/ateucher/lutz?branch=master&svg=true)](https://ci.appveyor.com/project/ateucher/lutz)
 [![Coverage
 Status](https://img.shields.io/codecov/c/github/ateucher/lutz/master.svg)](https://codecov.io/github/ateucher/lutz?branch=master)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/lutz)](https://cran.r-project.org/package=lutz)
+[![CRAN
+downloads](https://cranlogs.r-pkg.org/badges/lutz)](https://cran.r-project.org/package=lutz)
+<!-- badges: end -->
 
 # lutz (look up timezones)
 
@@ -103,12 +110,11 @@ We can compare the accuracy of both methods to the high-resolution
 timezone map provided by
 <https://github.com/evansiroky/timezone-boundary-builder>. This is the
 map that is used by `lutz` for the `"accurate"` method, but in `lutz` it
-is simplified by about 80% to be small enough to fit in the
-package.
+is simplified by about 80% to be small enough to fit in the package.
 
 ``` r
 ## Get the full timezone geojson from https://github.com/evansiroky/timezone-boundary-builder
-download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2018d/timezones-with-oceans.geojson.zip",
+download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2019a/timezones-with-oceans.geojson.zip",
                 destfile = "tz.zip")
 unzip("tz.zip", exdir = "data-raw/dist/")
 ```
@@ -129,6 +135,7 @@ ll_sf <- st_as_sf(ll, coords = c("lon", "lat"), crs = 4326)
 # Overlay those points with the full high-resolution timezone map:
 ref_ll_tz <- sf::st_join(ll_sf, tz_full)
 #> although coordinates are longitude/latitude, st_intersects assumes that they are planar
+#> although coordinates are longitude/latitude, st_intersects assumes that they are planar
 
 # run tz_lookup with both `"fast"` and `"accurate"` methods and compare with 
 # the timezones looked up with the high-resolution map:
@@ -147,13 +154,15 @@ tests <- map_df(c("fast", "accurate"), ~ {
     fun_nas = sum(is.na(test_ll_tz))
     )
 })
+#> Warning in ref_ll_tz$tzid == test_ll_tz: longer object length is not a
+#> multiple of shorter object length
 ```
 
 ``` r
 knitr::kable(tests)
 ```
 
-| method   |   time | matches | mismatches | accuracy | ref\_nas | fun\_nas |
-| :------- | -----: | ------: | ---------: | -------: | -------: | -------: |
-| fast     |  2.721 |  384735 |     115265 | 0.769470 |        0 |        0 |
-| accurate | 47.587 |  499956 |         44 | 0.999912 |        0 |        0 |
+| method   |   time | matches | mismatches |  accuracy | ref\_nas | fun\_nas |
+| :------- | -----: | ------: | ---------: | --------: | -------: | -------: |
+| fast     |  2.343 |    7641 |     493727 | 0.0152403 |        0 |        0 |
+| accurate | 15.080 |  501323 |         45 | 0.9999102 |        0 |        0 |
