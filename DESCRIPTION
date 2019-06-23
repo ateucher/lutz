@@ -8,7 +8,7 @@ Authors@R: c(
     )
 Description: Input latitude and longitude values or an 'sf/sfc' POINT 
     object and get back the timezone in which they exist. Two methods are implemented. 
-    One is very fast and uses 'Rcpp' in conjunction with dat from the 'Javascript' library
+    One is very fast and uses 'Rcpp' in conjunction with data from the 'Javascript' library
     (<https://github.com/darkskyapp/tz-lookup/>). This method also works outside of countries' 
     borders and in international waters, however speed comes at the cost of accuracy - near time 
     zone borders away from populated centres there is a chance that it will return the incorrect
