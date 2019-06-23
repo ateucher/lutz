@@ -2,3 +2,5 @@
 
 export(tz_lookup)
 export(tz_lookup_coords)
+importFrom(Rcpp,sourceCpp)
+useDynLib(lutz, .registration = TRUE)

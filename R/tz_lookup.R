@@ -90,15 +90,11 @@ tz_lookup_coords <- function(lat, lon, method = "fast", warn = TRUE) {
 }
 
 tz_lookup_coords_fast <- function(lat, lon, warn) {
-  if (warn) warn_for_fast()
-  ctx <- make_ctx()
 
-  ctx$assign("lat", lat)
-  ctx$assign("lon", lon)
-  ctx$eval("var out = Rtzlookup(lat, lon);")
-  ret <- ctx$get("out")
-  if (is.null(ret)) ret <- NA_character_
-  ret
+  if (warn) warn_for_fast()
+
+  timezone_lookup_coords_rcpp(lat, lon)
+
 }
 
 tz_lookup_accurate <- function(x, crs = NULL) {
