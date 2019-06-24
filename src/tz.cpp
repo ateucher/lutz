@@ -16,7 +16,7 @@ Rcpp::CharacterVector timezone_lookup_coords_rcpp(Rcpp::NumericVector latv, Rcpp
   uint32_t n, u, v, i;
   double x, y;
 
-  for (uint32_t j=0; j<latv.size(); j++) {
+  for (R_xlen_t j=0; j<latv.size(); j++) {
 
     if (NumericVector::is_na(latv[j]) || NumericVector::is_na(lonv[j])) {
       out[j] = NA_STRING;
