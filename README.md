@@ -12,7 +12,7 @@ Status](https://img.shields.io/codecov/c/github/ateucher/lutz/master.svg)](https
 
 Input latitude and longitude values or an `sf/sfc` POINT object and get
 back the timezone in which they exist. Two methods are implemented. One
-is very fast and uses an Rcpp in conjunction with source data from
+is very fast and uses Rcpp in conjunction with source data from
 (<https://github.com/darkskyapp/tz-lookup/>). However, speed comes at
 the cost of accuracy - near time zone borders away from populated
 centres there is a chance that it will return the incorrect time zone.
@@ -54,7 +54,7 @@ tz_lookup_coords(49.5, -123.5, method = "accurate")
 
 tz_lookup_coords(lat = c(48.9, 38.5, 63.1, -25), lon = c(-123.5, -110.2, -95.0, 130))
 #> [1] "America/Vancouver"    "America/Denver"       "America/Rankin_Inlet"
-#> [4] "Australia/Perth"
+#> [4] "Australia/Darwin"
 ```
 
 ### With `sf` objects:

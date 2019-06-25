@@ -67,3 +67,4 @@ test_that("tz_lookup.SpatialPoints works", {
                "Etc/GMT+9")
   expect_equal(tz_lookup(pt, 3005, warn = FALSE), "Etc/GMT+9")
 })
+
