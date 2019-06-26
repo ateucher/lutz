@@ -20,19 +20,19 @@ Rcpp::CharacterVector timezone_lookup_coords_rcpp(Rcpp::NumericVector latv, Rcpp
   for (R_xlen_t j=0; j<latv.size(); j++) {
 
     // Handle NA's
-    if (NumericVector::is_na(latv[j]) || NumericVector::is_na(lonv[j])) {
+    if (NumericVector::is_na(latv[j]) || NumericVector::is_na(lonv[j])) { // nocov start
       out[j] = NA_STRING;
       continue;
-    }
+    } // nocov end
 
     lat = latv[j];
     lon = lonv[j];
 
     // Valid #'s ?
-    if (!(lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180)) {
+    if (!(lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180)) { // nocov start
       out[j] = NA_STRING;
       continue;
-    }
+    } // nocov end
 
     if (lat >= 90) {   // Special case the north pole.
       out[j] = "Etc/GMT";

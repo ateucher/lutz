@@ -3,6 +3,7 @@
 # that are stored in src/generated-vars.h
 
 library(stringi)
+library(Rcpp)
 
 tf <- tempfile(fileext = ".js")
 on.exit(unlink(tf), add=TRUE)
@@ -19,22 +20,47 @@ l <- unlist(stri_split_regex(l, '(var T\\=|,U=\\[|;if\\()'))
 
 l[2] <- stri_replace_all_regex(l[2], '^"|"$', "")
 
-tf2 <- tempfile(fileext = ".txt")
-on.exit(unlink(tf2), add=TRUE)
+# hard wrap lines at n chars
+sourceCpp(code = "
+#include <Rcpp.h>
 
-cat(l[2], file=tf2, sep="")
+// [[Rcpp::export]]
+std::vector< std::string > fold(const std::string& input, int width) {
 
-# REQUIRES Linux or macOS (or similar) systems
-fold <- Sys.which("fold")
+  int sz = input.length() / width;
 
-if (fold == "") {
-  stop(
-    "The 'fold' macOS/Linux utility is required for this operation.",
-    call.=FALSE
-  )
+  std::vector< std::string > out;
+  out.reserve(sz); // shld make this more efficient
+
+  for (unsigned long idx=0; idx<sz; idx++) out.push_back(input.substr(idx*width, width));
+
+  if (input.length() % width != 0) out.push_back(input.substr(width*sz));
+
+  return(out);
+
 }
+")
 
-stringtree <- system2(fold, c("-w", "70", "-s", tf2), stdout = TRUE)
+# Keeping this here in case we want to go back to the fold binary dependency
+#
+# tf2 <- tempfile(fileext = ".txt")
+# on.exit(unlink(tf2), add=TRUE)
+#
+# cat(l[2], file=tf2, sep="")
+#
+# REQUIRES Linux or macOS (or similar) systems
+# fold <- Sys.which("fold")
+#
+# if (fold == "") {
+#   stop(
+#     "The 'fold' macOS/Linux utility is required for this operation.",
+#     call.=FALSE
+#   )
+# }
+#
+# stringtree <- system2(fold, c("-w", "70", "-s", tf2), stdout = TRUE)
+
+stringtree <- fold(l[2], 70)
 stringtree <- paste0(sprintf('  "%s"', stringtree), collapse = "\n")
 
 l[3] <- stri_replace_last_regex(l[3], "\\]$", "")
@@ -60,4 +86,4 @@ cat(
 message("REMEMBER TO RE-BUILD AND RE-TEST THE PACKAGE")
 
 unlink(tf)
-unlink(tf2)
+# unlink(tf2)
