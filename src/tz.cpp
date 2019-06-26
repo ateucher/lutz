@@ -29,7 +29,10 @@ Rcpp::CharacterVector timezone_lookup_coords_rcpp(Rcpp::NumericVector latv, Rcpp
     lon = lonv[j];
 
     // Valid #'s ?
-    if (!(lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180)) return(NA_STRING);
+    if (!(lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180)) {
+      out[j] = NA_STRING;
+      continue;
+    }
 
     if (lat >= 90) {   // Special case the north pole.
       out[j] = "Etc/GMT";
