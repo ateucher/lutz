@@ -112,8 +112,22 @@ tz_lookup_accurate <- function(x, crs = NULL) {
 
 tz_lookup_accurate.sf <- function(x, crs = NULL) {
   x <- fix_sf(x, crs)
-  x <- suppressMessages(sf::st_join(x, tz_sf))
-  ret <- x$tzid
+  # Add a unique id so we can deal with any duplicates resulting
+  # from overlapping timezones
+  x$lutzid <- seq_len(nrow(x))
+  x_tz <- suppressMessages(sf::st_join(x, tz_sf))
+
+  # group x by lutzid and concatenate multiple timezones with ;
+  if (nrow(x_tz) > nrow(x)) {
+    warning("Some points are in areas with more than one timezone defined.",
+            "These are often disputed areas and should be treated with care.")
+
+    ret <- vapply(unique(x_tz$lutzid), function(x) {
+      paste(x_tz$tzid[x_tz$lutzid == x], collapse = "; ")
+    }, FUN.VALUE = character(1))
+  } else {
+    ret <- x_tz$tzid
+  }
 
   # If any are NA, try to fill in with V8-based tzlookup
   nas <- which(is.na(ret))
@@ -125,7 +139,7 @@ tz_lookup_accurate.sf <- function(x, crs = NULL) {
 }
 
 tz_lookup_accurate.sfc <- function(x, crs = NULL) {
-  x_sf <- sf::st_sf(id = seq_len(length(x)), geom = x)
+  x_sf <- sf::st_sf(geom = x)
   tz_lookup_accurate(x_sf, crs = crs)
 }
 
