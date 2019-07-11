@@ -90,7 +90,7 @@ tz_lookup_coords <- function(lat, lon, method = "fast", warn = TRUE) {
   switch(method,
     fast = tz_lookup_coords_fast(lat, lon, warn),
     accurate = tz_lookup_coords_accurate(lat, lon),
-    stop("method mst be one of 'fast' or 'accurate'", call. = FALSE)
+    stop("method must be one of 'fast' or 'accurate'", call. = FALSE)
   )
 }
 
