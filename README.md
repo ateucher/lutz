@@ -86,7 +86,7 @@ ggplot() +
   coord_sf(datum = NA)
 ```
 
-![](tools/readme/unnamed-chunk-4-1.png)<!-- -->
+![](man/figures/unnamed-chunk-4-1.png)<!-- -->
 
 ### With `SpatialPoints` objects:
 
@@ -103,7 +103,7 @@ ggplot(cbind(as.data.frame(coordinates(state_centers_sp)), tz = state_centers_sp
   theme_minimal()
 ```
 
-![](tools/readme/unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/unnamed-chunk-5-1.png)<!-- -->
 
 Note that there are some regions in the world where a single point can
 land in two different overlapping timezones. The `"accurate"` method
@@ -186,5 +186,5 @@ knitr::kable(tests)
 
 | method   |   time | matches | mismatches | accuracy | ref\_nas | fun\_nas |
 | :------- | -----: | ------: | ---------: | -------: | -------: | -------: |
-| fast     |  1.006 |  371946 |     128054 | 0.743892 |        0 |        0 |
-| accurate | 21.546 |  499949 |         51 | 0.999898 |        0 |        0 |
+| fast     |  0.989 |  371946 |     128054 | 0.743892 |        0 |        0 |
+| accurate | 22.113 |  499949 |         51 | 0.999898 |        0 |        0 |
