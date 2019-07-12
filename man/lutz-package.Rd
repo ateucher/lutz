@@ -25,7 +25,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Andy Teucher \email{andy.teucher@gmail.com}
+\strong{Maintainer}: Andy Teucher \email{andy.teucher@gmail.com} (0000-0002-7840-692X)
 
 Other contributors:
 \itemize{

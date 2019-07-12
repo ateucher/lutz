@@ -9,3 +9,6 @@
 ^cran-comments\.md$
 ^data-raw$
 ^scratch$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

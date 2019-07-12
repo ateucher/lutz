@@ -1,0 +1,6 @@
+destination: docs
+
+development:
+  mode: auto
+
+url: https://ateucher.github.io/lutz

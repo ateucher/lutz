@@ -18,7 +18,7 @@ Description: Input latitude and longitude values or an 'sf/sfc' POINT
     points with a detailed map of time zones from here: 
     <https://github.com/evansiroky/timezone-boundary-builder/>.
 License: MIT + file LICENSE
-URL: https://github.com/ateucher/lutz
+URL: https://ateucher.github.io/lutz
 BugReports: https://github.com/ateucher/lutz/issues
 SystemRequirements: C++11
 Depends: R (>= 3.2)
