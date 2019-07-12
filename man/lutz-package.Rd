@@ -19,7 +19,7 @@ Input latitude and longitude values or an 'sf/sfc' POINT
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/ateucher/lutz}
+  \item \url{https://andyteucher.ca/lutz}
   \item Report bugs at \url{https://github.com/ateucher/lutz/issues}
 }
 
