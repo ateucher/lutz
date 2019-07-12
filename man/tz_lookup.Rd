@@ -29,6 +29,14 @@ a time zone boundary and not near a populated centre, it may return the
 incorrect timezone. If accuracy is more important than speed, use
 \code{method = "accurate"}.
 }
+\details{
+Note that there are some regions in the world where a single point can land in
+two different overlapping timezones. The \code{"accurate"} method includes these,
+and when they are encountered they are concatenated in a single string,
+separated by a semicolon.
+The data used in the \code{"fast"} method does not include overlapping timezones
+at this time.
+}
 \examples{
 if (require("sf")) {
 

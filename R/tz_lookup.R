@@ -8,7 +8,9 @@
 #'
 #' Note that there are some regions in the world where a single point can land in
 #' two different overlapping timezones. The `"accurate"` method includes these,
-#' however the method used in the `"fast"` does not include overlapping timezones
+#' and when they are encountered they are concatenated in a single string,
+#' separated by a semicolon.
+#' The data used in the `"fast"` method does not include overlapping timezones
 #' at this time.
 #'
 #' @param x either an `sfc` or `sf` points or `SpatialPoints(DataFrame)` object
