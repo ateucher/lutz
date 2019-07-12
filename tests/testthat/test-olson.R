@@ -19,7 +19,7 @@ test_that("tz_offset works", {
 
   t <- Sys.time()
   attr(t, "tzone") <- NULL
-  expect_warning(tz_offset(Sys.time()), "You supplied an object of class")
+  expect_warning(tz_offset(t), "You supplied an object of class")
   expect_warning(tz_offset(as.POSIXlt(Sys.time(), tz = "America/Vancouver"),
                            tz = "America/Moncton"),
                  "tz supplied is different")
