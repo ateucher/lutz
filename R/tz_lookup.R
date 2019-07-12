@@ -97,15 +97,11 @@ tz_lookup_coords <- function(lat, lon, method = "fast", warn = TRUE) {
 }
 
 tz_lookup_coords_fast <- function(lat, lon, warn) {
-  if (warn) warn_for_fast()
-  ctx <- make_ctx()
 
-  ctx$assign("lat", lat)
-  ctx$assign("lon", lon)
-  ctx$eval("var out = Rtzlookup(lat, lon);")
-  ret <- ctx$get("out")
-  if (is.null(ret)) ret <- NA_character_
-  ret
+  if (warn) warn_for_fast()
+
+  timezone_lookup_coords_rcpp(lat, lon)
+
 }
 
 tz_lookup_accurate <- function(x, crs = NULL) {
@@ -133,13 +129,13 @@ tz_lookup_accurate.sf <- function(x, crs = NULL) {
     ret <- x_tz$tzid
   }
 
-  # If any are NA, try to fill in with V8-based tzlookup
+  # If any are NA, try to fill in with Rcpp-based tzlookup
   nas <- which(is.na(ret))
   if (!length(nas)) {
     return(ret)
   }
-  ret[nas] <- tz_lookup_fast(x[nas, ], warn = FALSE)
-  ret
+  ret[nas] <- tz_lookup_fast(x[nas, ], warn = FALSE) # nocov start
+  ret # nocov end
 }
 
 tz_lookup_accurate.sfc <- function(x, crs = NULL) {

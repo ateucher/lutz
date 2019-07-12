@@ -19,11 +19,10 @@ downloads](https://cranlogs.r-pkg.org/badges/lutz)](https://cran.r-project.org/p
 
 Input latitude and longitude values or an `sf/sfc` POINT object and get
 back the timezone in which they exist. Two methods are implemented. One
-is very fast and uses the *V8* package to access the [`tz-lookup.js`
-javascript library](https://github.com/darkskyapp/tz-lookup/). However,
-speed comes at the cost of accuracy - near time zone borders away from
-populated centres there is a chance that it will return the incorrect
-time zone.
+is very fast and uses Rcpp in conjunction with source data from
+(<https://github.com/darkskyapp/tz-lookup/>). However, speed comes at
+the cost of accuracy - near time zone borders away from populated
+centres there is a chance that it will return the incorrect time zone.
 
 The other method is slower but more accurate - it uses the sf package to
 intersect points with a detailed map of time zones from
@@ -187,5 +186,5 @@ knitr::kable(tests)
 
 | method   |   time | matches | mismatches | accuracy | ref\_nas | fun\_nas |
 | :------- | -----: | ------: | ---------: | -------: | -------: | -------: |
-| fast     |  2.453 |  371953 |     128047 | 0.743906 |        0 |        0 |
-| accurate | 26.328 |  499949 |         51 | 0.999898 |        0 |        0 |
+| fast     |  1.006 |  371946 |     128054 | 0.743892 |        0 |        0 |
+| accurate | 21.546 |  499949 |         51 | 0.999898 |        0 |        0 |

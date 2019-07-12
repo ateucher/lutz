@@ -10,7 +10,6 @@ addons:
       - libproj-dev
       - libgeos-dev
       - libgdal-dev
-      - libv8-3.14-dev
 
 matrix:
   include:
