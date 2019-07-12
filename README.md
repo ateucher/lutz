@@ -17,6 +17,8 @@ downloads](https://cranlogs.r-pkg.org/badges/lutz)](https://cran.r-project.org/p
 
 # lutz (look up timezones)
 
+## Lookup the timezone of coordinates
+
 Input latitude and longitude values or an `sf/sfc` POINT object and get
 back the timezone in which they exist. Two methods are implemented. One
 is very fast and uses Rcpp in conjunction with source data from
@@ -27,6 +29,14 @@ centres there is a chance that it will return the incorrect time zone.
 The other method is slower but more accurate - it uses the sf package to
 intersect points with a detailed map of time zones from
 [here](https://github.com/evansiroky/timezone-boundary-builder).
+
+## Timezone utility functions
+
+**lutz** also contains several utility functions for helping to
+understand and visualize timezones, such as listing of world
+timezones,including information about daylight savings times and their
+offsets from UTC. You can also plot a timezone to visualize the UTC
+offset over a year and when daylight savings times are in effect.
 
 ## Installation
 
@@ -45,10 +55,11 @@ devtools::install_github("ateucher/lutz")
 
 ## Examples
 
-There are only two functions in this package: `tz_lookup()` which works
-with both `sf/sfc` and `SpatialPoints` objects, and `tz_lookup_coords`
-for looking up lat/long pairs. Use the `method` argument to choose the
-`"fast"` or `"accurate"` method.
+There are two functions in this package for looking up the timezones of
+coordinates: `tz_lookup()` which works with both `sf/sfc` and
+`SpatialPoints` objects, and `tz_lookup_coords` for looking up lat/long
+pairs. Use the `method` argument to choose the `"fast"` or `"accurate"`
+method.
 
 ### With coordinates. They must be lat/long in decimal degrees:
 
@@ -186,5 +197,70 @@ knitr::kable(tests)
 
 | method   |   time | matches | mismatches | accuracy | ref\_nas | fun\_nas |
 | :------- | -----: | ------: | ---------: | -------: | -------: | -------: |
-| fast     |  0.989 |  371946 |     128054 | 0.743892 |        0 |        0 |
-| accurate | 22.113 |  499949 |         51 | 0.999898 |        0 |        0 |
+| fast     |  1.010 |  371946 |     128054 | 0.743892 |        0 |        0 |
+| accurate | 21.969 |  499949 |         51 | 0.999898 |        0 |        0 |
+
+## Timezone utility functions
+
+### `plot_tz()`
+
+``` r
+plot_tz("America/Vancouver")
+```
+
+![](man/figures/unnamed-chunk-9-1.png)<!-- -->
+
+### `tz_offset()`
+
+``` r
+# A Date object
+tz_offset(Sys.Date(), "Africa/Algiers")
+#>          tz_name  date_time zone is_dst utc_offset_h
+#> 1 Africa/Algiers 2019-07-12  CET  FALSE            1
+
+
+# A Date-like character string
+tz_offset("2017-03-01", tz = "Singapore")
+#>     tz_name  date_time zone is_dst utc_offset_h
+#> 1 Singapore 2017-03-01  +08  FALSE            8
+
+
+# A POSIXct date-time object
+tz_offset(Sys.time())
+#> Warning: You supplied an object of class POSIXct that does not have a
+#> timezone attribute, and did not specify one inthe 'tz' argument. Defaulting
+#> to current (America/Vancouver).
+#>             tz_name           date_time zone is_dst utc_offset_h
+#> 1 America/Vancouver 2019-07-12 13:07:24  PDT   TRUE           -7
+```
+
+### `tz_list()`
+
+``` r
+tz_list() %>% 
+  head(20) %>% 
+  knitr::kable()
+```
+
+| tz\_name            | zone | is\_dst | utc\_offset\_h |
+| :------------------ | :--- | :------ | -------------: |
+| Africa/Abidjan      | GMT  | FALSE   |              0 |
+| Africa/Accra        | GMT  | FALSE   |              0 |
+| Africa/Addis\_Ababa | EAT  | FALSE   |              3 |
+| Africa/Algiers      | CET  | FALSE   |              1 |
+| Africa/Asmara       | EAT  | FALSE   |              3 |
+| Africa/Asmera       | EAT  | FALSE   |              3 |
+| Africa/Bamako       | GMT  | FALSE   |              0 |
+| Africa/Bangui       | WAT  | FALSE   |              1 |
+| Africa/Banjul       | GMT  | FALSE   |              0 |
+| Africa/Bissau       | GMT  | FALSE   |              0 |
+| Africa/Blantyre     | CAT  | FALSE   |              2 |
+| Africa/Brazzaville  | WAT  | FALSE   |              1 |
+| Africa/Bujumbura    | CAT  | FALSE   |              2 |
+| Africa/Cairo        | EET  | FALSE   |              2 |
+| Africa/Casablanca   | \+01 | FALSE   |              1 |
+| Africa/Casablanca   | \+00 | TRUE    |              0 |
+| Africa/Ceuta        | CET  | FALSE   |              1 |
+| Africa/Ceuta        | CEST | TRUE    |              2 |
+| Africa/Conakry      | GMT  | FALSE   |              0 |
+| Africa/Dakar        | GMT  | FALSE   |              0 |
