@@ -102,7 +102,7 @@ tz_offset <- function(dt, tz = "") {
 #' plot_tz("America/Vancouver")
 plot_tz <- function(tz) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
-    stop("ggplot2 rquired")
+    stop("ggplot2 rquired") #nocov
   }
 
   check_tz(tz)
