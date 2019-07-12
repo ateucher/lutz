@@ -3,8 +3,10 @@ Type: Package
 Title: Look Up Time Zones of Point Coordinates
 Version: 0.2.0.999
 Authors@R: c(
-      person("Andy", "Teucher", email = "andy.teucher@gmail.com", role = c("aut", "cre")),
-      person("Bob", "Rudis", email = "bob@rud.is", role = c("ctb"), comment = c(ORCID = "0000-0001-5670-2640"))
+      person("Andy", "Teucher", email = "andy.teucher@gmail.com", role = c("aut", "cre"), 
+             comment = c(ORCID = "0000-0002-7840-692X")),
+      person("Bob", "Rudis", email = "bob@rud.is", role = c("ctb"), 
+             comment = c(ORCID = "0000-0001-5670-2640"))
     )
 Description: Input latitude and longitude values or an 'sf/sfc' POINT 
     object and get back the timezone in which they exist. Two methods are implemented. 
