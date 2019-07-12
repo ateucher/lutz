@@ -106,6 +106,14 @@ ggplot(cbind(as.data.frame(coordinates(state_centers_sp)), tz = state_centers_sp
 
 ![](tools/readme/unnamed-chunk-5-1.png)<!-- -->
 
+Note that there are some regions in the world where a single point can
+land in two different overlapping timezones. The `"accurate"` method
+[includes
+these](https://github.com/evansiroky/timezone-boundary-builder/releases/tag/2018g),
+however the method used in the `"fast"` does not include overlapping
+timezones ([at least for
+now](https://github.com/darkskyapp/tz-lookup/issues/34)).
+
 We can compare the accuracy of both methods to the high-resolution
 timezone map provided by
 <https://github.com/evansiroky/timezone-boundary-builder>. This is the
@@ -122,20 +130,34 @@ unzip("tz.zip", exdir = "data-raw/dist/")
 ``` r
 library(lutz)
 library(sf)
-library(rmapshaper)
 library(purrr)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 
 tz_full <- read_sf("data-raw/dist/combined-with-oceans.json")
 # Create a data frame of 500000 lat/long pairs:
 set.seed(1)
 n <- 500000
-ll <- data.frame(lat = runif(n, -90, 90), lon = runif(n, -180, 180))
+ll <- data.frame(id = seq(n), lat = runif(n, -90, 90), lon = runif(n, -180, 180))
 ll_sf <- st_as_sf(ll, coords = c("lon", "lat"), crs = 4326)
 
 # Overlay those points with the full high-resolution timezone map:
 ref_ll_tz <- sf::st_join(ll_sf, tz_full)
 #> although coordinates are longitude/latitude, st_intersects assumes that they are planar
 #> although coordinates are longitude/latitude, st_intersects assumes that they are planar
+
+# Combine those that had overlapping timezones
+ref_ll_tz <- ref_ll_tz %>% 
+  st_set_geometry(NULL) %>% 
+  group_by(id) %>% 
+  summarize(tzid = paste(tzid, collapse = "; "))
 
 # run tz_lookup with both `"fast"` and `"accurate"` methods and compare with 
 # the timezones looked up with the high-resolution map:
@@ -154,15 +176,16 @@ tests <- map_df(c("fast", "accurate"), ~ {
     fun_nas = sum(is.na(test_ll_tz))
     )
 })
-#> Warning in ref_ll_tz$tzid == test_ll_tz: longer object length is not a
-#> multiple of shorter object length
+#> Warning in tz_lookup_accurate.sf(x, crs): Some points are in areas with
+#> more than one timezone defined.These are often disputed areas and should be
+#> treated with care.
 ```
 
 ``` r
 knitr::kable(tests)
 ```
 
-| method   |   time | matches | mismatches |  accuracy | ref\_nas | fun\_nas |
-| :------- | -----: | ------: | ---------: | --------: | -------: | -------: |
-| fast     |  2.343 |    7641 |     493727 | 0.0152403 |        0 |        0 |
-| accurate | 15.080 |  501323 |         45 | 0.9999102 |        0 |        0 |
+| method   |   time | matches | mismatches | accuracy | ref\_nas | fun\_nas |
+| :------- | -----: | ------: | ---------: | -------: | -------: | -------: |
+| fast     |  2.453 |  371953 |     128047 | 0.743906 |        0 |        0 |
+| accurate | 26.328 |  499949 |         51 | 0.999898 |        0 |        0 |

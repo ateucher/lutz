@@ -118,8 +118,8 @@ unzip("tz.zip", exdir = "data-raw/dist/")
 ```{r eval=file.exists("data-raw/dist/combined-with-oceans.json")}
 library(lutz)
 library(sf)
-library(rmapshaper)
 library(purrr)
+library(dplyr)
 
 tz_full <- read_sf("data-raw/dist/combined-with-oceans.json")
 # Create a data frame of 500000 lat/long pairs:
@@ -130,6 +130,12 @@ ll_sf <- st_as_sf(ll, coords = c("lon", "lat"), crs = 4326)
 
 # Overlay those points with the full high-resolution timezone map:
 ref_ll_tz <- sf::st_join(ll_sf, tz_full)
+
+# Combine those that had overlapping timezones
+ref_ll_tz <- ref_ll_tz %>% 
+  st_set_geometry(NULL) %>% 
+  group_by(id) %>% 
+  summarize(tzid = paste(tzid, collapse = "; "))
 
 # run tz_lookup with both `"fast"` and `"accurate"` methods and compare with 
 # the timezones looked up with the high-resolution map:
