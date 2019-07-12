@@ -46,7 +46,7 @@ tz_offset <- function(dt, tz = "") {
     # if tz is supplied, check it is valid
     check_tz(tz)
     # warning if different supplied tz from that in dt
-    if (lubridate::is.POSIXt(dt) && tz != lubridate::tz(dt)) {
+    if (lubridate::is.POSIXt(dt) && nzchar(lubridate::tz(dt)) && tz != lubridate::tz(dt)) {
       warning("tz supplied is different from that in 'dt'. Overwriting with tz.",
               call. = FALSE)
     }
