@@ -6,6 +6,13 @@
 #' incorrect timezone. If accuracy is more important than speed, use
 #' `method = "accurate"`.
 #'
+#' Note that there are some regions in the world where a single point can land in
+#' two different overlapping timezones. The `"accurate"` method includes these,
+#' and when they are encountered they are concatenated in a single string,
+#' separated by a semicolon.
+#' The data used in the `"fast"` method does not include overlapping timezones
+#' at this time.
+#'
 #' @param x either an `sfc` or `sf` points or `SpatialPoints(DataFrame)` object
 #' @param crs the coordinate reference system: integer with the EPSG code, or character with proj4string.
 #' If not specified (i.e., `NULL`) and `x` has no existing `crs`, EPSG: 4326 is assumed (lat/long).
@@ -36,7 +43,7 @@ tz_lookup <- function(x, crs = NULL, method = "fast", warn = TRUE) {
   switch(method,
          fast = tz_lookup_fast(x, crs, warn),
          accurate = tz_lookup_accurate(x, crs),
-         stop("method mst be one of 'fast' or 'accurate'", call. = FALSE))
+         stop("method must be one of 'fast' or 'accurate'", call. = FALSE))
 
 }
 
@@ -83,22 +90,18 @@ tz_lookup_coords <- function(lat, lon, method = "fast", warn = TRUE) {
   check_coords(lat, lon)
 
   switch(method,
-    fast = tz_lookup_coords_fast(lat, lon, warn),
-    accurate = tz_lookup_coords_accurate(lat, lon),
-    stop("method mst be one of 'fast' or 'accurate'", call. = FALSE)
+         fast = tz_lookup_coords_fast(lat, lon, warn),
+         accurate = tz_lookup_coords_accurate(lat, lon),
+         stop("method must be one of 'fast' or 'accurate'", call. = FALSE)
   )
 }
 
 tz_lookup_coords_fast <- function(lat, lon, warn) {
-  if (warn) warn_for_fast()
-  ctx <- make_ctx()
 
-  ctx$assign("lat", lat)
-  ctx$assign("lon", lon)
-  ctx$eval("var out = Rtzlookup(lat, lon);")
-  ret <- ctx$get("out")
-  if (is.null(ret)) ret <- NA_character_
-  ret
+  if (warn) warn_for_fast()
+
+  timezone_lookup_coords_rcpp(lat, lon)
+
 }
 
 tz_lookup_accurate <- function(x, crs = NULL) {
@@ -107,20 +110,36 @@ tz_lookup_accurate <- function(x, crs = NULL) {
 
 tz_lookup_accurate.sf <- function(x, crs = NULL) {
   x <- fix_sf(x, crs)
-  x <- suppressMessages(sf::st_join(x, tz_sf))
-  ret <- x$tzid
+  # Add a unique id so we can deal with any duplicates resulting
+  # from overlapping timezones
+  x$lutzid <- seq_len(nrow(x))
+  x_tz <- suppressMessages(sf::st_set_geometry(sf::st_join(x, tz_sf), NULL))
 
-  # If any are NA, try to fill in with V8-based tzlookup
+  # group x by lutzid and concatenate multiple timezones with ;
+  if (nrow(x_tz) > nrow(x)) {
+    warning("Some points are in areas with more than one timezone defined.",
+            "These are often disputed areas and should be treated with care.")
+
+    ret <- stats::aggregate(x_tz, list(x_tz$lutzid), function(x) {
+      if (length(x) == 1) return(x)
+      x <- paste(x, collapse = "; ")
+    }, drop = FALSE)[["tzid"]]
+
+  } else {
+    ret <- x_tz$tzid
+  }
+
+  # If any are NA, try to fill in with Rcpp-based tzlookup
   nas <- which(is.na(ret))
   if (!length(nas)) {
     return(ret)
   }
-  ret[nas] <- tz_lookup_fast(x[nas, ], warn = FALSE)
-  ret
+  ret[nas] <- tz_lookup_fast(x[nas, ], warn = FALSE) # nocov start
+  ret # nocov end
 }
 
 tz_lookup_accurate.sfc <- function(x, crs = NULL) {
-  x_sf <- sf::st_sf(id = seq_len(length(x)), geom = x)
+  x_sf <- sf::st_sf(geom = x)
   tz_lookup_accurate(x_sf, crs = crs)
 }
 

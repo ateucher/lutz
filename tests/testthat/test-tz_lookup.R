@@ -1,12 +1,5 @@
 context("tz_lookup works")
 
-test_that("make_ctx creates a working context", {
-  ct <- make_ctx()
-  expect_is(ct, c("V8", "environment"))
-  expect_equal(ct$eval("1 + 1"), "2")
-  expect_equal(ct$eval("tzlookup(1,1);"), "Etc/GMT")
-})
-
 test_that("warn works with tz_lookup", {
   expect_warning(tz_lookup_coords(70,30),
                  "Using 'fast' method")
@@ -16,9 +9,9 @@ test_that("warn works with tz_lookup", {
 
 test_that("errors when method is not one of fast, accurate", {
   expect_error(tz_lookup_coords(70,30, method = "great"),
-               "method mst be one of 'fast' or 'accurate'")
+               "method must be one of 'fast' or 'accurate'")
   expect_error(tz_lookup(sf::st_sfc(sf::st_point(c(1,1))), method = "great"),
-               "method mst be one of 'fast' or 'accurate'")
+               "method must be one of 'fast' or 'accurate'")
 })
 
 test_that("tz_lookup_coords works", {
@@ -37,11 +30,11 @@ test_that("tz_lookup_coords deals with NAs", {
   expect_equal(tz_lookup_coords(NA_real_, NA_real_, warn = FALSE), NA_character_)
   expect_equal(tz_lookup_coords(1, NA_real_, warn = FALSE), NA_character_)
   expect_equal(tz_lookup_coords(rep(NA_real_, 2), rep(NA_real_, 2), warn = FALSE),
-               rep(NA, 2))
+               rep(NA_character_, 2))
   expect_equal(tz_lookup_coords(c(NA_real_, 1), c(NA_real_, 1), warn = FALSE),
-               c(NA, "Etc/GMT"))
+               c(NA_character_, "Etc/GMT"))
   expect_equal(tz_lookup_coords(c(NA_real_, 1), c(1, 1), warn = FALSE),
-               c(NA, "Etc/GMT"))
+               c(NA_character_, "Etc/GMT"))
 })
 
 test_that("tz_lookup.sf works", {
@@ -74,3 +67,4 @@ test_that("tz_lookup.SpatialPoints works", {
                "Etc/GMT+9")
   expect_equal(tz_lookup(pt, 3005, warn = FALSE), "Etc/GMT+9")
 })
+

@@ -1,22 +1,28 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!-- badges: start -->
+
 [![Travis-CI Build
 Status](https://travis-ci.org/ateucher/lutz.svg?branch=master)](https://travis-ci.org/ateucher/lutz)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/ateucher/lutz?branch=master&svg=true)](https://ci.appveyor.com/project/ateucher/lutz)
 [![Coverage
 Status](https://img.shields.io/codecov/c/github/ateucher/lutz/master.svg)](https://codecov.io/github/ateucher/lutz?branch=master)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/lutz)](https://cran.r-project.org/package=lutz)
+[![CRAN
+downloads](https://cranlogs.r-pkg.org/badges/lutz)](https://cran.r-project.org/package=lutz)
+<!-- badges: end -->
 
 # lutz (look up timezones)
 
 Input latitude and longitude values or an `sf/sfc` POINT object and get
 back the timezone in which they exist. Two methods are implemented. One
-is very fast and uses the *V8* package to access the [`tz-lookup.js`
-javascript library](https://github.com/darkskyapp/tz-lookup/). However,
-speed comes at the cost of accuracy - near time zone borders away from
-populated centres there is a chance that it will return the incorrect
-time zone.
+is very fast and uses Rcpp in conjunction with source data from
+(<https://github.com/darkskyapp/tz-lookup/>). However, speed comes at
+the cost of accuracy - near time zone borders away from populated
+centres there is a chance that it will return the incorrect time zone.
 
 The other method is slower but more accurate - it uses the sf package to
 intersect points with a detailed map of time zones from
@@ -80,7 +86,7 @@ ggplot() +
   coord_sf(datum = NA)
 ```
 
-![](tools/readme/unnamed-chunk-4-1.png)<!-- -->
+![](man/figures/unnamed-chunk-4-1.png)<!-- -->
 
 ### With `SpatialPoints` objects:
 
@@ -97,18 +103,25 @@ ggplot(cbind(as.data.frame(coordinates(state_centers_sp)), tz = state_centers_sp
   theme_minimal()
 ```
 
-![](tools/readme/unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/unnamed-chunk-5-1.png)<!-- -->
+
+Note that there are some regions in the world where a single point can
+land in two different overlapping timezones. The `"accurate"` method
+[includes
+these](https://github.com/evansiroky/timezone-boundary-builder/releases/tag/2018g),
+however the method used in the `"fast"` does not include overlapping
+timezones ([at least for
+now](https://github.com/darkskyapp/tz-lookup/issues/34)).
 
 We can compare the accuracy of both methods to the high-resolution
 timezone map provided by
 <https://github.com/evansiroky/timezone-boundary-builder>. This is the
 map that is used by `lutz` for the `"accurate"` method, but in `lutz` it
-is simplified by about 80% to be small enough to fit in the
-package.
+is simplified by about 80% to be small enough to fit in the package.
 
 ``` r
 ## Get the full timezone geojson from https://github.com/evansiroky/timezone-boundary-builder
-download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2018d/timezones-with-oceans.geojson.zip",
+download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2019a/timezones-with-oceans.geojson.zip",
                 destfile = "tz.zip")
 unzip("tz.zip", exdir = "data-raw/dist/")
 ```
@@ -116,19 +129,34 @@ unzip("tz.zip", exdir = "data-raw/dist/")
 ``` r
 library(lutz)
 library(sf)
-library(rmapshaper)
 library(purrr)
+library(dplyr)
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 
 tz_full <- read_sf("data-raw/dist/combined-with-oceans.json")
 # Create a data frame of 500000 lat/long pairs:
 set.seed(1)
 n <- 500000
-ll <- data.frame(lat = runif(n, -90, 90), lon = runif(n, -180, 180))
+ll <- data.frame(id = seq(n), lat = runif(n, -90, 90), lon = runif(n, -180, 180))
 ll_sf <- st_as_sf(ll, coords = c("lon", "lat"), crs = 4326)
 
 # Overlay those points with the full high-resolution timezone map:
 ref_ll_tz <- sf::st_join(ll_sf, tz_full)
 #> although coordinates are longitude/latitude, st_intersects assumes that they are planar
+#> although coordinates are longitude/latitude, st_intersects assumes that they are planar
+
+# Combine those that had overlapping timezones
+ref_ll_tz <- ref_ll_tz %>% 
+  st_set_geometry(NULL) %>% 
+  group_by(id) %>% 
+  summarize(tzid = paste(tzid, collapse = "; "))
 
 # run tz_lookup with both `"fast"` and `"accurate"` methods and compare with 
 # the timezones looked up with the high-resolution map:
@@ -147,6 +175,9 @@ tests <- map_df(c("fast", "accurate"), ~ {
     fun_nas = sum(is.na(test_ll_tz))
     )
 })
+#> Warning in tz_lookup_accurate.sf(x, crs): Some points are in areas with
+#> more than one timezone defined.These are often disputed areas and should be
+#> treated with care.
 ```
 
 ``` r
@@ -155,5 +186,5 @@ knitr::kable(tests)
 
 | method   |   time | matches | mismatches | accuracy | ref\_nas | fun\_nas |
 | :------- | -----: | ------: | ---------: | -------: | -------: | -------: |
-| fast     |  2.721 |  384735 |     115265 | 0.769470 |        0 |        0 |
-| accurate | 47.587 |  499956 |         44 | 0.999912 |        0 |        0 |
+| fast     |  0.989 |  371946 |     128054 | 0.743892 |        0 |        0 |
+| accurate | 22.113 |  499949 |         51 | 0.999898 |        0 |        0 |

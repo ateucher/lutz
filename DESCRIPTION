@@ -1,24 +1,30 @@
 Package: lutz
 Type: Package
 Title: Look Up Time Zones of Point Coordinates
-Version: 0.2.0
-Authors@R: person("Andy", "Teucher", email = "andy.teucher@gmail.com", role = c("aut", "cre"))
+Version: 0.2.0.999
+Authors@R: c(
+      person("Andy", "Teucher", email = "andy.teucher@gmail.com", role = c("aut", "cre"), 
+             comment = c(ORCID = "0000-0002-7840-692X")),
+      person("Bob", "Rudis", email = "bob@rud.is", role = c("ctb"), 
+             comment = c(ORCID = "0000-0001-5670-2640"))
+    )
 Description: Input latitude and longitude values or an 'sf/sfc' POINT 
     object and get back the timezone in which they exist. Two methods are implemented. 
-    One is very fast and uses the 'V8' package to access the 'tz-lookup.js' 'Javascript' library
+    One is very fast and uses 'Rcpp' in conjunction with data from the 'Javascript' library
     (<https://github.com/darkskyapp/tz-lookup/>). This method also works outside of countries' 
     borders and in international waters, however speed comes at the cost of accuracy - near time 
     zone borders away from populated centres there is a chance that it will return the incorrect
-    time zone. The other method is slower but more accurate - it uses the sf package to intersect 
+    time zone. The other method is slower but more accurate - it uses the 'sf' package to intersect 
     points with a detailed map of time zones from here: 
     <https://github.com/evansiroky/timezone-boundary-builder/>.
 License: MIT + file LICENSE
-URL: https://github.com/ateucher/lutz
+URL: https://andyteucher.ca/lutz
 BugReports: https://github.com/ateucher/lutz/issues
-Depends: R (>= 2.10)
+SystemRequirements: C++11
+Depends: R (>= 3.2)
 Imports:
-    V8 (>= 1.5), 
-    stats
+    stats,
+    Rcpp
 Suggests:
     testthat, 
     sf (>= 0.5),
@@ -28,5 +34,7 @@ Suggests:
     covr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
+LinkingTo: 
+    Rcpp
