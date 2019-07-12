@@ -1,3 +1,13 @@
+#' Create a list of Time Zones
+#'
+#' Output a list of time zone names, with daylight savings time and utc offset
+#'
+#' @return A data.frame of all time zones on your system. Columns:
+#'   - tz_name: the name of the time zone
+#'   - zone: time zone
+#'   - is_dst: is the time zone in daylight savings time
+#'   - utc_offset_h: offset from UTC (in hours)
+#' @export
 tz_list <- function() {
   yr <- format(Sys.Date(), "%Y")
   big_list <- lapply(lutz_env$olson_names, function(tz) {
@@ -13,6 +23,17 @@ tz_list <- function() {
                      stringsAsFactors = FALSE))
 }
 
+#' Find the offset from UTC at a particular date/time in a particular timezone
+#'
+#' @param dt `Date`, `POSIXt` or date-like character string
+#' @param tz A timezone name from [base::OlsonNames()]. Not required if `dt`
+#' is a `POSIXt` object with a timezone component.
+#'
+#' @return a one-row data frame with details of the timezone
+#' @export
+#'
+#' @examples
+#' tz_offset("2018-06-12", "America/Moncton")
 tz_offset <- function(dt, tz = "") {
 
   if (!is.character(dt) && !lubridate::is.instant(dt)) {
@@ -61,12 +82,20 @@ tz_offset <- function(dt, tz = "") {
              stringsAsFactors = FALSE,
              row.names = NULL)
 }
-#
-# get_tz_list()
-#
-# get_tz_offset("2018-06-12", "America/Moncton")
 
 
+#' Plot a timezone
+#'
+#' Make a circular plot of a timezone, visualizing the UTC offset over the
+#' course of the year, including Daylight Savings times
+#'
+#' @param tz a valid time zone name. See [OlsonNames()]
+#'
+#' @return a `ggplot2` object
+#' @export
+#'
+#' @examples
+#' plot_tz("America/Vancouver")
 plot_tz <- function(tz) {
   if (!requireNamespace("ggplot2")) {
     stop("ggplot2 rquired")
