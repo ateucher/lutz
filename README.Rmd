@@ -12,7 +12,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-[![Travis-CI Build Status](https://travis-ci.org/ateucher/lutz.svg?branch=master)](https://travis-ci.org/ateucher/lutz) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ateucher/lutz?branch=master&svg=true)](https://ci.appveyor.com/project/ateucher/lutz) [![Coverage Status](https://img.shields.io/codecov/c/github/ateucher/lutz/master.svg)](https://codecov.io/github/ateucher/lutz?branch=master)
+<!-- badges: start -->
+[![Travis-CI Build Status](https://travis-ci.org/ateucher/lutz.svg?branch=master)](https://travis-ci.org/ateucher/lutz)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ateucher/lutz?branch=master&svg=true)](https://ci.appveyor.com/project/ateucher/lutz)
+[![Coverage Status](https://img.shields.io/codecov/c/github/ateucher/lutz/master.svg)](https://codecov.io/github/ateucher/lutz?branch=master)
+[![CRAN status](https://www.r-pkg.org/badges/version/lutz)](https://cran.r-project.org/package=lutz)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/lutz)](https://cran.r-project.org/package=lutz)
+<!-- badges: end -->
 
 # lutz (look up timezones)
 
@@ -91,6 +97,10 @@ ggplot(cbind(as.data.frame(coordinates(state_centers_sp)), tz = state_centers_sp
   theme_minimal()
 ```
 
+Note that there are some regions in the world where a single point can land in 
+two different overlapping timezones. The `"accurate"` method [includes these](https://github.com/evansiroky/timezone-boundary-builder/releases/tag/2018g), 
+however the method used in the `"fast"` does not include overlapping timezones
+([at least for now](https://github.com/darkskyapp/tz-lookup/issues/34)).
 
 We can compare the accuracy of both methods to the high-resolution timezone map
 provided by https://github.com/evansiroky/timezone-boundary-builder. This is the
@@ -99,7 +109,7 @@ simplified by about 80% to be small enough to fit in the package.
 
 ```{r eval=FALSE}
 ## Get the full timezone geojson from https://github.com/evansiroky/timezone-boundary-builder
-download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2018d/timezones-with-oceans.geojson.zip",
+download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2019a/timezones-with-oceans.geojson.zip",
                 destfile = "tz.zip")
 unzip("tz.zip", exdir = "data-raw/dist/")
 ```
@@ -108,18 +118,24 @@ unzip("tz.zip", exdir = "data-raw/dist/")
 ```{r eval=file.exists("data-raw/dist/combined-with-oceans.json")}
 library(lutz)
 library(sf)
-library(rmapshaper)
 library(purrr)
+library(dplyr)
 
 tz_full <- read_sf("data-raw/dist/combined-with-oceans.json")
 # Create a data frame of 500000 lat/long pairs:
 set.seed(1)
 n <- 500000
-ll <- data.frame(lat = runif(n, -90, 90), lon = runif(n, -180, 180))
+ll <- data.frame(id = seq(n), lat = runif(n, -90, 90), lon = runif(n, -180, 180))
 ll_sf <- st_as_sf(ll, coords = c("lon", "lat"), crs = 4326)
 
 # Overlay those points with the full high-resolution timezone map:
 ref_ll_tz <- sf::st_join(ll_sf, tz_full)
+
+# Combine those that had overlapping timezones
+ref_ll_tz <- ref_ll_tz %>% 
+  st_set_geometry(NULL) %>% 
+  group_by(id) %>% 
+  summarize(tzid = paste(tzid, collapse = "; "))
 
 # run tz_lookup with both `"fast"` and `"accurate"` methods and compare with 
 # the timezones looked up with the high-resolution map:

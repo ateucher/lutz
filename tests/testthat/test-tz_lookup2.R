@@ -51,3 +51,18 @@ test_that("tz_lookup.SpatialPoints works", {
                "Etc/GMT+9")
   expect_equal(tz_lookup(pt, 3005, method = "accurate"), "Etc/GMT+9")
 })
+
+test_that("tz_lookup accurate method deals with overlapping timezones", {
+  coords <- c(85.18436, 41.11543) # centroid of https://en.wikipedia.org/wiki/Xinjiang_Time
+  expect_warning(tz <- tz_lookup_coords(coords[2], coords[1], method = "accurate"),
+                 "Some points are in areas with more than one timezone")
+  expect_equal(tz, "Asia/Shanghai; Asia/Urumqi")
+  coords_sfc <- sf::st_sfc(sf::st_point(coords), crs = 4326)
+  expect_warning(tz <- tz_lookup(coords_sfc, method = "accurate"),
+                 "Some points are in areas with more than one timezone")
+  expect_equal(tz, "Asia/Shanghai; Asia/Urumqi")
+  coords_sp <- as(coords_sfc, "Spatial")
+  expect_warning(tz <- tz_lookup(coords_sp, method = "accurate"),
+                 "Some points are in areas with more than one timezone")
+  expect_equal(tz, "Asia/Shanghai; Asia/Urumqi")
+})

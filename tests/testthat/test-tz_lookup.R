@@ -16,9 +16,9 @@ test_that("warn works with tz_lookup", {
 
 test_that("errors when method is not one of fast, accurate", {
   expect_error(tz_lookup_coords(70,30, method = "great"),
-               "method mst be one of 'fast' or 'accurate'")
+               "method must be one of 'fast' or 'accurate'")
   expect_error(tz_lookup(sf::st_sfc(sf::st_point(c(1,1))), method = "great"),
-               "method mst be one of 'fast' or 'accurate'")
+               "method must be one of 'fast' or 'accurate'")
 })
 
 test_that("tz_lookup_coords works", {
