@@ -1,5 +1,8 @@
 # lutz 0.2.0.999
 
+* V8-based 'fast' method was ported to use Rcpp - it is now even faster, and
+  we can drop the V8 dependency. Thanks @hrbrmstr! (#4)
+* Bob Rudis (@hrbrmstr) added as an author
 * Upgraded timezone map to 2019b
 * Dealt with areas with overlapping timezones (#2)
 
