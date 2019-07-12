@@ -88,9 +88,9 @@ tz_lookup_coords <- function(lat, lon, method = "fast", warn = TRUE) {
   check_coords(lat, lon)
 
   switch(method,
-    fast = tz_lookup_coords_fast(lat, lon, warn),
-    accurate = tz_lookup_coords_accurate(lat, lon),
-    stop("method must be one of 'fast' or 'accurate'", call. = FALSE)
+         fast = tz_lookup_coords_fast(lat, lon, warn),
+         accurate = tz_lookup_coords_accurate(lat, lon),
+         stop("method must be one of 'fast' or 'accurate'", call. = FALSE)
   )
 }
 
@@ -115,16 +115,18 @@ tz_lookup_accurate.sf <- function(x, crs = NULL) {
   # Add a unique id so we can deal with any duplicates resulting
   # from overlapping timezones
   x$lutzid <- seq_len(nrow(x))
-  x_tz <- suppressMessages(sf::st_join(x, tz_sf))
+  x_tz <- suppressMessages(sf::st_set_geometry(sf::st_join(x, tz_sf), NULL))
 
   # group x by lutzid and concatenate multiple timezones with ;
   if (nrow(x_tz) > nrow(x)) {
     warning("Some points are in areas with more than one timezone defined.",
             "These are often disputed areas and should be treated with care.")
 
-    ret <- vapply(unique(x_tz$lutzid), function(x) {
-      paste(x_tz$tzid[x_tz$lutzid == x], collapse = "; ")
-    }, FUN.VALUE = character(1))
+    ret <- stats::aggregate(x_tz, list(x_tz$lutzid), function(x) {
+      if (length(x) == 1) return(x)
+      x <- paste(x, collapse = "; ")
+    }, drop = FALSE)[["tzid"]]
+
   } else {
     ret <- x_tz$tzid
   }
