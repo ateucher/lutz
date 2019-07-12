@@ -18,9 +18,11 @@ tz_list <- function() {
     unique(offs[, setdiff(names(offs), "date_time")])
   })
 
-  do.call("rbind", c(big_list,
+  ret <- do.call("rbind", c(big_list,
                      make.row.names = FALSE,
                      stringsAsFactors = FALSE))
+
+  ret[!is.na(ret$utc_offset_h), , drop = FALSE]
 }
 
 #' Find the offset from UTC at a particular date/time in a particular timezone
@@ -58,8 +60,10 @@ tz_offset <- function(dt, tz = "") {
       tz <- lubridate::tz(dt)
       # make sure it's not empty
       if (tz == "") {
-        stop("You supplied an object of class ", class(dt)[1], " that does not have a
-         timezone attribute, and did not specify one in the 'tz' argument",
+        tz <- Sys.timezone()
+        warning("You supplied an object of class ", class(dt)[1],
+        " that does not have a timezone attribute, and did not specify one in",
+        "the 'tz' argument. Defaulting to current (", Sys.timezone(), ").",
              call. = FALSE)
       }
     }
