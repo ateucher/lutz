@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • lutz</title>
+<title>Find the offset from UTC at a particular date/time in a particular timezone — tz_offset • lutz</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,10 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Find the offset from UTC at a particular date/time in a particular timezone — tz_offset" />
+
+<meta property="og:description" content="Find the offset from UTC at a particular date/time in a particular timezone" />
+<meta name="twitter:card" content="summary" />
 
 <meta name="robots" content="noindex">
 
@@ -47,7 +50,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -92,75 +95,54 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Find the offset from UTC at a particular date/time in a particular timezone</h1>
+    
+    <div class="hidden name"><code>tz_offset.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    
+    <p>Find the offset from UTC at a particular date/time in a particular timezone</p>
+    
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
-
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-look-up-the-timezones-of-coordinates" class="hasAnchor"><a href="#section-look-up-the-timezones-of-coordinates" class="anchor"></a>Look up the timezones of coordinates</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="tz_lookup.html">tz_lookup()</a></code> </p>
-        </td>
-        <td><p>Lookup time zones of sf or sp points</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tz_lookup_coords.html">tz_lookup_coords()</a></code> </p>
-        </td>
-        <td><p>Lookup time zones of lat/long pairs</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-timezone-utilities" class="hasAnchor"><a href="#section-timezone-utilities" class="anchor"></a>Timezone utilities</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="tz_list.html">tz_list()</a></code> </p>
-        </td>
-        <td><p>Create a list of Time Zones</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tz_offset.html">tz_offset()</a></code> </p>
-        </td>
-        <td><p>Find the offset from UTC at a particular date/time in a particular timezone</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_tz.html">plot_tz()</a></code> </p>
-        </td>
-        <td><p>Plot a timezone</p></td>
-      </tr>
-    </tbody>
+    <pre class="usage"><span class='fu'>tz_offset</span>(<span class='no'>dt</span>, <span class='kw'>tz</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>dt</th>
+      <td><p><code>Date</code>, <code>POSIXt</code> or date-like character string</p></td>
+    </tr>
+    <tr>
+      <th>tz</th>
+      <td><p>A timezone name from <code><a href='https://www.rdocumentation.org/packages/base/topics/timezones'>base::OlsonNames()</a></code>. Not required if <code>dt</code>
+is a <code>POSIXt</code> object with a timezone component.</p></td>
+    </tr>
     </table>
-  </div>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>a one-row data frame with details of the timezone</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>tz_offset</span>(<span class='st'>"2018-06-12"</span>, <span class='st'>"America/Moncton"</span>)</div><div class='output co'>#&gt;           tz_name  date_time zone is_dst utc_offset_h
+#&gt; 1 America/Moncton 2018-06-12  ADT   TRUE           -3</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-look-up-the-timezones-of-coordinates">Look up the timezones of coordinates</a></li>
-      <li><a href="#section-timezone-utilities">Timezone utilities</a></li>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
     </ul>
+
   </div>
 </div>
 

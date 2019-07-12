@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • lutz</title>
+<title>Create a list of Time Zones — tz_list • lutz</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,10 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Create a list of Time Zones — tz_list" />
+
+<meta property="og:description" content="Output a list of time zone names, with daylight savings time and utc offset" />
+<meta name="twitter:card" content="summary" />
 
 <meta name="robots" content="noindex">
 
@@ -47,7 +50,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -92,75 +95,40 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Create a list of Time Zones</h1>
+    
+    <div class="hidden name"><code>tz_list.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    
+    <p>Output a list of time zone names, with daylight savings time and utc offset</p>
+    
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>tz_list</span>()</pre>
+        
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-look-up-the-timezones-of-coordinates" class="hasAnchor"><a href="#section-look-up-the-timezones-of-coordinates" class="anchor"></a>Look up the timezones of coordinates</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="tz_lookup.html">tz_lookup()</a></code> </p>
-        </td>
-        <td><p>Lookup time zones of sf or sp points</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tz_lookup_coords.html">tz_lookup_coords()</a></code> </p>
-        </td>
-        <td><p>Lookup time zones of lat/long pairs</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-timezone-utilities" class="hasAnchor"><a href="#section-timezone-utilities" class="anchor"></a>Timezone utilities</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="tz_list.html">tz_list()</a></code> </p>
-        </td>
-        <td><p>Create a list of Time Zones</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tz_offset.html">tz_offset()</a></code> </p>
-        </td>
-        <td><p>Find the offset from UTC at a particular date/time in a particular timezone</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_tz.html">plot_tz()</a></code> </p>
-        </td>
-        <td><p>Plot a timezone</p></td>
-      </tr>
-    </tbody>
-    </table>
+    <p>A data.frame of all time zones on your system. Columns:</p><ul>
+<li><p>tz_name: the name of the time zone</p></li>
+<li><p>zone: time zone</p></li>
+<li><p>is_dst: is the time zone in daylight savings time</p></li>
+<li><p>utc_offset_h: offset from UTC (in hours)</p></li>
+</ul>
+
+    
+
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-look-up-the-timezones-of-coordinates">Look up the timezones of coordinates</a></li>
-      <li><a href="#section-timezone-utilities">Timezone utilities</a></li>
-    </ul>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
+
   </div>
 </div>
 

@@ -79,8 +79,17 @@
 <div id="lutz-look-up-timezones" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#lutz-look-up-timezones" class="anchor"></a>lutz (look up timezones)</h1></div>
+<div id="lookup-the-timezone-of-coordinates" class="section level2">
+<h2 class="hasAnchor">
+<a href="#lookup-the-timezone-of-coordinates" class="anchor"></a>Lookup the timezone of coordinates</h2>
 <p>Input latitude and longitude values or an <code>sf/sfc</code> POINT object and get back the timezone in which they exist. Two methods are implemented. One is very fast and uses Rcpp in conjunction with source data from (<a href="https://github.com/darkskyapp/tz-lookup/" class="uri">https://github.com/darkskyapp/tz-lookup/</a>). However, speed comes at the cost of accuracy - near time zone borders away from populated centres there is a chance that it will return the incorrect time zone.</p>
 <p>The other method is slower but more accurate - it uses the sf package to intersect points with a detailed map of time zones from <a href="https://github.com/evansiroky/timezone-boundary-builder">here</a>.</p>
+</div>
+<div id="timezone-utility-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#timezone-utility-functions" class="anchor"></a>Timezone utility functions</h2>
+<p><strong>lutz</strong> also contains several utility functions for helping to understand and visualize timezones, such as listing of world timezones,including information about daylight savings times and their offsets from UTC. You can also plot a timezone to visualize the UTC offset over a year and when daylight savings times are in effect.</p>
+</div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -93,7 +102,7 @@
 <div id="examples" class="section level2">
 <h2 class="hasAnchor">
 <a href="#examples" class="anchor"></a>Examples</h2>
-<p>There are only two functions in this package: <code><a href="reference/tz_lookup.html">tz_lookup()</a></code> which works with both <code>sf/sfc</code> and <code>SpatialPoints</code> objects, and <code>tz_lookup_coords</code> for looking up lat/long pairs. Use the <code>method</code> argument to choose the <code>"fast"</code> or <code>"accurate"</code> method.</p>
+<p>There are two functions in this package for looking up the timezones of coordinates: <code><a href="reference/tz_lookup.html">tz_lookup()</a></code> which works with both <code>sf/sfc</code> and <code>SpatialPoints</code> objects, and <code>tz_lookup_coords</code> for looking up lat/long pairs. Use the <code>method</code> argument to choose the <code>"fast"</code> or <code>"accurate"</code> method.</p>
 <div id="with-coordinates--they-must-be-latlong-in-decimal-degrees" class="section level3">
 <h3 class="hasAnchor">
 <a href="#with-coordinates--they-must-be-latlong-in-decimal-degrees" class="anchor"></a>With coordinates. They must be lat/long in decimal degrees:</h3>
@@ -214,7 +223,7 @@
 <tbody>
 <tr class="odd">
 <td align="left">fast</td>
-<td align="right">1.035</td>
+<td align="right">1.027</td>
 <td align="right">371946</td>
 <td align="right">128054</td>
 <td align="right">0.743892</td>
@@ -223,11 +232,184 @@
 </tr>
 <tr class="even">
 <td align="left">accurate</td>
-<td align="right">22.032</td>
+<td align="right">21.782</td>
 <td align="right">499949</td>
 <td align="right">51</td>
 <td align="right">0.999898</td>
 <td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="timezone-utility-functions-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#timezone-utility-functions-1" class="anchor"></a>Timezone utility functions</h2>
+<div id="plot_tz" class="section level3">
+<h3 class="hasAnchor">
+<a href="#plot_tz" class="anchor"></a><code><a href="reference/plot_tz.html">plot_tz()</a></code>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw"><a href="reference/plot_tz.html">plot_tz</a></span>(<span class="st">"America/Vancouver"</span>)</span></code></pre></div>
+<p><img src="reference/figures/unnamed-chunk-9-1.png" width="700"></p>
+</div>
+<div id="tz_offset" class="section level3">
+<h3 class="hasAnchor">
+<a href="#tz_offset" class="anchor"></a><code><a href="reference/tz_offset.html">tz_offset()</a></code>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># A Date object</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="kw"><a href="reference/tz_offset.html">tz_offset</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.Date</a></span>(), <span class="st">"Africa/Algiers"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="co">#&gt;          tz_name  date_time zone is_dst utc_offset_h</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="co">#&gt; 1 Africa/Algiers 2019-07-12  CET  FALSE            1</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a></span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="co"># A Date-like character string</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="kw"><a href="reference/tz_offset.html">tz_offset</a></span>(<span class="st">"2017-03-01"</span>, <span class="dt">tz =</span> <span class="st">"Singapore"</span>)</span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="co">#&gt;     tz_name  date_time zone is_dst utc_offset_h</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="co">#&gt; 1 Singapore 2017-03-01  +08  FALSE            8</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a></span>
+<span id="cb10-12"><a href="#cb10-12"></a></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="co"># A POSIXct date-time object</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="kw"><a href="reference/tz_offset.html">tz_offset</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.time</a></span>())</span>
+<span id="cb10-15"><a href="#cb10-15"></a><span class="co">#&gt; Warning: You supplied an object of class POSIXct that does not have a</span></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="co">#&gt; timezone attribute, and did not specify one inthe 'tz' argument. Defaulting</span></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="co">#&gt; to current (America/Vancouver).</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a><span class="co">#&gt;             tz_name           date_time zone is_dst utc_offset_h</span></span>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="co">#&gt; 1 America/Vancouver 2019-07-12 13:07:22  PDT   TRUE           -7</span></span></code></pre></div>
+</div>
+<div id="tz_list" class="section level3">
+<h3 class="hasAnchor">
+<a href="#tz_list" class="anchor"></a><code><a href="reference/tz_list.html">tz_list()</a></code>
+</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw"><a href="reference/tz_list.html">tz_list</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>()</span></code></pre></div>
+<table class="table table">
+<thead><tr class="header">
+<th align="left">tz_name</th>
+<th align="left">zone</th>
+<th align="left">is_dst</th>
+<th align="right">utc_offset_h</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Africa/Abidjan</td>
+<td align="left">GMT</td>
+<td align="left">FALSE</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Africa/Accra</td>
+<td align="left">GMT</td>
+<td align="left">FALSE</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Africa/Addis_Ababa</td>
+<td align="left">EAT</td>
+<td align="left">FALSE</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">Africa/Algiers</td>
+<td align="left">CET</td>
+<td align="left">FALSE</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Africa/Asmara</td>
+<td align="left">EAT</td>
+<td align="left">FALSE</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">Africa/Asmera</td>
+<td align="left">EAT</td>
+<td align="left">FALSE</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">Africa/Bamako</td>
+<td align="left">GMT</td>
+<td align="left">FALSE</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Africa/Bangui</td>
+<td align="left">WAT</td>
+<td align="left">FALSE</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Africa/Banjul</td>
+<td align="left">GMT</td>
+<td align="left">FALSE</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Africa/Bissau</td>
+<td align="left">GMT</td>
+<td align="left">FALSE</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Africa/Blantyre</td>
+<td align="left">CAT</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">Africa/Brazzaville</td>
+<td align="left">WAT</td>
+<td align="left">FALSE</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Africa/Bujumbura</td>
+<td align="left">CAT</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">Africa/Cairo</td>
+<td align="left">EET</td>
+<td align="left">FALSE</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Africa/Casablanca</td>
+<td align="left">+01</td>
+<td align="left">FALSE</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">Africa/Casablanca</td>
+<td align="left">+00</td>
+<td align="left">TRUE</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Africa/Ceuta</td>
+<td align="left">CET</td>
+<td align="left">FALSE</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">Africa/Ceuta</td>
+<td align="left">CEST</td>
+<td align="left">TRUE</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Africa/Conakry</td>
+<td align="left">GMT</td>
+<td align="left">FALSE</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Africa/Dakar</td>
+<td align="left">GMT</td>
+<td align="left">FALSE</td>
 <td align="right">0</td>
 </tr>
 </tbody>
