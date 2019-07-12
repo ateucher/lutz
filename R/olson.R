@@ -121,7 +121,8 @@ plot_tz <- function(tz) {
   label_df <- data.frame(tz_breaks = tz_data$date_time[break_indices])
 
   p <- ggplot2::ggplot(tz_data,
-                       ggplot2::aes(x = date_time, y = 1, colour = tz_lab)) +
+                       ggplot2::aes(x = !!ggplot2::sym("date_time"), y = 1,
+                                    colour = !!ggplot2::sym("tz_lab"))) +
     ggplot2::geom_point(size = 5) +
     ggplot2::coord_polar() +
     ggplot2::scale_y_continuous(breaks = c(0,1), limits = c(0,1.1)) +
@@ -140,8 +141,8 @@ plot_tz <- function(tz) {
   if (length(break_indices)) {
     p <- p +
       ggplot2::geom_text(data = label_df, inherit.aes = FALSE,
-                         ggplot2::aes(x = tz_breaks, y = 0.85,
-                                      label = format(tz_breaks, "%b %d")),
+                         ggplot2::aes(x = !!ggplot2::sym("tz_breaks"), y = 0.85,
+                                      label = format(!!ggplot2::sym("tz_breaks"), "%b %d")),
                          hjust = "inward")
   }
   p
