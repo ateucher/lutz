@@ -16,6 +16,9 @@ test_that("tz_offset works", {
   expect_is(tz_offset("2019-01-01 12:31:45", "America/Vancouver"), "data.frame")
   expect_is(tz_offset(as.POSIXlt(Sys.time(), tz = "America/Vancouver")),
             "data.frame")
+
+  t <- Sys.time()
+  attr(t, "tzone") <- NULL
   expect_warning(tz_offset(Sys.time()), "You supplied an object of class")
   expect_warning(tz_offset(as.POSIXlt(Sys.time(), tz = "America/Vancouver"),
                            tz = "America/Moncton"),
