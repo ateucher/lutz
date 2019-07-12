@@ -18,7 +18,12 @@
     zone borders away from populated centres there is a chance that it will return the incorrect
     time zone. The other method is slower but more accurate - it uses the 'sf' package to intersect 
     points with a detailed map of time zones from here: 
-    &lt;https://github.com/evansiroky/timezone-boundary-builder/&gt;.">
+    &lt;https://github.com/evansiroky/timezone-boundary-builder/&gt;. The package also 
+    contains several utility functions for helping to understand and visualize 
+    timezones, such as listing of world timezones,including information about 
+    daylight savings times and their offsets from UTC. You can also plot a 
+    timezone to visualize the UTC offset over a year and when daylight savings 
+    times are in effect.">
 <meta name="twitter:card" content="summary">
 <meta name="robots" content="noindex">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -223,7 +228,7 @@
 <tbody>
 <tr class="odd">
 <td align="left">fast</td>
-<td align="right">1.027</td>
+<td align="right">0.976</td>
 <td align="right">371946</td>
 <td align="right">128054</td>
 <td align="right">0.743892</td>
@@ -232,7 +237,7 @@
 </tr>
 <tr class="even">
 <td align="left">accurate</td>
-<td align="right">21.782</td>
+<td align="right">20.761</td>
 <td align="right">499949</td>
 <td align="right">51</td>
 <td align="right">0.999898</td>
@@ -275,7 +280,7 @@
 <span id="cb10-16"><a href="#cb10-16"></a><span class="co">#&gt; timezone attribute, and did not specify one inthe 'tz' argument. Defaulting</span></span>
 <span id="cb10-17"><a href="#cb10-17"></a><span class="co">#&gt; to current (America/Vancouver).</span></span>
 <span id="cb10-18"><a href="#cb10-18"></a><span class="co">#&gt;             tz_name           date_time zone is_dst utc_offset_h</span></span>
-<span id="cb10-19"><a href="#cb10-19"></a><span class="co">#&gt; 1 America/Vancouver 2019-07-12 13:07:22  PDT   TRUE           -7</span></span></code></pre></div>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="co">#&gt; 1 America/Vancouver 2019-07-12 13:17:32  PDT   TRUE           -7</span></span></code></pre></div>
 </div>
 <div id="tz_list" class="section level3">
 <h3 class="hasAnchor">
