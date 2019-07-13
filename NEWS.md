@@ -1,4 +1,4 @@
-# lutz 0.2.0.999
+# lutz 0.3.0
 
 * V8-based 'fast' method was ported to use Rcpp - it is now even faster, and
   we can drop the V8 dependency. Thanks @hrbrmstr! (#4)
