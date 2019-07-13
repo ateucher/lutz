@@ -12,4 +12,5 @@
 
 ## Reverse dependencies
 
-There are no reverse dependencies.
+There is one reverse Suggests: weathercan. I checked it with lutz 0.3.0 and 
+there were no issues
