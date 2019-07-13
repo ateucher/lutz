@@ -13,3 +13,4 @@
 ^docs$
 ^pkgdown$
 ^revdep$
+^CRAN-RELEASE$
