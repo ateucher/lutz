@@ -5,6 +5,11 @@
 * Bob Rudis (@hrbrmstr) added as an author
 * Upgraded timezone map to 2019b
 * Dealt with areas with overlapping timezones (#2)
+* Added three new functions:
+  - tz_list() lists all timezones and information about UTC offsets and daylight savings
+  - tz_offset() lists information about a specific time in a specific timezone
+  - plot_tz() plots a timezone and its UTC offset for a year, including periods
+  of daylight savings.
 
 # lutz 0.2.0
 
