@@ -1,5 +1,5 @@
 ## Test environments
-* Local macOS install (Mojave 10.14.5 ), R 3.6.0
+* Local macOS install (Mojave 10.14.5 ), R 3.6.1
 * win-builder (R-devel)
 * Ubuntu 14.04.5 (on Travis-CI: R-devel, R-release and R-oldrel)
 * Debian Linux, R-devel, GCC ASAN/UBSAN (r-hub)
