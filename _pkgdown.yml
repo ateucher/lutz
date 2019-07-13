@@ -6,10 +6,10 @@ development:
 url: https://andyteucher.ca/lutz
 
 reference:
-  - title: "Look up the timezones of coordinates"
+  - title: "Look up time zones of coordinates"
     contents:
       - starts_with("tz_lookup")
-  - title: "Timezone utilities"
+  - title: "Time zone utilities"
     contents:
       - tz_list
       - tz_offset

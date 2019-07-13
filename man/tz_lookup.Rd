@@ -26,15 +26,15 @@ character vector the same length as \code{x} specifying the time zone of the poi
 There are two methods - \code{"fast"}, and \code{"accurate"}. The \code{"fast"} version can
 look up many thousands of points very quickly, however  when a point is near
 a time zone boundary and not near a populated centre, it may return the
-incorrect timezone. If accuracy is more important than speed, use
+incorrect time zone. If accuracy is more important than speed, use
 \code{method = "accurate"}.
 }
 \details{
 Note that there are some regions in the world where a single point can land in
-two different overlapping timezones. The \code{"accurate"} method includes these,
+two different overlapping time zones. The \code{"accurate"} method includes these,
 and when they are encountered they are concatenated in a single string,
 separated by a semicolon.
-The data used in the \code{"fast"} method does not include overlapping timezones
+The data used in the \code{"fast"} method does not include overlapping time zones
 at this time.
 }
 \examples{

@@ -6,7 +6,7 @@ test_that("tz_list works", {
 
 test_that("tz_plot works", {
   expect_is(tz_plot("America/Vancouver"), "ggplot")
-  expect_error(tz_plot("foo"), "foo is not a valid timezone")
+  expect_error(tz_plot("foo"), "foo is not a valid time zone")
 })
 
 test_that("tz_offset works", {
@@ -27,7 +27,7 @@ test_that("tz_offset works", {
 
 test_that("tz_offset fails correctly", {
   expect_error(tz_offset("2019-01-01"),
-               "If dt is a character or a Date, you must supply a timezone")
+               "If dt is a character or a Date, you must supply a time zone")
   expect_error(tz_offset(1),
                "dt must be of type POSIXct/lt, Date, or a character")
 })

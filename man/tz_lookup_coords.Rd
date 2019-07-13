@@ -25,7 +25,7 @@ character vector the same length as x and y specifying the time zone of the poin
 There are two methods - \code{"fast"}, and \code{"accurate"}. The \code{"fast"} version can
 look up many thousands of points very quickly, however  when a point is near
 a time zone boundary and not near a populated centre, it may return the
-incorrect timezone. If accuracy is more important than speed, use
+incorrect time zone. If accuracy is more important than speed, use
 \code{method = "accurate"}.
 }
 \examples{

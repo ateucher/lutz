@@ -15,12 +15,12 @@ status](https://www.r-pkg.org/badges/version/lutz)](https://cran.r-project.org/p
 downloads](https://cranlogs.r-pkg.org/badges/lutz)](https://cran.r-project.org/package=lutz)
 <!-- badges: end -->
 
-# lutz (look up timezones)
+# lutz (look up time zones)
 
-## Lookup the timezone of coordinates
+## Lookup the time zone of coordinates
 
 Input latitude and longitude values or an `sf/sfc` POINT object and get
-back the timezone in which they exist. Two methods are implemented. One
+back the time zone in which they exist. Two methods are implemented. One
 is very fast and uses Rcpp in conjunction with source data from
 (<https://github.com/darkskyapp/tz-lookup/>). However, speed comes at
 the cost of accuracy - near time zone borders away from populated
@@ -30,12 +30,12 @@ The other method is slower but more accurate - it uses the sf package to
 intersect points with a detailed map of time zones from
 [here](https://github.com/evansiroky/timezone-boundary-builder).
 
-## Timezone utility functions
+## time zone utility functions
 
 **lutz** also contains several utility functions for helping to
-understand and visualize timezones, such as listing of world
-timezones,including information about daylight savings times and their
-offsets from UTC. You can also plot a timezone to visualize the UTC
+understand and visualize time zones, such as listing of world time
+zones,including information about daylight savings times and their
+offsets from UTC. You can also plot a time zone to visualize the UTC
 offset over a year and when daylight savings times are in effect.
 
 ## Installation
@@ -55,7 +55,7 @@ devtools::install_github("ateucher/lutz")
 
 ## Examples
 
-There are two functions in this package for looking up the timezones of
+There are two functions in this package for looking up the time zones of
 coordinates: `tz_lookup()` which works with both `sf/sfc` and
 `SpatialPoints` objects, and `tz_lookup_coords` for looking up lat/long
 pairs. Use the `method` argument to choose the `"fast"` or `"accurate"`
@@ -87,7 +87,7 @@ pts <- lapply(seq_along(state.center$x), function(i) {
 })
 state_centers_sf <- st_sf(st_sfc(pts))
 
-# Use tz_lookup_sf to find the timezones
+# Use tz_lookup_sf to find the time zones
 state_centers_sf$tz <- tz_lookup(state_centers_sf)
 state_centers_sf$tz <- tz_lookup(state_centers_sf, method = "accurate")
 
@@ -117,21 +117,21 @@ ggplot(cbind(as.data.frame(coordinates(state_centers_sp)), tz = state_centers_sp
 ![](man/figures/unnamed-chunk-5-1.png)<!-- -->
 
 Note that there are some regions in the world where a single point can
-land in two different overlapping timezones. The `"accurate"` method
+land in two different overlapping time zones. The `"accurate"` method
 [includes
 these](https://github.com/evansiroky/timezone-boundary-builder/releases/tag/2018g),
 however the method used in the `"fast"` does not include overlapping
-timezones ([at least for
+time zones ([at least for
 now](https://github.com/darkskyapp/tz-lookup/issues/34)).
 
-We can compare the accuracy of both methods to the high-resolution
-timezone map provided by
+We can compare the accuracy of both methods to the high-resolution time
+zone map provided by
 <https://github.com/evansiroky/timezone-boundary-builder>. This is the
 map that is used by `lutz` for the `"accurate"` method, but in `lutz` it
 is simplified by about 80% to be small enough to fit in the package.
 
 ``` r
-## Get the full timezone geojson from https://github.com/evansiroky/timezone-boundary-builder
+## Get the full time zone geojson from https://github.com/evansiroky/timezone-boundary-builder
 download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2019a/timezones-with-oceans.geojson.zip",
                 destfile = "tz.zip")
 unzip("tz.zip", exdir = "data-raw/dist/")
@@ -158,19 +158,19 @@ n <- 500000
 ll <- data.frame(id = seq(n), lat = runif(n, -90, 90), lon = runif(n, -180, 180))
 ll_sf <- st_as_sf(ll, coords = c("lon", "lat"), crs = 4326)
 
-# Overlay those points with the full high-resolution timezone map:
+# Overlay those points with the full high-resolution time zone map:
 ref_ll_tz <- sf::st_join(ll_sf, tz_full)
 #> although coordinates are longitude/latitude, st_intersects assumes that they are planar
 #> although coordinates are longitude/latitude, st_intersects assumes that they are planar
 
-# Combine those that had overlapping timezones
+# Combine those that had overlapping time zones
 ref_ll_tz <- ref_ll_tz %>% 
   st_set_geometry(NULL) %>% 
   group_by(id) %>% 
   summarize(tzid = paste(tzid, collapse = "; "))
 
 # run tz_lookup with both `"fast"` and `"accurate"` methods and compare with 
-# the timezones looked up with the high-resolution map:
+# the time zones looked up with the high-resolution map:
 tests <- map_df(c("fast", "accurate"), ~ {
   time <- system.time(test_ll_tz <- tz_lookup(ll_sf, method = .x, warn = FALSE))
   comp <- ref_ll_tz$tzid == test_ll_tz
@@ -197,10 +197,10 @@ knitr::kable(tests)
 
 | method   |   time | matches | mismatches | accuracy | ref\_nas | fun\_nas |
 | :------- | -----: | ------: | ---------: | -------: | -------: | -------: |
-| fast     |  1.294 |  371946 |     128054 | 0.743892 |        0 |        0 |
-| accurate | 27.437 |  499949 |         51 | 0.999898 |        0 |        0 |
+| fast     |  1.132 |  371946 |     128054 | 0.743892 |        0 |        0 |
+| accurate | 26.363 |  499949 |         51 | 0.999898 |        0 |        0 |
 
-## Timezone utility functions
+## time zone utility functions
 
 ### `tz_plot()`
 
@@ -216,7 +216,7 @@ tz_plot("America/Vancouver")
 # A Date object
 tz_offset(Sys.Date(), "Africa/Algiers")
 #>          tz_name  date_time zone is_dst utc_offset_h
-#> 1 Africa/Algiers 2019-07-12  CET  FALSE            1
+#> 1 Africa/Algiers 2019-07-13  CET  FALSE            1
 
 
 # A Date-like character string
@@ -231,7 +231,7 @@ tz_offset(Sys.time())
 #> timezone attribute, and did not specify one inthe 'tz' argument. Defaulting
 #> to current (America/Vancouver).
 #>             tz_name           date_time zone is_dst utc_offset_h
-#> 1 America/Vancouver 2019-07-12 23:49:20  PDT   TRUE           -7
+#> 1 America/Vancouver 2019-07-13 15:49:18  PDT   TRUE           -7
 ```
 
 ### `tz_list()`

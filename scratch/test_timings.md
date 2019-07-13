@@ -1,7 +1,7 @@
 
-These are tests to figure out how to include a full timezone map in lutz
+These are tests to figure out how to include a full time zone map in lutz
 that is small enough to submit to CRAN (\<5MB), but still provides a
-very high degree of accuracy. Simplify the full timezone map at various
+very high degree of accuracy. Simplify the full time zone map at various
 levels and compare accuracy vs size. Performance is a secondary
 consideration.
 
@@ -16,7 +16,7 @@ library(sf)
 library(rmapshaper)
 library(purrr)
 
-## Get the full timezone geojson from https://github.com/evansiroky/timezone-boundary-builder
+## Get the full time zone geojson from https://github.com/evansiroky/timezone-boundary-builder
 download.file("https://github.com/evansiroky/timezone-boundary-builder/releases/download/2018d/timezones-with-oceans.geojson.zip",
               destfile = "tz.zip")
 unzip("tz.zip", exdir = ".")
@@ -25,8 +25,8 @@ tz_full <- read_sf("dist/combined-with-oceans.json")
 
 A function that takes a vector of values to pass to the `keep` argument
 in `rmapshaper::ms_simplify()`, an `sf` POINTS object, and the full
-unmodified timezone map. It will simplify the map using each value of
-`keep` and get timezone values from the simplified map, outputting size,
+unmodified time zone map. It will simplify the map using each value of
+`keep` and get time zone values from the simplified map, outputting size,
 time, accuracy etc.
 
 ``` r
@@ -58,7 +58,7 @@ compare_tz_ver <- function(keep, ll, tz_full) {
 ```
 
 Make an sf points object of n points randomly distributed around the
-globe. The timezone file only has land, so points in the oceans don’t
+globe. The time zone file only has land, so points in the oceans don’t
 get evaluated.
 
 ``` r

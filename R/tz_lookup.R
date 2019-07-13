@@ -3,14 +3,14 @@
 #' There are two methods - `"fast"`, and `"accurate"`. The `"fast"` version can
 #' look up many thousands of points very quickly, however  when a point is near
 #' a time zone boundary and not near a populated centre, it may return the
-#' incorrect timezone. If accuracy is more important than speed, use
+#' incorrect time zone. If accuracy is more important than speed, use
 #' `method = "accurate"`.
 #'
 #' Note that there are some regions in the world where a single point can land in
-#' two different overlapping timezones. The `"accurate"` method includes these,
+#' two different overlapping time zones. The `"accurate"` method includes these,
 #' and when they are encountered they are concatenated in a single string,
 #' separated by a semicolon.
-#' The data used in the `"fast"` method does not include overlapping timezones
+#' The data used in the `"fast"` method does not include overlapping time zones
 #' at this time.
 #'
 #' @param x either an `sfc` or `sf` points or `SpatialPoints(DataFrame)` object
@@ -73,7 +73,7 @@ tz_lookup_fast.SpatialPoints <- function(x, crs, warn) {
 #' There are two methods - `"fast"`, and `"accurate"`. The `"fast"` version can
 #' look up many thousands of points very quickly, however  when a point is near
 #' a time zone boundary and not near a populated centre, it may return the
-#' incorrect timezone. If accuracy is more important than speed, use
+#' incorrect time zone. If accuracy is more important than speed, use
 #' `method = "accurate"`.
 #'
 #' @param lat numeric vector of latitudes
@@ -111,13 +111,13 @@ tz_lookup_accurate <- function(x, crs = NULL) {
 tz_lookup_accurate.sf <- function(x, crs = NULL) {
   x <- fix_sf(x, crs)
   # Add a unique id so we can deal with any duplicates resulting
-  # from overlapping timezones
+  # from overlapping time zones
   x$lutzid <- seq_len(nrow(x))
   x_tz <- suppressMessages(sf::st_set_geometry(sf::st_join(x, tz_sf), NULL))
 
-  # group x by lutzid and concatenate multiple timezones with ;
+  # group x by lutzid and concatenate multiple time zones with ;
   if (nrow(x_tz) > nrow(x)) {
-    warning("Some points are in areas with more than one timezone defined.",
+    warning("Some points are in areas with more than one time zone defined.",
             "These are often disputed areas and should be treated with care.")
 
     ret <- stats::aggregate(x_tz, list(x_tz$lutzid), function(x) {

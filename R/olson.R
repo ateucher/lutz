@@ -25,13 +25,13 @@ tz_list <- function() {
   ret[!is.na(ret$utc_offset_h), , drop = FALSE]
 }
 
-#' Find the offset from UTC at a particular date/time in a particular timezone
+#' Find the offset from UTC at a particular date/time in a particular time zone
 #'
 #' @param dt `Date`, `POSIXt` or date-like character string
-#' @param tz A timezone name from [base::OlsonNames()]. Not required if `dt`
-#' is a `POSIXt` object with a timezone component.
+#' @param tz A time zone name from [base::OlsonNames()]. Not required if `dt`
+#' is a `POSIXt` object with a time zone component.
 #'
-#' @return a one-row data frame with details of the timezone
+#' @return a one-row data frame with details of the time zone
 #' @export
 #'
 #' @examples
@@ -53,16 +53,16 @@ tz_offset <- function(dt, tz = "") {
   } else { # if tz not supplied
     # if dt not a POSIXt, bail
     if (is.character(dt) || lubridate::is.Date(dt)) {
-      stop("If dt is a character or a Date, you must supply a timezone",
+      stop("If dt is a character or a Date, you must supply a time zone",
            call. = FALSE)
     } else {
-      # if it is a datetime object, extract the timezone attribute
+      # if it is a datetime object, extract the time zone attribute
       tz <- lubridate::tz(dt)
       # make sure it's not empty
       if (tz == "") {
         tz <- Sys.timezone()
         warning("You supplied an object of class ", class(dt)[1],
-        " that does not have a timezone attribute, and did not specify one in",
+        " that does not have a time zone attribute, and did not specify one in",
         "the 'tz' argument. Defaulting to current (", Sys.timezone(), ").",
              call. = FALSE)
       }
@@ -71,7 +71,7 @@ tz_offset <- function(dt, tz = "") {
 
   dt <- lubridate::force_tz(as.POSIXlt(dt), tz)
 
-  # Extract components / attributes of timezone
+  # Extract components / attributes of time zone
   utc_offset <- dt$gmtoff
   zone <- dt$zone
   is_dst <- lubridate::dst(dt)
@@ -88,9 +88,9 @@ tz_offset <- function(dt, tz = "") {
 }
 
 
-#' Plot a timezone
+#' Plot a time zone
 #'
-#' Make a circular plot of a timezone, visualizing the UTC offset over the
+#' Make a circular plot of a time zone, visualizing the UTC offset over the
 #' course of the year, including Daylight Savings times
 #'
 #' @param tz a valid time zone name. See [OlsonNames()]
@@ -154,7 +154,7 @@ tz_plot <- function(tz) {
 
 check_tz <- function(tz) {
   if (!tz %in% lutz_env$olson_names) {
-    stop(tz, " is not a valid timezone. See ?OlsonNames",
+    stop(tz, " is not a valid time zone. See ?OlsonNames",
          call. = FALSE)
   }
 }

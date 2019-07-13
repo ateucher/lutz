@@ -3,12 +3,12 @@
 * V8-based 'fast' method was ported to use Rcpp - it is now even faster, and
   we can drop the V8 dependency. Thanks @hrbrmstr! (#4)
 * Bob Rudis (@hrbrmstr) added as an author
-* Upgraded timezone map to 2019b
-* Dealt with areas with overlapping timezones (#2)
+* Upgraded time zone map to 2019b
+* Dealt with areas with overlapping time zones (#2)
 * Added three new functions:
-  - tz_list() lists all timezones and information about UTC offsets and daylight savings
-  - tz_offset() lists information about a specific time in a specific timezone
-  - tz_plot() plots a timezone and its UTC offset for a year, including periods
+  - tz_list() lists all time zones and information about UTC offsets and daylight savings
+  - tz_offset() lists information about a specific time in a specific time zone
+  - tz_plot() plots a time zone and its UTC offset for a year, including periods
   of daylight savings.
 
 # lutz 0.2.0

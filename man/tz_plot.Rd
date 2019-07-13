@@ -2,7 +2,7 @@
 % Please edit documentation in R/olson.R
 \name{tz_plot}
 \alias{tz_plot}
-\title{Plot a timezone}
+\title{Plot a time zone}
 \usage{
 tz_plot(tz)
 }
@@ -13,7 +13,7 @@ tz_plot(tz)
 a \code{ggplot2} object
 }
 \description{
-Make a circular plot of a timezone, visualizing the UTC offset over the
+Make a circular plot of a time zone, visualizing the UTC offset over the
 course of the year, including Daylight Savings times
 }
 \examples{

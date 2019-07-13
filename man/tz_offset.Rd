@@ -2,21 +2,21 @@
 % Please edit documentation in R/olson.R
 \name{tz_offset}
 \alias{tz_offset}
-\title{Find the offset from UTC at a particular date/time in a particular timezone}
+\title{Find the offset from UTC at a particular date/time in a particular time zone}
 \usage{
 tz_offset(dt, tz = "")
 }
 \arguments{
 \item{dt}{\code{Date}, \code{POSIXt} or date-like character string}
 
-\item{tz}{A timezone name from \code{\link[base:OlsonNames]{base::OlsonNames()}}. Not required if \code{dt}
-is a \code{POSIXt} object with a timezone component.}
+\item{tz}{A time zone name from \code{\link[base:OlsonNames]{base::OlsonNames()}}. Not required if \code{dt}
+is a \code{POSIXt} object with a time zone component.}
 }
 \value{
-a one-row data frame with details of the timezone
+a one-row data frame with details of the time zone
 }
 \description{
-Find the offset from UTC at a particular date/time in a particular timezone
+Find the offset from UTC at a particular date/time in a particular time zone
 }
 \examples{
 tz_offset("2018-06-12", "America/Moncton")

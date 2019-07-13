@@ -67,7 +67,7 @@ check_for_spatial <- function(x) {
 }
 
 warn_for_fast <- function() {
-  warning("Using 'fast' method. This can cause inaccuracies in timezones
+  warning("Using 'fast' method. This can cause inaccuracies in time zones
   near boundaries away from populated ares. Use the 'accurate'
   method if accuracy is more important than speed.", call. = FALSE)
 }
