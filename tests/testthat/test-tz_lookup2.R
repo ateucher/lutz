@@ -65,4 +65,7 @@ test_that("tz_lookup accurate method deals with overlapping timezones", {
   expect_warning(tz <- tz_lookup(coords_sp, method = "accurate"),
                  "Some points are in areas with more than one timezone")
   expect_equal(tz, "Asia/Shanghai; Asia/Urumqi")
+  pts <- sf::st_sfc(sf::st_point(c(30, 70)), sf::st_point(coords))
+  expect_equal(suppressWarnings(tz_lookup(pts, method = "accurate")),
+               c("Europe/Oslo", "Asia/Shanghai; Asia/Urumqi"))
 })

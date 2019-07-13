@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>lutz: Look Up Time Zones of Point Coordinates — lutz-package • lutz</title>
+<title>Create a list of Time Zones — tz_list • lutz</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,22 +30,9 @@
 
 
 
-<meta property="og:title" content="lutz: Look Up Time Zones of Point Coordinates — lutz-package" />
+<meta property="og:title" content="Create a list of Time Zones — tz_list" />
 
-<meta property="og:description" content="Input latitude and longitude values or an 'sf/sfc' POINT 
-    object and get back the timezone in which they exist. Two methods are implemented. 
-    One is very fast and uses 'Rcpp' in conjunction with data from the 'Javascript' library
-    (&amp;lt;https://github.com/darkskyapp/tz-lookup/&amp;gt;). This method also works outside of countries' 
-    borders and in international waters, however speed comes at the cost of accuracy - near time 
-    zone borders away from populated centres there is a chance that it will return the incorrect
-    time zone. The other method is slower but more accurate - it uses the 'sf' package to intersect 
-    points with a detailed map of time zones from here: 
-    &amp;lt;https://github.com/evansiroky/timezone-boundary-builder/&amp;gt;. The package also 
-    contains several utility functions for helping to understand and visualize 
-    timezones, such as listing of world timezones,including information about 
-    daylight savings times and their offsets from UTC. You can also plot a 
-    timezone to visualize the UTC offset over a year and when daylight savings 
-    times are in effect." />
+<meta property="og:description" content="Output a list of time zone names, with daylight savings time and utc offset" />
 <meta name="twitter:card" content="summary" />
 
 <meta name="robots" content="noindex">
@@ -110,37 +97,28 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>lutz: Look Up Time Zones of Point Coordinates</h1>
+    <h1>Create a list of Time Zones</h1>
     
-    <div class="hidden name"><code>lutz-package.Rd</code></div>
+    <div class="hidden name"><code>tz_list.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Input latitude and longitude values or an 'sf/sfc' POINT 
-    object and get back the timezone in which they exist. Two methods are implemented. 
-    One is very fast and uses 'Rcpp' in conjunction with data from the 'Javascript' library
-    (&lt;https://github.com/darkskyapp/tz-lookup/&gt;). This method also works outside of countries' 
-    borders and in international waters, however speed comes at the cost of accuracy - near time 
-    zone borders away from populated centres there is a chance that it will return the incorrect
-    time zone. The other method is slower but more accurate - it uses the 'sf' package to intersect 
-    points with a detailed map of time zones from here: 
-    &lt;https://github.com/evansiroky/timezone-boundary-builder/&gt;. The package also 
-    contains several utility functions for helping to understand and visualize 
-    timezones, such as listing of world timezones,including information about 
-    daylight savings times and their offsets from UTC. You can also plot a 
-    timezone to visualize the UTC offset over a year and when daylight savings 
-    times are in effect.</p>
+    <p>Output a list of time zone names, with daylight savings time and utc offset</p>
     
     </div>
 
+    <pre class="usage"><span class='fu'>tz_list</span>()</pre>
         
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <div class='dont-index'><p>Useful links:</p><ul>
-<li><p><a href='https://andyteucher.ca/lutz'>https://andyteucher.ca/lutz</a></p></li>
-<li><p>Report bugs at <a href='https://github.com/ateucher/lutz/issues'>https://github.com/ateucher/lutz/issues</a></p></li>
-</ul></div>
+    <p>A data.frame of all time zones on your system. Columns:</p><ul>
+<li><p>tz_name: the name of the time zone</p></li>
+<li><p>zone: time zone</p></li>
+<li><p>is_dst: is the time zone in daylight savings time</p></li>
+<li><p>utc_offset_h: offset from UTC (in hours)</p></li>
+</ul>
+
     
 
   </div>
@@ -148,15 +126,8 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       
-      <li><a href="#see-also">See also</a></li>
+      <li><a href="#value">Value</a></li>
           </ul>
-
-    <h2>Author</h2>
-    <p><strong>Maintainer</strong>: Andy Teucher <a href='mailto:andy.teucher@gmail.com'>andy.teucher@gmail.com</a> (0000-0002-7840-692X)</p>
-<p>Other contributors:</p><ul>
-<li><p>Bob Rudis <a href='mailto:bob@rud.is'>bob@rud.is</a> (0000-0001-5670-2640) [contributor]</p></li>
-</ul>
-
 
   </div>
 </div>

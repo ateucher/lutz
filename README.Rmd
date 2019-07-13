@@ -22,6 +22,8 @@ knitr::opts_chunk$set(
 
 # lutz (look up timezones)
 
+## Lookup the timezone of coordinates
+
 Input latitude and longitude values or an `sf/sfc` POINT object and get back 
 the timezone in which they exist. Two methods are implemented. One is very 
 fast and uses Rcpp in conjunction with source data from (https://github.com/darkskyapp/tz-lookup/). 
@@ -31,6 +33,11 @@ populated centres there is a chance that it will return the incorrect time zone.
 The other method is slower but more accurate - it uses the sf package to 
 intersect points with a detailed map of time zones from 
 [here](https://github.com/evansiroky/timezone-boundary-builder).
+
+## Timezone utility functions
+
+**lutz** also contains several utility functions for helping to understand and 
+visualize timezones, such as listing of world timezones,including information about daylight savings times and their offsets from UTC. You can also plot a timezone to visualize the UTC offset over a year and when daylight savings times are in effect.
 
 ## Installation
 
@@ -49,7 +56,7 @@ devtools::install_github("ateucher/lutz")
 
 ## Examples
 
-There are only two functions in this package: `tz_lookup()` which works with both `sf/sfc` and `SpatialPoints` objects, and `tz_lookup_coords` for looking up lat/long pairs. Use the `method` argument to choose the `"fast"` or `"accurate"`
+There are two functions in this package for looking up the timezones of coordinates: `tz_lookup()` which works with both `sf/sfc` and `SpatialPoints` objects, and `tz_lookup_coords` for looking up lat/long pairs. Use the `method` argument to choose the `"fast"` or `"accurate"`
 method.
 
 ### With coordinates. They must be lat/long in decimal degrees:
@@ -158,3 +165,36 @@ tests <- map_df(c("fast", "accurate"), ~ {
 ```{r results="asis", eval=file.exists("data-raw/dist/combined-with-oceans.json")}
 knitr::kable(tests)
 ```
+
+## Timezone utility functions
+
+### `plot_tz()`
+
+```{r}
+plot_tz("America/Vancouver")
+```
+
+### `tz_offset()`
+
+```{r}
+# A Date object
+tz_offset(Sys.Date(), "Africa/Algiers")
+
+
+# A Date-like character string
+tz_offset("2017-03-01", tz = "Singapore")
+
+
+# A POSIXct date-time object
+tz_offset(Sys.time())
+```
+
+### `tz_list()`
+
+```{r}
+tz_list() %>% 
+  head(20) %>% 
+  knitr::kable()
+```
+
+

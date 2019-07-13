@@ -4,3 +4,13 @@ development:
   mode: auto
 
 url: https://andyteucher.ca/lutz
+
+reference:
+  - title: "Look up the timezones of coordinates"
+    contents:
+      - starts_with("tz_lookup")
+  - title: "Timezone utilities"
+    contents:
+      - tz_list
+      - tz_offset
+      - plot_tz
