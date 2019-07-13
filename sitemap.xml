@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://andyteucher.ca/lutz/index.html</loc>
+  </url>
+  <url>
+    <loc>https://andyteucher.ca/lutz/reference/lutz-package.html</loc>
+  </url>
+  <url>
+    <loc>https://andyteucher.ca/lutz/reference/plot_tz.html</loc>
+  </url>
+  <url>
+    <loc>https://andyteucher.ca/lutz/reference/tz_list.html</loc>
+  </url>
+  <url>
+    <loc>https://andyteucher.ca/lutz/reference/tz_lookup.html</loc>
+  </url>
+  <url>
+    <loc>https://andyteucher.ca/lutz/reference/tz_lookup_coords.html</loc>
+  </url>
+  <url>
+    <loc>https://andyteucher.ca/lutz/reference/tz_offset.html</loc>
+  </url>
+</urlset>
