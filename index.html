@@ -11,7 +11,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Look Up Time Zones of Point Coordinates">
 <meta property="og:description" content="Input latitude and longitude values or an 'sf/sfc' POINT 
-    object and get back the timezone in which they exist. Two methods are implemented. 
+    object and get back the time zone in which they exist. Two methods are implemented. 
     One is very fast and uses 'Rcpp' in conjunction with data from the 'Javascript' library
     (&lt;https://github.com/darkskyapp/tz-lookup/&gt;). This method also works outside of countries' 
     borders and in international waters, however speed comes at the cost of accuracy - near time 
@@ -22,7 +22,7 @@
     contains several utility functions for helping to understand and visualize 
     time zones, such as listing of world time zones, including information about 
     daylight savings times and their offsets from UTC. You can also plot a 
-    timezone to visualize the UTC offset over a year and when daylight savings 
+    time zone to visualize the UTC offset over a year and when daylight savings 
     times are in effect.">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -80,19 +80,19 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 
-<div id="lutz-look-up-timezones" class="section level1">
+<div id="lutz-look-up-time-zones" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#lutz-look-up-timezones" class="anchor"></a>lutz (look up timezones)</h1></div>
-<div id="lookup-the-timezone-of-coordinates" class="section level2">
+<a href="#lutz-look-up-time-zones" class="anchor"></a>lutz (look up time zones)</h1></div>
+<div id="lookup-the-time-zone-of-coordinates" class="section level2">
 <h2 class="hasAnchor">
-<a href="#lookup-the-timezone-of-coordinates" class="anchor"></a>Lookup the timezone of coordinates</h2>
-<p>Input latitude and longitude values or an <code>sf/sfc</code> POINT object and get back the timezone in which they exist. Two methods are implemented. One is very fast and uses Rcpp in conjunction with source data from (<a href="https://github.com/darkskyapp/tz-lookup/" class="uri">https://github.com/darkskyapp/tz-lookup/</a>). However, speed comes at the cost of accuracy - near time zone borders away from populated centres there is a chance that it will return the incorrect time zone.</p>
+<a href="#lookup-the-time-zone-of-coordinates" class="anchor"></a>Lookup the time zone of coordinates</h2>
+<p>Input latitude and longitude values or an <code>sf/sfc</code> POINT object and get back the time zone in which they exist. Two methods are implemented. One is very fast and uses Rcpp in conjunction with source data from (<a href="https://github.com/darkskyapp/tz-lookup/" class="uri">https://github.com/darkskyapp/tz-lookup/</a>). However, speed comes at the cost of accuracy - near time zone borders away from populated centres there is a chance that it will return the incorrect time zone.</p>
 <p>The other method is slower but more accurate - it uses the sf package to intersect points with a detailed map of time zones from <a href="https://github.com/evansiroky/timezone-boundary-builder">here</a>.</p>
 </div>
-<div id="timezone-utility-functions" class="section level2">
+<div id="time-zone-utility-functions" class="section level2">
 <h2 class="hasAnchor">
-<a href="#timezone-utility-functions" class="anchor"></a>Timezone utility functions</h2>
-<p><strong>lutz</strong> also contains several utility functions for helping to understand and visualize timezones, such as listing of world timezones,including information about daylight savings times and their offsets from UTC. You can also plot a timezone to visualize the UTC offset over a year and when daylight savings times are in effect.</p>
+<a href="#time-zone-utility-functions" class="anchor"></a>time zone utility functions</h2>
+<p><strong>lutz</strong> also contains several utility functions for helping to understand and visualize time zones, such as listing of world time zones,including information about daylight savings times and their offsets from UTC. You can also plot a time zone to visualize the UTC offset over a year and when daylight savings times are in effect.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -106,7 +106,7 @@
 <div id="examples" class="section level2">
 <h2 class="hasAnchor">
 <a href="#examples" class="anchor"></a>Examples</h2>
-<p>There are two functions in this package for looking up the timezones of coordinates: <code><a href="reference/tz_lookup.html">tz_lookup()</a></code> which works with both <code>sf/sfc</code> and <code>SpatialPoints</code> objects, and <code>tz_lookup_coords</code> for looking up lat/long pairs. Use the <code>method</code> argument to choose the <code>"fast"</code> or <code>"accurate"</code> method.</p>
+<p>There are two functions in this package for looking up the time zones of coordinates: <code><a href="reference/tz_lookup.html">tz_lookup()</a></code> which works with both <code>sf/sfc</code> and <code>SpatialPoints</code> objects, and <code>tz_lookup_coords</code> for looking up lat/long pairs. Use the <code>method</code> argument to choose the <code>"fast"</code> or <code>"accurate"</code> method.</p>
 <div id="with-coordinates--they-must-be-latlong-in-decimal-degrees" class="section level3">
 <h3 class="hasAnchor">
 <a href="#with-coordinates--they-must-be-latlong-in-decimal-degrees" class="anchor"></a>With coordinates. They must be lat/long in decimal degrees:</h3>
@@ -132,7 +132,7 @@
 <a class="sourceLine" id="cb4-7" data-line-number="7">})</a>
 <a class="sourceLine" id="cb4-8" data-line-number="8">state_centers_sf &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/sf">st_sf</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/sfc">st_sfc</a></span>(pts))</a>
 <a class="sourceLine" id="cb4-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co"># Use tz_lookup_sf to find the timezones</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co"># Use tz_lookup_sf to find the time zones</span></a>
 <a class="sourceLine" id="cb4-11" data-line-number="11">state_centers_sf<span class="op">$</span>tz &lt;-<span class="st"> </span><span class="kw"><a href="reference/tz_lookup.html">tz_lookup</a></span>(state_centers_sf)</a>
 <a class="sourceLine" id="cb4-12" data-line-number="12">state_centers_sf<span class="op">$</span>tz &lt;-<span class="st"> </span><span class="kw"><a href="reference/tz_lookup.html">tz_lookup</a></span>(state_centers_sf, <span class="dt">method =</span> <span class="st">"accurate"</span>)</a>
 <a class="sourceLine" id="cb4-13" data-line-number="13"></a>
@@ -156,9 +156,9 @@
 <a class="sourceLine" id="cb5-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_fixed</a></span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb5-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span>()</a></code></pre></div>
 <p><img src="reference/figures/unnamed-chunk-5-1.png" width="700"></p>
-<p>Note that there are some regions in the world where a single point can land in two different overlapping timezones. The <code>"accurate"</code> method <a href="https://github.com/evansiroky/timezone-boundary-builder/releases/tag/2018g">includes these</a>, however the method used in the <code>"fast"</code> does not include overlapping timezones (<a href="https://github.com/darkskyapp/tz-lookup/issues/34">at least for now</a>).</p>
-<p>We can compare the accuracy of both methods to the high-resolution timezone map provided by <a href="https://github.com/evansiroky/timezone-boundary-builder" class="uri">https://github.com/evansiroky/timezone-boundary-builder</a>. This is the map that is used by <code>lutz</code> for the <code>"accurate"</code> method, but in <code>lutz</code> it is simplified by about 80% to be small enough to fit in the package.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">## Get the full timezone geojson from https://github.com/evansiroky/timezone-boundary-builder</a>
+<p>Note that there are some regions in the world where a single point can land in two different overlapping time zones. The <code>"accurate"</code> method <a href="https://github.com/evansiroky/timezone-boundary-builder/releases/tag/2018g">includes these</a>, however the method used in the <code>"fast"</code> does not include overlapping time zones (<a href="https://github.com/darkskyapp/tz-lookup/issues/34">at least for now</a>).</p>
+<p>We can compare the accuracy of both methods to the high-resolution time zone map provided by <a href="https://github.com/evansiroky/timezone-boundary-builder" class="uri">https://github.com/evansiroky/timezone-boundary-builder</a>. This is the map that is used by <code>lutz</code> for the <code>"accurate"</code> method, but in <code>lutz</code> it is simplified by about 80% to be small enough to fit in the package.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">## Get the full time zone geojson from https://github.com/evansiroky/timezone-boundary-builder</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/download.file">download.file</a></span>(<span class="st">"https://github.com/evansiroky/timezone-boundary-builder/releases/download/2019a/timezones-with-oceans.geojson.zip"</span>,</a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">                <span class="dt">destfile =</span> <span class="st">"tz.zip"</span>)</a>
 <a class="sourceLine" id="cb6-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/unzip">unzip</a></span>(<span class="st">"tz.zip"</span>, <span class="dt">exdir =</span> <span class="st">"data-raw/dist/"</span>)</a></code></pre></div>
@@ -174,17 +174,17 @@
 <a class="sourceLine" id="cb7-10" data-line-number="10">ll &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(n), <span class="dt">lat =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(n, <span class="dv">-90</span>, <span class="dv">90</span>), <span class="dt">lon =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(n, <span class="dv">-180</span>, <span class="dv">180</span>))</a>
 <a class="sourceLine" id="cb7-11" data-line-number="11">ll_sf &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_as_sf">st_as_sf</a></span>(ll, <span class="dt">coords =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="dt">crs =</span> <span class="dv">4326</span>)</a>
 <a class="sourceLine" id="cb7-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co"># Overlay those points with the full high-resolution timezone map:</span></a>
+<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co"># Overlay those points with the full high-resolution time zone map:</span></a>
 <a class="sourceLine" id="cb7-14" data-line-number="14">ref_ll_tz &lt;-<span class="st"> </span>sf<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_join">st_join</a></span>(ll_sf, tz_full)</a>
 <a class="sourceLine" id="cb7-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="co"># Combine those that had overlapping timezones</span></a>
+<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="co"># Combine those that had overlapping time zones</span></a>
 <a class="sourceLine" id="cb7-17" data-line-number="17">ref_ll_tz &lt;-<span class="st"> </span>ref_ll_tz <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb7-18" data-line-number="18"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/sf/topics/st_geometry">st_set_geometry</a></span>(<span class="ot">NULL</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb7-19" data-line-number="19"><span class="st">  </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb7-20" data-line-number="20"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">tzid =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(tzid, <span class="dt">collapse =</span> <span class="st">"; "</span>))</a>
 <a class="sourceLine" id="cb7-21" data-line-number="21"></a>
 <a class="sourceLine" id="cb7-22" data-line-number="22"><span class="co"># run tz_lookup with both `"fast"` and `"accurate"` methods and compare with </span></a>
-<a class="sourceLine" id="cb7-23" data-line-number="23"><span class="co"># the timezones looked up with the high-resolution map:</span></a>
+<a class="sourceLine" id="cb7-23" data-line-number="23"><span class="co"># the time zones looked up with the high-resolution map:</span></a>
 <a class="sourceLine" id="cb7-24" data-line-number="24">tests &lt;-<span class="st"> </span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map_df</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"fast"</span>, <span class="st">"accurate"</span>), <span class="op">~</span><span class="st"> </span>{</a>
 <a class="sourceLine" id="cb7-25" data-line-number="25">  time &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(test_ll_tz &lt;-<span class="st"> </span><span class="kw"><a href="reference/tz_lookup.html">tz_lookup</a></span>(ll_sf, <span class="dt">method =</span> .x, <span class="dt">warn =</span> <span class="ot">FALSE</span>))</a>
 <a class="sourceLine" id="cb7-26" data-line-number="26">  comp &lt;-<span class="st"> </span>ref_ll_tz<span class="op">$</span>tzid <span class="op">==</span><span class="st"> </span>test_ll_tz</a>
@@ -203,9 +203,9 @@
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(tests)</a></code></pre></div>
 </div>
 </div>
-<div id="timezone-utility-functions-1" class="section level2">
+<div id="time-zone-utility-functions-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#timezone-utility-functions-1" class="anchor"></a>Timezone utility functions</h2>
+<a href="#time-zone-utility-functions-1" class="anchor"></a>time zone utility functions</h2>
 <div id="tz_plot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#tz_plot" class="anchor"></a><code><a href="reference/tz_plot.html">tz_plot()</a></code>
@@ -232,7 +232,7 @@
 <a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co"># A POSIXct date-time object</span></a>
 <a class="sourceLine" id="cb10-14" data-line-number="14"><span class="kw"><a href="reference/tz_offset.html">tz_offset</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.time">Sys.time</a></span>())</a>
 <a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#&gt;   tz_name           date_time zone is_dst utc_offset_h</span></a>
-<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt; 1     UTC 2019-07-13 21:09:40 &lt;NA&gt;  FALSE            0</span></a></code></pre></div>
+<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt; 1     UTC 2019-07-13 23:06:30 &lt;NA&gt;  FALSE            0</span></a></code></pre></div>
 </div>
 <div id="tz_list" class="section level3">
 <h3 class="hasAnchor">

@@ -35,7 +35,7 @@
 <meta property="og:description" content="There are two methods - &quot;fast&quot;, and &quot;accurate&quot;. The &quot;fast&quot; version can
 look up many thousands of points very quickly, however  when a point is near
 a time zone boundary and not near a populated centre, it may return the
-incorrect timezone. If accuracy is more important than speed, use
+incorrect time zone. If accuracy is more important than speed, use
 method = &quot;accurate&quot;." />
 <meta name="twitter:card" content="summary" />
 
@@ -111,7 +111,7 @@ method = &quot;accurate&quot;." />
     <p>There are two methods - <code>"fast"</code>, and <code>"accurate"</code>. The <code>"fast"</code> version can
 look up many thousands of points very quickly, however  when a point is near
 a time zone boundary and not near a populated centre, it may return the
-incorrect timezone. If accuracy is more important than speed, use
+incorrect time zone. If accuracy is more important than speed, use
 <code>method = "accurate"</code>.</p>
     
     </div>
@@ -150,10 +150,10 @@ this off.</p></td>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Note that there are some regions in the world where a single point can land in
-two different overlapping timezones. The <code>"accurate"</code> method includes these,
+two different overlapping time zones. The <code>"accurate"</code> method includes these,
 and when they are encountered they are concatenated in a single string,
 separated by a semicolon.
-The data used in the <code>"fast"</code> method does not include overlapping timezones
+The data used in the <code>"fast"</code> method does not include overlapping time zones
 at this time.</p>
     
 
@@ -169,7 +169,7 @@ at this time.</p>
 <span class='no'>state_centers_sf</span>$<span class='no'>tz</span> <span class='kw'>&lt;-</span> <span class='fu'>tz_lookup</span>(<span class='no'>state_centers_sf</span>)
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/sf/topics/plot'>plot</a></span>(<span class='no'>state_centers_sf</span>[, <span class='st'>"tz"</span>])
-}</div><div class='output co'>#&gt; <span class='message'>Loading required package: sf</span></div><div class='output co'>#&gt; <span class='message'>Linking to GEOS 3.5.0, GDAL 2.2.2, PROJ 4.8.0</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Using 'fast' method. This can cause inaccuracies in timezones</span>
+}</div><div class='output co'>#&gt; <span class='message'>Loading required package: sf</span></div><div class='output co'>#&gt; <span class='message'>Linking to GEOS 3.5.0, GDAL 2.2.2, PROJ 4.8.0</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Using 'fast' method. This can cause inaccuracies in time zones</span>
 #&gt; <span class='warning'>  near boundaries away from populated ares. Use the 'accurate'</span>
 #&gt; <span class='warning'>  method if accuracy is more important than speed.</span></div><div class='img'><img src='tz_lookup-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
