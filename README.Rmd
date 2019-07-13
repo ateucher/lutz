@@ -168,10 +168,10 @@ knitr::kable(tests)
 
 ## Timezone utility functions
 
-### `plot_tz()`
+### `tz_plot()`
 
 ```{r}
-plot_tz("America/Vancouver")
+tz_plot("America/Vancouver")
 ```
 
 ### `tz_offset()`

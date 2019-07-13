@@ -197,15 +197,15 @@ knitr::kable(tests)
 
 | method   |   time | matches | mismatches | accuracy | ref\_nas | fun\_nas |
 | :------- | -----: | ------: | ---------: | -------: | -------: | -------: |
-| fast     |  1.010 |  371946 |     128054 | 0.743892 |        0 |        0 |
-| accurate | 21.969 |  499949 |         51 | 0.999898 |        0 |        0 |
+| fast     |  1.294 |  371946 |     128054 | 0.743892 |        0 |        0 |
+| accurate | 27.437 |  499949 |         51 | 0.999898 |        0 |        0 |
 
 ## Timezone utility functions
 
-### `plot_tz()`
+### `tz_plot()`
 
 ``` r
-plot_tz("America/Vancouver")
+tz_plot("America/Vancouver")
 ```
 
 ![](man/figures/unnamed-chunk-9-1.png)<!-- -->
@@ -231,7 +231,7 @@ tz_offset(Sys.time())
 #> timezone attribute, and did not specify one inthe 'tz' argument. Defaulting
 #> to current (America/Vancouver).
 #>             tz_name           date_time zone is_dst utc_offset_h
-#> 1 America/Vancouver 2019-07-12 13:07:24  PDT   TRUE           -7
+#> 1 America/Vancouver 2019-07-12 23:49:20  PDT   TRUE           -7
 ```
 
 ### `tz_list()`

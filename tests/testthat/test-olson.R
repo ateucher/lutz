@@ -4,9 +4,9 @@ test_that("tz_list works", {
   expect_is(tz_list(), "data.frame")
 })
 
-test_that("plot_tz works", {
-  expect_is(plot_tz("America/Vancouver"), "ggplot")
-  expect_error(plot_tz("foo"), "foo is not a valid timezone")
+test_that("tz_plot works", {
+  expect_is(tz_plot("America/Vancouver"), "ggplot")
+  expect_error(tz_plot("foo"), "foo is not a valid timezone")
 })
 
 test_that("tz_offset works", {

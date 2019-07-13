@@ -99,8 +99,8 @@ tz_offset <- function(dt, tz = "") {
 #' @export
 #'
 #' @examples
-#' plot_tz("America/Vancouver")
-plot_tz <- function(tz) {
+#' tz_plot("America/Vancouver")
+tz_plot <- function(tz) {
   if (!requireNamespace("ggplot2", quietly = TRUE)) {
     stop("ggplot2 rquired") #nocov
   }

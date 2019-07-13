@@ -16,7 +16,7 @@ Input latitude and longitude values or an 'sf/sfc' POINT
     points with a detailed map of time zones from here: 
     <https://github.com/evansiroky/timezone-boundary-builder/>. The package also 
     contains several utility functions for helping to understand and visualize 
-    timezones, such as listing of world timezones,including information about 
+    time zones, such as listing of world time zones, including information about 
     daylight savings times and their offsets from UTC. You can also plot a 
     timezone to visualize the UTC offset over a year and when daylight savings 
     times are in effect.

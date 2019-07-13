@@ -8,7 +8,7 @@
 * Added three new functions:
   - tz_list() lists all timezones and information about UTC offsets and daylight savings
   - tz_offset() lists information about a specific time in a specific timezone
-  - plot_tz() plots a timezone and its UTC offset for a year, including periods
+  - tz_plot() plots a timezone and its UTC offset for a year, including periods
   of daylight savings.
 
 # lutz 0.2.0

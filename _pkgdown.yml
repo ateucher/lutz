@@ -13,4 +13,4 @@ reference:
     contents:
       - tz_list
       - tz_offset
-      - plot_tz
+      - tz_plot
