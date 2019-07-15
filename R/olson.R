@@ -9,14 +9,10 @@
 #'   - utc_offset_h: offset from UTC (in hours)
 #' @export
 tz_list <- function() {
-  yr <- format(Sys.Date(), "%Y")
-  big_list <- lapply(lutz_env$olson_names, function(tz) {
-    dates <- seq(as.Date(paste0(yr,"-01-01"), format = "%Y-%m-%d"),
-                 as.Date(paste0(yr,"-12-31"), format = "%Y-%m-%d"),
-                 by = "1 day")
-    offs <- tz_offset(dates, tz)
-    unique(offs[, setdiff(names(offs), "date_time")])
-  })
+  big_list <- lapply(lutz_env$olson_names, safe_get_tz_info,
+                     yr = format(Sys.Date(), "%Y"))
+
+  big_list <- tz_compact(big_list)
 
   ret <- do.call("rbind", c(big_list,
                      make.row.names = FALSE,
@@ -157,4 +153,15 @@ check_tz <- function(tz) {
     stop(tz, " is not a valid time zone. See ?OlsonNames",
          call. = FALSE)
   }
+}
+
+safe_get_tz_info <- function(tz, yr) {
+  dates <- seq(as.Date(paste0(yr,"-01-01"), format = "%Y-%m-%d"),
+               as.Date(paste0(yr,"-12-31"), format = "%Y-%m-%d"),
+               by = "1 day")
+  offs <- try(tz_offset(dates, tz))
+
+  if (class(offs) == "try-error") return(NULL)
+
+  unique(offs[, setdiff(names(offs), "date_time")])
 }

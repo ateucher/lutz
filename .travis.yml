@@ -32,7 +32,7 @@ matrix:
     - os: osx
       r: release
 
-  allow_failures:
-    - os: osx
+#  allow_failures:
+#    - os: osx
 
 warnings_are_errors: true

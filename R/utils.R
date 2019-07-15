@@ -71,3 +71,5 @@ warn_for_fast <- function() {
   near boundaries away from populated ares. Use the 'accurate'
   method if accuracy is more important than speed.", call. = FALSE)
 }
+
+tz_compact <- function(x) Filter(Negate(is.null), x)

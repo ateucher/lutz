@@ -31,3 +31,7 @@ test_that("tz_offset fails correctly", {
   expect_error(tz_offset(1),
                "dt must be of type POSIXct/lt, Date, or a character")
 })
+
+test_that("safe_get_tz_info works", {
+  expect_null(safe_get_tz_info("foo", "2019"))
+})
