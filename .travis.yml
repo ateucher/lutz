@@ -30,7 +30,7 @@ matrix:
         skip_cleanup: true
 
     - os: osx
-      osx_image: xcode9.2
+      osx_image: xcode9.3
       r: release
 
 #  allow_failures:
