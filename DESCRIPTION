@@ -1,7 +1,7 @@
 Package: lutz
 Type: Package
 Title: Look Up Time Zones of Point Coordinates
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: c(
       person("Andy", "Teucher", email = "andy.teucher@gmail.com", role = c("aut", "cre"), 
              comment = c(ORCID = "0000-0002-7840-692X")),
