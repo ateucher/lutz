@@ -2,7 +2,7 @@
 
 |field    |value                        |
 |:--------|:----------------------------|
-|version  |R version 3.6.0 (2019-04-26) |
+|version  |R version 3.6.1 (2019-07-05) |
 |os       |macOS Mojave 10.14.5         |
 |system   |x86_64, darwin15.6.0         |
 |ui       |RStudio                      |
@@ -10,23 +10,33 @@
 |collate  |en_CA.UTF-8                  |
 |ctype    |en_CA.UTF-8                  |
 |tz       |America/Vancouver            |
-|date     |2019-07-13                   |
+|date     |2019-07-19                   |
 
 # Dependencies
 
 |package   |old   |new   |Δ  |
 |:---------|:-----|:-----|:--|
-|lutz      |0.2.0 |0.3.0 |*  |
-|curl      |3.3   |NA    |*  |
-|glue      |NA    |1.3.1 |*  |
-|jsonlite  |1.6   |NA    |*  |
-|lubridate |NA    |1.7.4 |*  |
-|magrittr  |NA    |1.5   |*  |
+|lutz      |0.3.0 |0.3.1 |*  |
+|glue      |1.3.1 |1.3.1 |   |
+|lubridate |1.7.4 |1.7.4 |   |
+|magrittr  |1.5   |1.5   |   |
 |Rcpp      |1.0.1 |1.0.1 |   |
-|stringi   |NA    |1.4.3 |*  |
-|stringr   |NA    |1.4.0 |*  |
-|V8        |2.3   |NA    |*  |
+|stringi   |1.4.3 |1.4.3 |   |
+|stringr   |1.4.0 |1.4.0 |   |
 
 # Revdeps
 
-weathercan 0.2.8                       ── E: 0     | W: 0     | N: 0       
+## Suggests
+
+### weathercan 0.2.8
+
+Status: OK
+
+__Before__
+
+0 errors | 0 warnings | 0 notes
+
+__After__
+
+0 errors | 0 warnings | 0 notes
+

@@ -21,4 +21,4 @@ recently released lutz 0.3.0.
 
 ## Reverse dependencies
 
-There is one reverse Suggests: weathercan. I ran `R CMD check` on it with this version of lutz (0.3.1) and there were no issues
+There is one reverse Suggests: weathercan. I ran `R CMD check` on it with this version of lutz (0.3.1) and there were no issues.
