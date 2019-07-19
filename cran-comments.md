@@ -1,4 +1,6 @@
-This is a patch release to fix check CRAN check errors for lutz 0.3.0 on osx: https://cran.r-project.org/web/checks/check_results_lutz.html
+This is a patch release to fix check CRAN check errors for lutz 0.3.0 on osx:
+https://cran.r-project.org/web/checks/check_results_lutz.html. Additional checks
+on osx Travis-CI were added.
 
 ## Test environments
 * Local macOS install (Mojave 10.14.5 ), R 3.6.1
@@ -11,7 +13,11 @@ This is a patch release to fix check CRAN check errors for lutz 0.3.0 on osx: ht
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
+
+There was one NOTE on win-builder: "Days since last update: 5". As mentioned 
+above, this is a patch release to attempt to fix CRAN check errors on osx in 
+recently released lutz 0.3.0.
 
 ## Reverse dependencies
 

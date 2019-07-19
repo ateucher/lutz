@@ -1,6 +1,6 @@
 # lutz 0.3.1
 
-* Catch errors for invalid timezones in `tz_list()`
+* Fixed bug where invalid timezones would cause `tz_list()` to fail.
 
 # lutz 0.3.0
 
