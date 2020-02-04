@@ -6,18 +6,20 @@ jobs:
   R-CMD-check-docker:
     runs-on: ubuntu-latest
     container: jakubnowosad/geocompr_proj6
+    name: dev-sp-rdgal-${{ matrix.config.dev_sp_rgdal }}
     strategy:
       matrix:
         config:
           - {dev_sp_rgdal: true}
           - {dev_sp_rgdal: false}
+
     steps:
       - uses: actions/checkout@v1
 
       - name: Install dependencies
         run: Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)" -e "remotes::install_cran('rcmdcheck')"
 
-      - name: Install dev sp andrgdal
+      - name: Install dev sp and rgdal
         if: matrix.config.dev_sp_rgdal == true
         run: |
           Rscript -e "remotes::install_github('rsbivand/sp')" -e "install.packages('rgdal', repos='http://R-Forge.R-project.org', type='source')"
