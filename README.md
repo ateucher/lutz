@@ -22,8 +22,8 @@ downloads](https://cranlogs.r-pkg.org/badges/lutz)](https://cran.r-project.org/p
 Input latitude and longitude values or an `sf/sfc` POINT object and get
 back the time zone in which they exist. Two methods are implemented. One
 is very fast and uses Rcpp in conjunction with source data from
-(<https://github.com/darkskyapp/tz-lookup/>). However, speed comes at
-the cost of accuracy - near time zone borders away from populated
+(<https://github.com/darkskyapp/tz-lookup-oss/>). However, speed comes
+at the cost of accuracy - near time zone borders away from populated
 centres there is a chance that it will return the incorrect time zone.
 
 The other method is slower but more accurate - it uses the sf package to
@@ -122,7 +122,7 @@ land in two different overlapping time zones. The `"accurate"` method
 these](https://github.com/evansiroky/timezone-boundary-builder/releases/tag/2018g),
 however the method used in the `"fast"` does not include overlapping
 time zones ([at least for
-now](https://github.com/darkskyapp/tz-lookup/issues/34)).
+now](https://github.com/darkskyapp/tz-lookup-oss/issues/34)).
 
 We can compare the accuracy of both methods to the high-resolution time
 zone map provided by
@@ -186,9 +186,9 @@ tests <- map_df(c("fast", "accurate"), ~ {
     fun_nas = sum(is.na(test_ll_tz))
     )
 })
-#> Warning in tz_lookup_accurate.sf(x, crs): Some points are in areas with
-#> more than one timezone defined.These are often disputed areas and should be
-#> treated with care.
+#> Warning in tz_lookup_accurate.sf(x, crs): Some points are in areas with more
+#> than one time zone defined.These are often disputed areas and should be treated
+#> with care.
 ```
 
 ``` r
@@ -197,8 +197,8 @@ knitr::kable(tests)
 
 | method   |   time | matches | mismatches | accuracy | ref\_nas | fun\_nas |
 | :------- | -----: | ------: | ---------: | -------: | -------: | -------: |
-| fast     |  1.132 |  371946 |     128054 | 0.743892 |        0 |        0 |
-| accurate | 26.363 |  499949 |         51 | 0.999898 |        0 |        0 |
+| fast     |  1.225 |  371946 |     128054 | 0.743892 |        0 |        0 |
+| accurate | 23.322 |  499949 |         51 | 0.999898 |        0 |        0 |
 
 ## time zone utility functions
 
@@ -216,7 +216,7 @@ tz_plot("America/Vancouver")
 # A Date object
 tz_offset(Sys.Date(), "Africa/Algiers")
 #>          tz_name  date_time zone is_dst utc_offset_h
-#> 1 Africa/Algiers 2019-07-13  CET  FALSE            1
+#> 1 Africa/Algiers 2020-05-11  CET  FALSE            1
 
 
 # A Date-like character string
@@ -227,11 +227,11 @@ tz_offset("2017-03-01", tz = "Singapore")
 
 # A POSIXct date-time object
 tz_offset(Sys.time())
-#> Warning: You supplied an object of class POSIXct that does not have a
-#> timezone attribute, and did not specify one inthe 'tz' argument. Defaulting
-#> to current (America/Vancouver).
+#> Warning: You supplied an object of class POSIXct that does not have a time zone
+#> attribute, and did not specify one inthe 'tz' argument. Defaulting to current
+#> (America/Vancouver).
 #>             tz_name           date_time zone is_dst utc_offset_h
-#> 1 America/Vancouver 2019-07-13 15:49:18  PDT   TRUE           -7
+#> 1 America/Vancouver 2020-05-11 12:36:18  PDT   TRUE           -7
 ```
 
 ### `tz_list()`

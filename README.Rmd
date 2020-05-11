@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 
 Input latitude and longitude values or an `sf/sfc` POINT object and get back 
 the time zone in which they exist. Two methods are implemented. One is very 
-fast and uses Rcpp in conjunction with source data from (https://github.com/darkskyapp/tz-lookup/). 
+fast and uses Rcpp in conjunction with source data from (https://github.com/darkskyapp/tz-lookup-oss/). 
 However, speed comes at the cost of accuracy - near time zone borders away from 
 populated centres there is a chance that it will return the incorrect time zone. 
 
@@ -106,7 +106,7 @@ ggplot(cbind(as.data.frame(coordinates(state_centers_sp)), tz = state_centers_sp
 Note that there are some regions in the world where a single point can land in 
 two different overlapping time zones. The `"accurate"` method [includes these](https://github.com/evansiroky/timezone-boundary-builder/releases/tag/2018g), 
 however the method used in the `"fast"` does not include overlapping time zones
-([at least for now](https://github.com/darkskyapp/tz-lookup/issues/34)).
+([at least for now](https://github.com/darkskyapp/tz-lookup-oss/issues/34)).
 
 We can compare the accuracy of both methods to the high-resolution time zone map
 provided by https://github.com/evansiroky/timezone-boundary-builder. This is the
