@@ -50,7 +50,7 @@ fix_sf <- function(x, crs) {
 check_coords <- function(lat, lon) {
   if (!identical(length(lat), length(lon)) ||
       !all(is.numeric(lat) && is.numeric(lon))) {
-    stop("lat and lon must numeric vectors be of the same length")
+    stop("lat and lon must be numeric vectors of the same length")
   }
 
   if (any(abs(stats::na.omit(lat)) > 90 |
