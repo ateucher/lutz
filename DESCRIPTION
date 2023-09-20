@@ -30,18 +30,18 @@ Depends: R (>= 3.2)
 Imports:
     stats,
     Rcpp,
-    lubridate
-Suggests:
-    testthat (>= 2.1.0),
+    lubridate,
     sf (>= 0.7),
     sp,
+    ggplot2
+Suggests:
+    testthat (>= 2.1.0),
     rgdal,
     datasets,
-    covr,
-    ggplot2
+    covr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 LinkingTo: 
     Rcpp
