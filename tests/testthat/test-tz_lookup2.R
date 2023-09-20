@@ -5,9 +5,9 @@ test_that("tz_lookup_coords works with method = accurate", {
   expect_equal(tz_lookup_coords(c(70, -70), c(30, -30), method = "accurate"),
                c("Europe/Oslo", "Etc/GMT+2"))
   expect_error(tz_lookup_coords(1, 1:2, method = "accurate"),
-               "lat and lon must numeric vectors be of the same length")
+               "lat and lon must be numeric vectors of the same length")
   expect_error(tz_lookup_coords("a", "b", method = "accurate"),
-               "lat and lon must numeric vectors be of the same length")
+               "lat and lon must be numeric vectors of the same length")
   expect_error(tz_lookup_coords(100, 500, method = "accurate"), "invalid coordinates")
   expect_error(tz_lookup_coords(-100, -500, method = "accurate"), "invalid coordinates")
 })

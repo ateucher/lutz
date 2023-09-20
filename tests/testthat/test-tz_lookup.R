@@ -19,9 +19,9 @@ test_that("tz_lookup_coords works", {
   expect_equal(tz_lookup_coords(c(70, -70), c(30, -30), warn = FALSE),
                c("Europe/Oslo", "Etc/GMT+2"))
   expect_error(tz_lookup_coords(1, 1:2, warn = FALSE),
-               "lat and lon must numeric vectors be of the same length")
+               "lat and lon must be numeric vectors of the same length")
   expect_error(tz_lookup_coords("a", "b", warn = FALSE),
-               "lat and lon must numeric vectors be of the same length")
+               "lat and lon must be numeric vectors of the same length")
   expect_error(tz_lookup_coords(100, 500, warn = FALSE), "invalid coordinates")
   expect_error(tz_lookup_coords(-100, -500, warn = FALSE), "invalid coordinates")
 })
@@ -61,10 +61,11 @@ test_that("tz_lookup.SpatialPoints works", {
   expect_equal(tz_lookup(pt, warn = FALSE), "Etc/GMT")
   expect_equal(tz_lookup(pts, warn = FALSE), c("Europe/Oslo", "Etc/GMT+2"))
   expect_error(tz_lookup_coords(pts, warn = FALSE),
-               "It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object") # nolint
-  expect_equal(tz_lookup(pt, "+proj=aea +lat_1=50 +lat_2=58.5 +lat_0=45 +lon_0=-126 +x_0=1000000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
-                         warn = FALSE), # nolint
+    "It looks like you are trying to get the tz of an sf/sfc or SpatialPoints object") # nolint
+  # suppressing Warnings as PROJ can sometimes emit a warning
+  expect_equal(suppressWarnings(tz_lookup(pt, "+proj=aea +lat_1=50 +lat_2=58.5 +lat_0=45 +lon_0=-126 +x_0=1000000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+    warn = FALSE)), # nolint
+  "Etc/GMT+9")
+  expect_equal(suppressWarnings(tz_lookup(pt, 3005, warn = FALSE)),
                "Etc/GMT+9")
-  expect_equal(tz_lookup(pt, 3005, warn = FALSE), "Etc/GMT+9")
 })
-
