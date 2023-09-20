@@ -51,6 +51,7 @@ tz_lookup_fast <- function(x, crs = NULL, warn) {
   UseMethod("tz_lookup_fast")
 }
 
+#' @importFrom sf st_coordinates
 tz_lookup_fast.sf <- function(x, crs, warn) {
   x <- fix_sf(x, crs)
   coords <- sf::st_coordinates(x)
@@ -60,6 +61,7 @@ tz_lookup_fast.sf <- function(x, crs, warn) {
 
 tz_lookup_fast.sfc <- tz_lookup_fast.sf
 
+#' @importFrom sp coordinates
 tz_lookup_fast.SpatialPoints <- function(x, crs, warn) {
   x <- fix_sp(x, crs)
 
@@ -108,6 +110,8 @@ tz_lookup_accurate <- function(x, crs = NULL) {
   UseMethod("tz_lookup_accurate")
 }
 
+#' @importFrom sf st_set_geometry st_join
+#' @importFrom stats aggregate
 tz_lookup_accurate.sf <- function(x, crs = NULL) {
   x <- fix_sf(x, crs)
   # Add a unique id so we can deal with any duplicates resulting
@@ -138,16 +142,20 @@ tz_lookup_accurate.sf <- function(x, crs = NULL) {
   ret # nocov end
 }
 
+#' @importFrom sf st_sf
 tz_lookup_accurate.sfc <- function(x, crs = NULL) {
   x_sf <- sf::st_sf(geom = x)
   tz_lookup_accurate(x_sf, crs = crs)
 }
 
+#' @importFrom sf st_as_sf
 tz_lookup_accurate.SpatialPoints <- function(x, crs = NULL) {
   x <- sf::st_as_sf(x)
   tz_lookup_accurate(x, crs)
 }
 
+#' @importFrom sf st_as_sf
+#' @importFrom stats complete.cases
 tz_lookup_coords_accurate <- function(lat, lon) {
 
   ll <- data.frame(lat = lat, lon = lon)

@@ -28,6 +28,8 @@ tz_list <- function() {
 #' is a `POSIXt` object with a time zone component.
 #'
 #' @return a one-row data frame with details of the time zone
+#'
+#' @importFrom lubridate is.POSIXt tz is.Date force_tz dst
 #' @export
 #'
 #' @examples
@@ -92,6 +94,9 @@ tz_offset <- function(dt, tz = "") {
 #' @param tz a valid time zone name. See [OlsonNames()]
 #'
 #' @return a `ggplot2` object
+#'
+#' @importFrom ggplot2 ggplot aes geom_point coord_polar scale_y_continuous scale_x_date theme_minimal theme labs geom_text sym
+#'
 #' @export
 #'
 #' @examples

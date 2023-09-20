@@ -1,3 +1,4 @@
+#' @importFrom sp CRS proj4string
 is_wgs84 <- function(x) {
   # The most minimal specification of WGS84
   comp <- c("+proj=longlat", "+datum=WGS84", "+no_defs")
@@ -9,12 +10,9 @@ wgs84_string <- function() {
   "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 }
 
+#' @importFrom sp CRS proj4string spTransform
 fix_sp <- function(x, crs) {
-  if (!requireNamespace("sp"))
-    stop("You must have the sp package installed to use this function", # nocov
-         call. = FALSE) # nocov
-
-  if (is.numeric(crs)) crs <- paste0("+init=epsg:", crs)
+    if (is.numeric(crs)) crs <- paste0("+init=epsg:", crs)
 
   if (is.na(sp::proj4string(x))) {
     if (is.null(crs)) crs <- wgs84_string()
@@ -27,10 +25,8 @@ fix_sp <- function(x, crs) {
   x
 }
 
+#' @importFrom sf st_crs st_geometry_type st_transform
 fix_sf <- function(x, crs) {
-  if (!requireNamespace("sf"))
-    stop("You must have the sf package installed to use this function", # nocov
-         call. = FALSE) # nocov
 
   if (!all(sf::st_geometry_type(x) == "POINT"))
     stop("This only works with points", call. = FALSE)
@@ -47,6 +43,7 @@ fix_sf <- function(x, crs) {
   x
 }
 
+#' @importFrom stats na.omit
 check_coords <- function(lat, lon) {
   if (!identical(length(lat), length(lon)) ||
       !all(is.numeric(lat) && is.numeric(lon))) {
