@@ -161,7 +161,7 @@ safe_get_tz_info <- function(tz, yr) {
                by = "1 day")
   offs <- try(tz_offset(dates, tz))
 
-  if (class(offs) == "try-error") return(NULL)
+  if (inherits(offs, "try-error")) return(NULL)
 
   unique(offs[, setdiff(names(offs), "date_time")])
 }
