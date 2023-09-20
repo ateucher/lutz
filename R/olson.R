@@ -164,7 +164,7 @@ safe_get_tz_info <- function(tz, yr) {
   dates <- seq(as.Date(paste0(yr,"-01-01"), format = "%Y-%m-%d"),
                as.Date(paste0(yr,"-12-31"), format = "%Y-%m-%d"),
                by = "1 day")
-  offs <- try(tz_offset(dates, tz))
+  offs <- try(tz_offset(dates, tz), silent = TRUE)
 
   if (inherits(offs, "try-error")) return(NULL)
 
