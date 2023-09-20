@@ -6,7 +6,7 @@ test_that("tz_list works", {
 
 test_that("tz_plot works", {
   expect_is(tz_plot("America/Vancouver"), "ggplot")
-  expect_error(tz_plot("foo"), "foo is not a valid time zone")
+  expect_error(tz_plot("foo"), "foo is not a valid time zone. See ?OlsonNames")
 })
 
 test_that("tz_offset works", {
