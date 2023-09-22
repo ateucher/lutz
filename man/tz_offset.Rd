@@ -9,7 +9,7 @@ tz_offset(dt, tz = "")
 \arguments{
 \item{dt}{\code{Date}, \code{POSIXt} or date-like character string}
 
-\item{tz}{A time zone name from \code{\link[base:OlsonNames]{base::OlsonNames()}}. Not required if \code{dt}
+\item{tz}{A time zone name from \code{\link[base:timezones]{base::OlsonNames()}}. Not required if \code{dt}
 is a \code{POSIXt} object with a time zone component.}
 }
 \value{

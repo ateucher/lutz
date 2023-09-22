@@ -6,7 +6,8 @@ test_that("tz_list works", {
 
 test_that("tz_plot works", {
   expect_is(tz_plot("America/Vancouver"), "ggplot")
-  expect_error(tz_plot("foo"), "foo is not a valid time zone")
+  expect_error(tz_plot("foo"), "foo is not a valid time zone. See ?OlsonNames",
+    fixed = TRUE)
 })
 
 test_that("tz_offset works", {
@@ -22,14 +23,17 @@ test_that("tz_offset works", {
   # expect_warning(tz_offset(t), "You supplied an object of class")
   expect_warning(tz_offset(as.POSIXlt(Sys.time(), tz = "America/Vancouver"),
                            tz = "America/Moncton"),
-                 "tz supplied is different")
+                 "tz supplied is different",
+    fixed = TRUE)
 })
 
 test_that("tz_offset fails correctly", {
   expect_error(tz_offset("2019-01-01"),
-               "If dt is a character or a Date, you must supply a time zone")
+               "If dt is a character or a Date, you must supply a time zone",
+    fixed = TRUE)
   expect_error(tz_offset(1),
-               "dt must be of type POSIXct/lt, Date, or a character")
+    "dt must be of type POSIXct/lt, Date, or a character",
+    fixed = TRUE)
 })
 
 test_that("safe_get_tz_info works", {

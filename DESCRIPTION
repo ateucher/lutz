@@ -25,7 +25,6 @@ Description: Input latitude and longitude values or an 'sf/sfc' POINT
 License: MIT + file LICENSE
 URL: https://andyteucher.ca/lutz
 BugReports: https://github.com/ateucher/lutz/issues
-SystemRequirements: C++11
 Depends: R (>= 3.2)
 Imports:
     stats,
@@ -41,7 +40,7 @@ Suggests:
     ggplot2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 LinkingTo: 
     Rcpp
