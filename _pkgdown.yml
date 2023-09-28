@@ -1,4 +1,6 @@
-destination: docs
+url: http://andyteucher.ca/lutz/
+template:
+  bootstrap: 5
 
 development:
   mode: auto
