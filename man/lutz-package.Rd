@@ -12,6 +12,7 @@ Input latitude and longitude values or an 'sf/sfc' POINT object and get back the
 Useful links:
 \itemize{
   \item \url{https://andyteucher.ca/lutz}
+  \item \url{https://github.com/ateucher/lutz}
   \item Report bugs at \url{https://github.com/ateucher/lutz/issues}
 }
 
