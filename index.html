@@ -4,14 +4,27 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Input latitude and longitude values or an sf/sfc POINT 
+    object and get back the time zone in which they exist. Two methods are implemented. 
+    One is very fast and uses Rcpp in conjunction with data from the Javascript library
+    (&lt;https://github.com/darkskyapp/tz-lookup/&gt;). This method also works outside of countries 
+    borders and in international waters, however speed comes at the cost of accuracy - near time 
+    zone borders away from populated centres there is a chance that it will return the incorrect
+    time zone. The other method is slower but more accurate - it uses the sf' package to intersect 
+    points with a detailed map of time zones from here: 
+    &lt;https://github.com/evansiroky/timezone-boundary-builder/&gt;. The package also 
+    contains several utility functions for helping to understand and visualize 
+    time zones, such as listing of world time zones, including information about 
+    daylight savings times and their offsets from UTC. You can also plot a 
+    time zone to visualize the UTC offset over a year and when daylight savings 
+    times are in effect.">
 <title>Look Up Time Zones of Point Coordinates • lutz</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
-<script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Look Up Time Zones of Point Coordinates">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Look Up Time Zones of Point Coordinates">
 <meta property="og:description" content="Input latitude and longitude values or an sf/sfc POINT 
     object and get back the time zone in which they exist. Two methods are implemented. 
     One is very fast and uses Rcpp in conjunction with data from the Javascript library
@@ -31,269 +44,235 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
-    <div class="container template-home">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">lutz</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
-      </span>
-    </div>
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+    
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    
+    <a class="navbar-brand me-2" href="index.html">lutz</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.1</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="news/index.html">Changelog</a>
+<li class="nav-item">
+  <a class="nav-link" href="news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/ateucher/lutz/">
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/ateucher/lutz/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+    
   </div>
-<!--/.container -->
+</nav><div class="container template-home">
+<div class="row">
+  <main id="main" class="col-md-9">
+<div class="section level1">
+<div class="page-header"><h1 id="lutz-look-up-time-zones">lutz (look up time zones)<a class="anchor" aria-label="anchor" href="#lutz-look-up-time-zones"></a>
+</h1></div>
+<div class="section level2">
+<h2 id="lookup-the-time-zone-of-coordinates">Lookup the time zone of coordinates<a class="anchor" aria-label="anchor" href="#lookup-the-time-zone-of-coordinates"></a>
+</h2>
+<p>Input latitude and longitude values or an <code>sf/sfc</code> POINT object and get back the time zone in which they exist. Two methods are implemented. One is very fast and uses Rcpp in conjunction with source data from (<a href="https://github.com/darkskyapp/tz-lookup-oss/" class="external-link uri">https://github.com/darkskyapp/tz-lookup-oss/</a>). However, speed comes at the cost of accuracy - near time zone borders away from populated centres there is a chance that it will return the incorrect time zone.</p>
+<p>The other method is slower but more accurate - it uses the sf package to intersect points with a detailed map of time zones from <a href="https://github.com/evansiroky/timezone-boundary-builder" class="external-link">here</a>.</p>
 </div>
-<!--/.navbar -->
-
-      
-
-      </header><div class="row">
-  <div class="contents col-md-9">
-
-
-<div id="lutz-look-up-time-zones" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#lutz-look-up-time-zones" class="anchor"></a>lutz (look up time zones)</h1></div>
-<div id="lookup-the-time-zone-of-coordinates" class="section level2">
-<h2 class="hasAnchor">
-<a href="#lookup-the-time-zone-of-coordinates" class="anchor"></a>Lookup the time zone of coordinates</h2>
-<p>Input latitude and longitude values or an <code>sf/sfc</code> POINT object and get back the time zone in which they exist. Two methods are implemented. One is very fast and uses Rcpp in conjunction with source data from (<a href="https://github.com/darkskyapp/tz-lookup-oss/" class="uri">https://github.com/darkskyapp/tz-lookup-oss/</a>). However, speed comes at the cost of accuracy - near time zone borders away from populated centres there is a chance that it will return the incorrect time zone.</p>
-<p>The other method is slower but more accurate - it uses the sf package to intersect points with a detailed map of time zones from <a href="https://github.com/evansiroky/timezone-boundary-builder">here</a>.</p>
-</div>
-<div id="time-zone-utility-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#time-zone-utility-functions" class="anchor"></a>time zone utility functions</h2>
+<div class="section level2">
+<h2 id="time-zone-utility-functions">time zone utility functions<a class="anchor" aria-label="anchor" href="#time-zone-utility-functions"></a>
+</h2>
 <p><strong>lutz</strong> also contains several utility functions for helping to understand and visualize time zones, such as listing of world time zones,including information about daylight savings times and their offsets from UTC. You can also plot a time zone to visualize the UTC offset over a year and when daylight savings times are in effect.</p>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>You can install lutz from CRAN with:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"lutz"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"lutz"</span><span class="op">)</span></span></code></pre></div>
 <p>Or you can install the development version from github with:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="co"># install.packages("devtools")</span>
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu">install_github</span>(<span class="st">"ateucher/lutz"</span>)</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ateucher/lutz"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
 <p>There are two functions in this package for looking up the time zones of coordinates: <code><a href="reference/tz_lookup.html">tz_lookup()</a></code> which works with both <code>sf/sfc</code> and <code>SpatialPoints</code> objects, and <code>tz_lookup_coords</code> for looking up lat/long pairs. Use the <code>method</code> argument to choose the <code>"fast"</code> or <code>"accurate"</code> method.</p>
-<div id="with-coordinates--they-must-be-latlong-in-decimal-degrees" class="section level3">
-<h3 class="hasAnchor">
-<a href="#with-coordinates--they-must-be-latlong-in-decimal-degrees" class="anchor"></a>With coordinates. They must be lat/long in decimal degrees:</h3>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">lutz</span>)
-<span class="fu"><a href="reference/tz_lookup_coords.html">tz_lookup_coords</a></span>(<span class="fl">49.5</span>, -<span class="fl">123.5</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"fast"</span>)
-<span class="co">#&gt; [1] "America/Vancouver"</span>
-<span class="fu"><a href="reference/tz_lookup_coords.html">tz_lookup_coords</a></span>(<span class="fl">49.5</span>, -<span class="fl">123.5</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"accurate"</span>)
-<span class="co">#&gt; [1] "America/Vancouver"</span>
-
-<span class="fu"><a href="reference/tz_lookup_coords.html">tz_lookup_coords</a></span>(<span class="kw">lat</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">48.9</span>, <span class="fl">38.5</span>, <span class="fl">63.1</span>, -<span class="fl">25</span>), <span class="kw">lon</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(-<span class="fl">123.5</span>, -<span class="fl">110.2</span>, -<span class="fl">95.0</span>, <span class="fl">130</span>))
-<span class="co">#&gt; [1] "America/Vancouver"    "America/Denver"       "America/Rankin_Inlet"</span>
-<span class="co">#&gt; [4] "Australia/Darwin"</span></pre></div>
+<div class="section level3">
+<h3 id="with-coordinates-they-must-be-latlong-in-decimal-degrees">With coordinates. They must be lat/long in decimal degrees:<a class="anchor" aria-label="anchor" href="#with-coordinates-they-must-be-latlong-in-decimal-degrees"></a>
+</h3>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://andyteucher.ca/lutz" class="external-link">lutz</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/tz_lookup_coords.html">tz_lookup_coords</a></span><span class="op">(</span><span class="fl">49.5</span>, <span class="op">-</span><span class="fl">123.5</span>, method <span class="op">=</span> <span class="st">"fast"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "America/Vancouver"</span></span>
+<span><span class="fu"><a href="reference/tz_lookup_coords.html">tz_lookup_coords</a></span><span class="op">(</span><span class="fl">49.5</span>, <span class="op">-</span><span class="fl">123.5</span>, method <span class="op">=</span> <span class="st">"accurate"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "America/Vancouver"</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/tz_lookup_coords.html">tz_lookup_coords</a></span><span class="op">(</span>lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">48.9</span>, <span class="fl">38.5</span>, <span class="fl">63.1</span>, <span class="op">-</span><span class="fl">25</span><span class="op">)</span>, lon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">123.5</span>, <span class="op">-</span><span class="fl">110.2</span>, <span class="op">-</span><span class="fl">95.0</span>, <span class="fl">130</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "America/Vancouver"    "America/Denver"       "America/Rankin_Inlet"</span></span>
+<span><span class="co">#&gt; [4] "Australia/Darwin"</span></span></code></pre></div>
 </div>
-<div id="with-sf-objects" class="section level3">
-<h3 class="hasAnchor">
-<a href="#with-sf-objects" class="anchor"></a>With <code>sf</code> objects:</h3>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">sf</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>) <span class="co"># this requires the devlopment version of ggplot2</span>
-
-<span class="co"># Create an sf object out of the included state.center dataset:</span>
-<span class="no">pts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span>(<span class="no">state.center</span>$<span class="no">x</span>), <span class="kw">function</span>(<span class="no">i</span>) {
-  <span class="fu"><a href="https://rdrr.io/pkg/sf/man/st.html">st_point</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">state.center</span>$<span class="no">x</span>[<span class="no">i</span>], <span class="no">state.center</span>$<span class="no">y</span>[<span class="no">i</span>]))
-})
-<span class="no">state_centers_sf</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sf/man/sf.html">st_sf</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/sf/man/sfc.html">st_sfc</a></span>(<span class="no">pts</span>))
-
-<span class="co"># Use tz_lookup_sf to find the time zones</span>
-<span class="no">state_centers_sf</span>$<span class="no">tz</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/tz_lookup.html">tz_lookup</a></span>(<span class="no">state_centers_sf</span>)
-<span class="no">state_centers_sf</span>$<span class="no">tz</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/tz_lookup.html">tz_lookup</a></span>(<span class="no">state_centers_sf</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"accurate"</span>)
-
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span>(<span class="kw">data</span> <span class="kw">=</span> <span class="no">state_centers_sf</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">colour</span> <span class="kw">=</span> <span class="no">tz</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">coord_sf</a></span>(<span class="kw">datum</span> <span class="kw">=</span> <span class="fl">NA</span>)</pre></div>
+<div class="section level3">
+<h3 id="with-sf-objects">With <code>sf</code> objects:<a class="anchor" aria-label="anchor" href="#with-sf-objects"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span> <span class="co"># this requires the devlopment version of ggplot2</span></span>
+<span></span>
+<span><span class="co"># Create an sf object out of the included state.center dataset:</span></span>
+<span><span class="va">pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">state.center</span><span class="op">$</span><span class="va">x</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">state.center</span><span class="op">$</span><span class="va">x</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">state.center</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="va">state_centers_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/sf.html" class="external-link">st_sf</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="va">pts</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Use tz_lookup_sf to find the time zones</span></span>
+<span><span class="va">state_centers_sf</span><span class="op">$</span><span class="va">tz</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tz_lookup.html">tz_lookup</a></span><span class="op">(</span><span class="va">state_centers_sf</span><span class="op">)</span></span>
+<span><span class="va">state_centers_sf</span><span class="op">$</span><span class="va">tz</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tz_lookup.html">tz_lookup</a></span><span class="op">(</span><span class="va">state_centers_sf</span>, method <span class="op">=</span> <span class="st">"accurate"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">state_centers_sf</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="va">tz</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>datum <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/unnamed-chunk-4-1.png"><!-- --></p>
 </div>
-<div id="with-spatialpoints-objects" class="section level3">
-<h3 class="hasAnchor">
-<a href="#with-spatialpoints-objects" class="anchor"></a>With <code>SpatialPoints</code> objects:</h3>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">sp</span>)
-<span class="no">state_centers_sp</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sf/man/coerce-methods.html">as</a></span>(<span class="no">state_centers_sf</span>, <span class="st">"Spatial"</span>)
-
-<span class="no">state_centers_sp</span>$<span class="no">tz</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/tz_lookup.html">tz_lookup</a></span>(<span class="no">state_centers_sp</span>)
-
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(<span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html">coordinates</a></span>(<span class="no">state_centers_sp</span>)), <span class="kw">tz</span> <span class="kw">=</span> <span class="no">state_centers_sp</span>$<span class="no">tz</span>),
-       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">coords.x1</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">coords.x2</span>, <span class="kw">colour</span> <span class="kw">=</span> <span class="no">tz</span>)) +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html">coord_fixed</a></span>() +
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_minimal</a></span>()</pre></div>
-<p><img src="reference/figures/unnamed-chunk-5-1.png"><!-- --></p>
-<p>Note that there are some regions in the world where a single point can land in two different overlapping time zones. The <code>"accurate"</code> method <a href="https://github.com/evansiroky/timezone-boundary-builder/releases/tag/2018g">includes these</a>, however the method used in the <code>"fast"</code> does not include overlapping time zones (<a href="https://github.com/darkskyapp/tz-lookup-oss/issues/34">at least for now</a>).</p>
-<p>We can compare the accuracy of both methods to the high-resolution time zone map provided by <a href="https://github.com/evansiroky/timezone-boundary-builder" class="uri">https://github.com/evansiroky/timezone-boundary-builder</a>. This is the map that is used by <code>lutz</code> for the <code>"accurate"</code> method, but in <code>lutz</code> it is simplified by about 80% to be small enough to fit in the package.</p>
-<div class="sourceCode" id="cb6"><pre class="r"><span class="co">## Get the full time zone geojson from https://github.com/evansiroky/timezone-boundary-builder</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/download.file.html">download.file</a></span>(<span class="st">"https://github.com/evansiroky/timezone-boundary-builder/releases/download/2019a/timezones-with-oceans.geojson.zip"</span>,
-                <span class="kw">destfile</span> <span class="kw">=</span> <span class="st">"tz.zip"</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/unzip.html">unzip</a></span>(<span class="st">"tz.zip"</span>, <span class="kw">exdir</span> <span class="kw">=</span> <span class="st">"data-raw/dist/"</span>)</pre></div>
-<div class="sourceCode" id="cb7"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">lutz</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">sf</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">purrr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'dplyr'</span>
-<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     filter, lag</span>
-<span class="co">#&gt; The following objects are masked from 'package:base':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     intersect, setdiff, setequal, union</span>
-
-<span class="no">tz_full</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sf/man/st_read.html">read_sf</a></span>(<span class="st">"data-raw/dist/combined-with-oceans.json"</span>)
-<span class="co"># Create a data frame of 500000 lat/long pairs:</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1</span>)
-<span class="no">n</span> <span class="kw">&lt;-</span> <span class="fl">500000</span>
-<span class="no">ll</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="kw">id</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="no">n</span>), <span class="kw">lat</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="no">n</span>, -<span class="fl">90</span>, <span class="fl">90</span>), <span class="kw">lon</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="no">n</span>, -<span class="fl">180</span>, <span class="fl">180</span>))
-<span class="no">ll_sf</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sf/man/st_as_sf.html">st_as_sf</a></span>(<span class="no">ll</span>, <span class="kw">coords</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="kw">crs</span> <span class="kw">=</span> <span class="fl">4326</span>)
-
-<span class="co"># Overlay those points with the full high-resolution time zone map:</span>
-<span class="no">ref_ll_tz</span> <span class="kw">&lt;-</span> <span class="kw pkg">sf</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/sf/man/st_join.html">st_join</a></span>(<span class="no">ll_sf</span>, <span class="no">tz_full</span>)
-<span class="co">#&gt; although coordinates are longitude/latitude, st_intersects assumes that they are planar</span>
-<span class="co">#&gt; although coordinates are longitude/latitude, st_intersects assumes that they are planar</span>
-
-<span class="co"># Combine those that had overlapping time zones</span>
-<span class="no">ref_ll_tz</span> <span class="kw">&lt;-</span> <span class="no">ref_ll_tz</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/sf/man/st_geometry.html">st_set_geometry</a></span>(<span class="kw">NULL</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">id</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarize</span>(<span class="kw">tzid</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="no">tzid</span>, <span class="kw">collapse</span> <span class="kw">=</span> <span class="st">"; "</span>))
-
-<span class="co"># run tz_lookup with both `"fast"` and `"accurate"` methods and compare with </span>
-<span class="co"># the time zones looked up with the high-resolution map:</span>
-<span class="no">tests</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_df</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"fast"</span>, <span class="st">"accurate"</span>), ~ {
-  <span class="no">time</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span>(<span class="no">test_ll_tz</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/tz_lookup.html">tz_lookup</a></span>(<span class="no">ll_sf</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="no">.x</span>, <span class="kw">warn</span> <span class="kw">=</span> <span class="fl">FALSE</span>))
-  <span class="no">comp</span> <span class="kw">&lt;-</span> <span class="no">ref_ll_tz</span>$<span class="no">tzid</span> <span class="kw">==</span> <span class="no">test_ll_tz</span>
-  <span class="no">matches</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">comp</span>, <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-  <span class="no">mismatches</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(!<span class="no">comp</span>, <span class="kw">na.rm</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-    <span class="kw">method</span> <span class="kw">=</span> <span class="no">.x</span>,
-    <span class="kw">time</span> <span class="kw">=</span> <span class="no">time</span>[<span class="st">"elapsed"</span>],
-    <span class="kw">matches</span> <span class="kw">=</span> <span class="no">matches</span>,
-    <span class="kw">mismatches</span> <span class="kw">=</span> <span class="no">mismatches</span>,
-    <span class="kw">accuracy</span> <span class="kw">=</span> <span class="no">matches</span> / (<span class="no">matches</span> + <span class="no">mismatches</span>),
-    <span class="kw">ref_nas</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">ref_ll_tz</span>$<span class="no">tzid</span>)),
-    <span class="kw">fun_nas</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">test_ll_tz</span>))
-    )
-})
-<span class="co">#&gt; Warning in tz_lookup_accurate.sf(x, crs): Some points are in areas with more</span>
-<span class="co">#&gt; than one time zone defined.These are often disputed areas and should be treated</span>
-<span class="co">#&gt; with care.</span></pre></div>
-<div class="sourceCode" id="cb8"><pre class="r"><span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">tests</span>)</pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="left">method</th>
-<th align="right">time</th>
-<th align="right">matches</th>
-<th align="right">mismatches</th>
-<th align="right">accuracy</th>
-<th align="right">ref_nas</th>
-<th align="right">fun_nas</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">fast</td>
-<td align="right">1.225</td>
-<td align="right">371946</td>
-<td align="right">128054</td>
-<td align="right">0.743892</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">accurate</td>
-<td align="right">23.322</td>
-<td align="right">499949</td>
-<td align="right">51</td>
-<td align="right">0.999898</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="time-zone-utility-functions-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#time-zone-utility-functions-1" class="anchor"></a>time zone utility functions</h2>
-<div id="tz_plot" class="section level3">
-<h3 class="hasAnchor">
-<a href="#tz_plot" class="anchor"></a><code>tz_plot()</code>
+<div class="section level3">
+<h3 id="with-spatialpoints-objects">With <code>SpatialPoints</code> objects:<a class="anchor" aria-label="anchor" href="#with-spatialpoints-objects"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="r"><span class="fu"><a href="reference/tz_plot.html">tz_plot</a></span>(<span class="st">"America/Vancouver"</span>)</pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/" class="external-link">sp</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
+<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
+<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
+<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
+<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
+<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
+<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
+<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
+<span><span class="va">state_centers_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/methods/as.html" class="external-link">as</a></span><span class="op">(</span><span class="va">state_centers_sf</span>, <span class="st">"Spatial"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">state_centers_sp</span><span class="op">$</span><span class="va">tz</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tz_lookup.html">tz_lookup</a></span><span class="op">(</span><span class="va">state_centers_sp</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/sp/man/coordinates.html" class="external-link">coordinates</a></span><span class="op">(</span><span class="va">state_centers_sp</span><span class="op">)</span><span class="op">)</span>, tz <span class="op">=</span> <span class="va">state_centers_sp</span><span class="op">$</span><span class="va">tz</span><span class="op">)</span>, </span>
+<span>       <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">coords.x1</span>, y <span class="op">=</span> <span class="va">coords.x2</span>, colour <span class="op">=</span> <span class="va">tz</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/unnamed-chunk-5-1.png"><!-- --></p>
+<p>Note that there are some regions in the world where a single point can land in two different overlapping time zones. The <code>"accurate"</code> method <a href="https://github.com/evansiroky/timezone-boundary-builder/releases/tag/2018g" class="external-link">includes these</a>, however the method used in the <code>"fast"</code> does not include overlapping time zones (<a href="https://github.com/darkskyapp/tz-lookup-oss/issues/34" class="external-link">at least for now</a>).</p>
+<p>We can compare the accuracy of both methods to the high-resolution time zone map provided by <a href="https://github.com/evansiroky/timezone-boundary-builder" class="external-link uri">https://github.com/evansiroky/timezone-boundary-builder</a>. This is the map that is used by <code>lutz</code> for the <code>"accurate"</code> method, but in <code>lutz</code> it is simplified by about 80% to be small enough to fit in the package.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Get the full time zone geojson from https://github.com/evansiroky/timezone-boundary-builder</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="st">"https://github.com/evansiroky/timezone-boundary-builder/releases/download/2019a/timezones-with-oceans.geojson.zip"</span>,</span>
+<span>                destfile <span class="op">=</span> <span class="st">"tz.zip"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="st">"tz.zip"</span>, exdir <span class="op">=</span> <span class="st">"data-raw/dist/"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://andyteucher.ca/lutz" class="external-link">lutz</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tz_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">read_sf</a></span><span class="op">(</span><span class="st">"data-raw/dist/combined-with-oceans.json"</span><span class="op">)</span></span>
+<span><span class="co"># Create a data frame of 500000 lat/long pairs:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">500000</span></span>
+<span><span class="va">ll</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>, lat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n</span>, <span class="op">-</span><span class="fl">90</span>, <span class="fl">90</span><span class="op">)</span>, lon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n</span>, <span class="op">-</span><span class="fl">180</span>, <span class="fl">180</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">ll_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">ll</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Overlay those points with the full high-resolution time zone map:</span></span>
+<span><span class="va">ref_ll_tz</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_join.html" class="external-link">st_join</a></span><span class="op">(</span><span class="va">ll_sf</span>, <span class="va">tz_full</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Combine those that had overlapping time zones</span></span>
+<span><span class="va">ref_ll_tz</span> <span class="op">&lt;-</span> <span class="va">ref_ll_tz</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_set_geometry</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu">summarize</span><span class="op">(</span>tzid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">tzid</span>, collapse <span class="op">=</span> <span class="st">"; "</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># run tz_lookup with both `"fast"` and `"accurate"` methods and compare with </span></span>
+<span><span class="co"># the time zones looked up with the high-resolution map:</span></span>
+<span><span class="va">tests</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html" class="external-link">map_df</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fast"</span>, <span class="st">"accurate"</span><span class="op">)</span>, <span class="op">~</span> <span class="op">{</span></span>
+<span>  <span class="va">time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">test_ll_tz</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tz_lookup.html">tz_lookup</a></span><span class="op">(</span><span class="va">ll_sf</span>, method <span class="op">=</span> <span class="va">.x</span>, warn <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">comp</span> <span class="op">&lt;-</span> <span class="va">ref_ll_tz</span><span class="op">$</span><span class="va">tzid</span> <span class="op">==</span> <span class="va">test_ll_tz</span></span>
+<span>  <span class="va">matches</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">comp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="va">mismatches</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="va">comp</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    method <span class="op">=</span> <span class="va">.x</span>,</span>
+<span>    time <span class="op">=</span> <span class="va">time</span><span class="op">[</span><span class="st">"elapsed"</span><span class="op">]</span>,</span>
+<span>    matches <span class="op">=</span> <span class="va">matches</span>,</span>
+<span>    mismatches <span class="op">=</span> <span class="va">mismatches</span>,</span>
+<span>    accuracy <span class="op">=</span> <span class="va">matches</span> <span class="op">/</span> <span class="op">(</span><span class="va">matches</span> <span class="op">+</span> <span class="va">mismatches</span><span class="op">)</span>,</span>
+<span>    ref_nas <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">ref_ll_tz</span><span class="op">$</span><span class="va">tzid</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    fun_nas <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">test_ll_tz</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">tests</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="time-zone-utility-functions-1">time zone utility functions<a class="anchor" aria-label="anchor" href="#time-zone-utility-functions-1"></a>
+</h2>
+<div class="section level3">
+<h3 id="tz_plot">
+<code>tz_plot()</code><a class="anchor" aria-label="anchor" href="#tz_plot"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/tz_plot.html">tz_plot</a></span><span class="op">(</span><span class="st">"America/Vancouver"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/unnamed-chunk-9-1.png"><!-- --></p>
 </div>
-<div id="tz_offset" class="section level3">
-<h3 class="hasAnchor">
-<a href="#tz_offset" class="anchor"></a><code>tz_offset()</code>
+<div class="section level3">
+<h3 id="tz_offset">
+<code>tz_offset()</code><a class="anchor" aria-label="anchor" href="#tz_offset"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="r"><span class="co"># A Date object</span>
-<span class="fu"><a href="reference/tz_offset.html">tz_offset</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span>(), <span class="st">"Africa/Algiers"</span>)
-<span class="co">#&gt;          tz_name  date_time zone is_dst utc_offset_h</span>
-<span class="co">#&gt; 1 Africa/Algiers 2020-05-11  CET  FALSE            1</span>
-
-
-<span class="co"># A Date-like character string</span>
-<span class="fu"><a href="reference/tz_offset.html">tz_offset</a></span>(<span class="st">"2017-03-01"</span>, <span class="kw">tz</span> <span class="kw">=</span> <span class="st">"Singapore"</span>)
-<span class="co">#&gt;     tz_name  date_time zone is_dst utc_offset_h</span>
-<span class="co">#&gt; 1 Singapore 2017-03-01  +08  FALSE            8</span>
-
-
-<span class="co"># A POSIXct date-time object</span>
-<span class="fu"><a href="reference/tz_offset.html">tz_offset</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>())
-<span class="co">#&gt; Warning: You supplied an object of class POSIXct that does not have a time zone</span>
-<span class="co">#&gt; attribute, and did not specify one inthe 'tz' argument. Defaulting to current</span>
-<span class="co">#&gt; (America/Vancouver).</span>
-<span class="co">#&gt;             tz_name           date_time zone is_dst utc_offset_h</span>
-<span class="co">#&gt; 1 America/Vancouver 2020-05-11 12:36:18  PDT   TRUE           -7</span></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># A Date object</span></span>
+<span><span class="fu"><a href="reference/tz_offset.html">tz_offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"Africa/Algiers"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          tz_name  date_time zone is_dst utc_offset_h</span></span>
+<span><span class="co">#&gt; 1 Africa/Algiers 2023-09-21  CET  FALSE            1</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># A Date-like character string</span></span>
+<span><span class="fu"><a href="reference/tz_offset.html">tz_offset</a></span><span class="op">(</span><span class="st">"2017-03-01"</span>, tz <span class="op">=</span> <span class="st">"Singapore"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     tz_name  date_time zone is_dst utc_offset_h</span></span>
+<span><span class="co">#&gt; 1 Singapore 2017-03-01  +08  FALSE            8</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># A POSIXct date-time object</span></span>
+<span><span class="fu"><a href="reference/tz_offset.html">tz_offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: You supplied an object of class POSIXct that does not have a time zone</span></span>
+<span><span class="co">#&gt; attribute, and did not specify one inthe 'tz' argument. Defaulting to current</span></span>
+<span><span class="co">#&gt; (America/Chicago).</span></span>
+<span><span class="co">#&gt;           tz_name           date_time zone is_dst utc_offset_h</span></span>
+<span><span class="co">#&gt; 1 America/Chicago 2023-09-21 16:22:42  CDT   TRUE           -5</span></span></code></pre></div>
 </div>
-<div id="tz_list" class="section level3">
-<h3 class="hasAnchor">
-<a href="#tz_list" class="anchor"></a><code>tz_list()</code>
+<div class="section level3">
+<h3 id="tz_list">
+<code>tz_list()</code><a class="anchor" aria-label="anchor" href="#tz_list"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="r"><span class="fu"><a href="reference/tz_list.html">tz_list</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">20</span>) <span class="kw">%&gt;%</span>
-  <span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/tz_list.html">tz_list</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
+<th align="left"></th>
 <th align="left">tz_name</th>
 <th align="left">zone</th>
 <th align="left">is_dst</th>
@@ -301,121 +280,141 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
+<td align="left">1</td>
 <td align="left">Africa/Abidjan</td>
 <td align="left">GMT</td>
 <td align="left">FALSE</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
+<td align="left">2</td>
 <td align="left">Africa/Accra</td>
 <td align="left">GMT</td>
 <td align="left">FALSE</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
+<td align="left">3</td>
 <td align="left">Africa/Addis_Ababa</td>
 <td align="left">EAT</td>
 <td align="left">FALSE</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
+<td align="left">4</td>
 <td align="left">Africa/Algiers</td>
 <td align="left">CET</td>
 <td align="left">FALSE</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
+<td align="left">5</td>
 <td align="left">Africa/Asmara</td>
 <td align="left">EAT</td>
 <td align="left">FALSE</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
+<td align="left">6</td>
 <td align="left">Africa/Asmera</td>
 <td align="left">EAT</td>
 <td align="left">FALSE</td>
 <td align="right">3</td>
 </tr>
 <tr class="odd">
+<td align="left">7</td>
 <td align="left">Africa/Bamako</td>
 <td align="left">GMT</td>
 <td align="left">FALSE</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
+<td align="left">8</td>
 <td align="left">Africa/Bangui</td>
 <td align="left">WAT</td>
 <td align="left">FALSE</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
+<td align="left">9</td>
 <td align="left">Africa/Banjul</td>
 <td align="left">GMT</td>
 <td align="left">FALSE</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
+<td align="left">10</td>
 <td align="left">Africa/Bissau</td>
 <td align="left">GMT</td>
 <td align="left">FALSE</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
+<td align="left">11</td>
 <td align="left">Africa/Blantyre</td>
 <td align="left">CAT</td>
 <td align="left">FALSE</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
+<td align="left">12</td>
 <td align="left">Africa/Brazzaville</td>
 <td align="left">WAT</td>
 <td align="left">FALSE</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
+<td align="left">13</td>
 <td align="left">Africa/Bujumbura</td>
 <td align="left">CAT</td>
 <td align="left">FALSE</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
+<td align="left">14</td>
 <td align="left">Africa/Cairo</td>
 <td align="left">EET</td>
 <td align="left">FALSE</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
-<td align="left">Africa/Casablanca</td>
-<td align="left">+01</td>
-<td align="left">FALSE</td>
-<td align="right">1</td>
+<td align="left">16</td>
+<td align="left">Africa/Cairo</td>
+<td align="left">EEST</td>
+<td align="left">TRUE</td>
+<td align="right">3</td>
 </tr>
 <tr class="even">
+<td align="left">17</td>
 <td align="left">Africa/Casablanca</td>
-<td align="left">+00</td>
+<td align="left">+01</td>
 <td align="left">TRUE</td>
-<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="odd">
+<td align="left">18</td>
+<td align="left">Africa/Casablanca</td>
+<td align="left">+00</td>
+<td align="left">FALSE</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">19</td>
 <td align="left">Africa/Ceuta</td>
 <td align="left">CET</td>
 <td align="left">FALSE</td>
 <td align="right">1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
+<td align="left">20</td>
 <td align="left">Africa/Ceuta</td>
 <td align="left">CEST</td>
 <td align="left">TRUE</td>
 <td align="right">2</td>
 </tr>
-<tr class="odd">
-<td align="left">Africa/Conakry</td>
-<td align="left">GMT</td>
-<td align="left">FALSE</td>
-<td align="right">0</td>
-</tr>
 <tr class="even">
-<td align="left">Africa/Dakar</td>
+<td align="left">21</td>
+<td align="left">Africa/Conakry</td>
 <td align="left">GMT</td>
 <td align="left">FALSE</td>
 <td align="right">0</td>
@@ -426,63 +425,62 @@
 </div>
 </div>
 
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="links">
-<h2>Links</h2>
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=lutz">https://​cloud.r-project.org/​package=lutz</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/ateucher/lutz/">https://​github.com/​ateucher/​lutz/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/ateucher/lutz/issues">https://​github.com/​ateucher/​lutz/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=lutz" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/ateucher/lutz/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/ateucher/lutz/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing lutz</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Andy Teucher <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7840-692X" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li>Andy Teucher <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-7840-692X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://travis-ci.org/ateucher/lutz"><img src="https://travis-ci.org/ateucher/lutz.svg?branch=master" alt="Travis-CI Build Status"></a></li>
-<li><a href="https://ci.appveyor.com/project/ateucher/lutz"><img src="https://ci.appveyor.com/api/projects/status/github/ateucher/lutz?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
-<li><a href="https://codecov.io/github/ateucher/lutz?branch=master"><img src="https://img.shields.io/codecov/c/github/ateucher/lutz/master.svg" alt="Coverage Status"></a></li>
-<li><a href="https://cran.r-project.org/package=lutz"><img src="https://www.r-pkg.org/badges/version/lutz" alt="CRAN status"></a></li>
-<li><a href="https://cran.r-project.org/package=lutz"><img src="https://cranlogs.r-pkg.org/badges/lutz" alt="CRAN downloads"></a></li>
-</ul>
-</div>
-</div>
+
+
+  </aside>
 </div>
 
 
-      <footer><div class="copyright">
-  <p>Developed by Andy Teucher.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p></p>
+<p>Developed by Andy Teucher.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+<div class="pkgdown-footer-right">
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
 
+  
 
   </body>
 </html>
