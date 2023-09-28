@@ -5,8 +5,6 @@ template:
 development:
   mode: auto
 
-url: https://andyteucher.ca/lutz
-
 reference:
   - title: "Look up time zones of coordinates"
     contents:
