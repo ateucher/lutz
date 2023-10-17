@@ -1,4 +1,4 @@
-# lutz (development version)
+# lutz 0.3.2
 
 This is a maintenance release, with no new features. The rgdal package was 
 removed as a Suggested package, as it has been archived on CRAN.
