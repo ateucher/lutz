@@ -8,7 +8,7 @@
 <meta name="description" content="Input latitude and longitude values or an sf/sfc POINT 
     object and get back the time zone in which they exist. Two methods are implemented. 
     One is very fast and uses Rcpp in conjunction with data from the Javascript library
-    (&lt;https://github.com/darkskyapp/tz-lookup/&gt;). This method also works outside of countries 
+    (&lt;https://github.com/darkskyapp/tz-lookup-oss/&gt;). This method also works outside of countries 
     borders and in international waters, however speed comes at the cost of accuracy - near time 
     zone borders away from populated centres there is a chance that it will return the incorrect
     time zone. The other method is slower but more accurate - it uses the sf' package to intersect 
@@ -28,7 +28,7 @@
 <meta property="og:description" content="Input latitude and longitude values or an sf/sfc POINT 
     object and get back the time zone in which they exist. Two methods are implemented. 
     One is very fast and uses Rcpp in conjunction with data from the Javascript library
-    (&lt;https://github.com/darkskyapp/tz-lookup/&gt;). This method also works outside of countries 
+    (&lt;https://github.com/darkskyapp/tz-lookup-oss/&gt;). This method also works outside of countries 
     borders and in international waters, however speed comes at the cost of accuracy - near time 
     zone borders away from populated centres there is a chance that it will return the incorrect
     time zone. The other method is slower but more accurate - it uses the sf' package to intersect 
@@ -52,7 +52,7 @@
     
     <a class="navbar-brand me-2" href="index.html">lutz</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -120,7 +120,7 @@
 <h3 id="with-coordinates-they-must-be-latlong-in-decimal-degrees">With coordinates. They must be lat/long in decimal degrees:<a class="anchor" aria-label="anchor" href="#with-coordinates-they-must-be-latlong-in-decimal-degrees"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://andyteucher.ca/lutz" class="external-link">lutz</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://andyteucher.ca/lutz/" class="external-link">lutz</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/tz_lookup_coords.html">tz_lookup_coords</a></span><span class="op">(</span><span class="fl">49.5</span>, <span class="op">-</span><span class="fl">123.5</span>, method <span class="op">=</span> <span class="st">"fast"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "America/Vancouver"</span></span>
 <span><span class="fu"><a href="reference/tz_lookup_coords.html">tz_lookup_coords</a></span><span class="op">(</span><span class="fl">49.5</span>, <span class="op">-</span><span class="fl">123.5</span>, method <span class="op">=</span> <span class="st">"accurate"</span><span class="op">)</span></span>
@@ -176,7 +176,7 @@
 <span>                destfile <span class="op">=</span> <span class="st">"tz.zip"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="st">"tz.zip"</span>, exdir <span class="op">=</span> <span class="st">"data-raw/dist/"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://andyteucher.ca/lutz" class="external-link">lutz</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://andyteucher.ca/lutz/" class="external-link">lutz</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -252,7 +252,7 @@
 <span><span class="co">#&gt; attribute, and did not specify one inthe 'tz' argument. Defaulting to current</span></span>
 <span><span class="co">#&gt; (America/Vancouver).</span></span>
 <span><span class="co">#&gt;             tz_name           date_time zone is_dst utc_offset_h</span></span>
-<span><span class="co">#&gt; 1 America/Vancouver 2023-10-17 11:58:09  PDT   TRUE           -7</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 America/Vancouver 2023-10-17 12:11:11  PDT   TRUE           -7</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="tz_list">
