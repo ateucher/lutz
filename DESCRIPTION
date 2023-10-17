@@ -34,7 +34,6 @@ Suggests:
     testthat (>= 2.1.0),
     sf (>= 0.7),
     sp,
-    rgdal,
     datasets,
     covr,
     ggplot2
