@@ -158,14 +158,6 @@
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/edzer/sp/" class="external-link">sp</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
-<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
-<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
-<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
-<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
-<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
-<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
-<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
 <span><span class="va">state_centers_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/methods/as.html" class="external-link">as</a></span><span class="op">(</span><span class="va">state_centers_sf</span>, <span class="st">"Spatial"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">state_centers_sp</span><span class="op">$</span><span class="va">tz</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tz_lookup.html">tz_lookup</a></span><span class="op">(</span><span class="va">state_centers_sp</span><span class="op">)</span></span>
@@ -245,7 +237,7 @@
 <code class="sourceCode R"><span><span class="co"># A Date object</span></span>
 <span><span class="fu"><a href="reference/tz_offset.html">tz_offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"Africa/Algiers"</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          tz_name  date_time zone is_dst utc_offset_h</span></span>
-<span><span class="co">#&gt; 1 Africa/Algiers 2023-09-21  CET  FALSE            1</span></span>
+<span><span class="co">#&gt; 1 Africa/Algiers 2023-10-17  CET  FALSE            1</span></span>
 <span></span>
 <span></span>
 <span><span class="co"># A Date-like character string</span></span>
@@ -258,9 +250,9 @@
 <span><span class="fu"><a href="reference/tz_offset.html">tz_offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: You supplied an object of class POSIXct that does not have a time zone</span></span>
 <span><span class="co">#&gt; attribute, and did not specify one inthe 'tz' argument. Defaulting to current</span></span>
-<span><span class="co">#&gt; (America/Chicago).</span></span>
-<span><span class="co">#&gt;           tz_name           date_time zone is_dst utc_offset_h</span></span>
-<span><span class="co">#&gt; 1 America/Chicago 2023-09-21 16:22:42  CDT   TRUE           -5</span></span></code></pre></div>
+<span><span class="co">#&gt; (America/Vancouver).</span></span>
+<span><span class="co">#&gt;             tz_name           date_time zone is_dst utc_offset_h</span></span>
+<span><span class="co">#&gt; 1 America/Vancouver 2023-10-17 11:58:09  PDT   TRUE           -7</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="tz_list">
