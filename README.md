@@ -99,14 +99,6 @@ ggplot() +
 
 ``` r
 library(sp)
-#> The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,
-#> which was just loaded, will retire in October 2023.
-#> Please refer to R-spatial evolution reports for details, especially
-#> https://r-spatial.org/r/2023/05/15/evolution4.html.
-#> It may be desirable to make the sf package available;
-#> package maintainers should consider adding sf to Suggests:.
-#> The sp package is now running under evolution status 2
-#>      (status 2 uses the sf package in place of rgdal)
 state_centers_sp <- as(state_centers_sf, "Spatial")
 
 state_centers_sp$tz <- tz_lookup(state_centers_sp)
@@ -202,7 +194,7 @@ tz_plot("America/Vancouver")
 # A Date object
 tz_offset(Sys.Date(), "Africa/Algiers")
 #>          tz_name  date_time zone is_dst utc_offset_h
-#> 1 Africa/Algiers 2023-09-21  CET  FALSE            1
+#> 1 Africa/Algiers 2023-10-17  CET  FALSE            1
 
 
 # A Date-like character string
@@ -215,9 +207,9 @@ tz_offset("2017-03-01", tz = "Singapore")
 tz_offset(Sys.time())
 #> Warning: You supplied an object of class POSIXct that does not have a time zone
 #> attribute, and did not specify one inthe 'tz' argument. Defaulting to current
-#> (America/Chicago).
-#>           tz_name           date_time zone is_dst utc_offset_h
-#> 1 America/Chicago 2023-09-21 16:22:42  CDT   TRUE           -5
+#> (America/Vancouver).
+#>             tz_name           date_time zone is_dst utc_offset_h
+#> 1 America/Vancouver 2023-10-17 11:58:09  PDT   TRUE           -7
 ```
 
 ### `tz_list()`

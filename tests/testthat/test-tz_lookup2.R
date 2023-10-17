@@ -40,7 +40,6 @@ test_that("tz_lookup.sf works", {
 
 test_that("tz_lookup.SpatialPoints works", {
   skip_if_not_installed("sp")
-  skip_if_not_installed("rgdal")
   pt <- sp::SpatialPoints(matrix(c(1,1), nrow = 1))
   pts <- sp::SpatialPoints(matrix(c(30, 70,-30, -70), nrow = 2, byrow = TRUE))
   expect_equal(tz_lookup(pt, method = "accurate"), "Etc/GMT")
