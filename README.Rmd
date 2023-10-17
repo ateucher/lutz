@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/ateucher/lutz/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ateucher/lutz/actions/workflows/R-CMD-check.yaml)
-[![Coverage Status](https://img.shields.io/codecov/c/github/ateucher/lutz/master.svg)](https://codecov.io/github/ateucher/lutz?branch=master)
+[![Coverage Status](https://img.shields.io/codecov/c/github/ateucher/lutz/master.svg)](https://app.codecov.io/github/ateucher/lutz?branch=master)
 [![CRAN status](https://www.r-pkg.org/badges/version/lutz)](https://cran.r-project.org/package=lutz)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/lutz)](https://cran.r-project.org/package=lutz)
 <!-- badges: end -->

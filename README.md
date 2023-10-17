@@ -4,7 +4,7 @@
 
 [![R-CMD-check](https://github.com/ateucher/lutz/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ateucher/lutz/actions/workflows/R-CMD-check.yaml)
 [![Coverage
-Status](https://img.shields.io/codecov/c/github/ateucher/lutz/master.svg)](https://codecov.io/github/ateucher/lutz?branch=master)
+Status](https://img.shields.io/codecov/c/github/ateucher/lutz/master.svg)](https://app.codecov.io/github/ateucher/lutz?branch=master)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/lutz)](https://cran.r-project.org/package=lutz)
 [![CRAN
@@ -209,7 +209,7 @@ tz_offset(Sys.time())
 #> attribute, and did not specify one inthe 'tz' argument. Defaulting to current
 #> (America/Vancouver).
 #>             tz_name           date_time zone is_dst utc_offset_h
-#> 1 America/Vancouver 2023-10-17 11:58:09  PDT   TRUE           -7
+#> 1 America/Vancouver 2023-10-17 12:11:11  PDT   TRUE           -7
 ```
 
 ### `tz_list()`

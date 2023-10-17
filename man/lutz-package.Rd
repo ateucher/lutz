@@ -6,12 +6,12 @@
 \alias{lutz-package}
 \title{lutz: Look Up Time Zones of Point Coordinates}
 \description{
-Input latitude and longitude values or an 'sf/sfc' POINT object and get back the time zone in which they exist. Two methods are implemented. One is very fast and uses 'Rcpp' in conjunction with data from the 'Javascript' library (\url{https://github.com/darkskyapp/tz-lookup/}). This method also works outside of countries' borders and in international waters, however speed comes at the cost of accuracy - near time zone borders away from populated centres there is a chance that it will return the incorrect time zone. The other method is slower but more accurate - it uses the 'sf' package to intersect points with a detailed map of time zones from here: \url{https://github.com/evansiroky/timezone-boundary-builder/}. The package also contains several utility functions for helping to understand and visualize time zones, such as listing of world time zones, including information about daylight savings times and their offsets from UTC. You can also plot a time zone to visualize the UTC offset over a year and when daylight savings times are in effect.
+Input latitude and longitude values or an 'sf/sfc' POINT object and get back the time zone in which they exist. Two methods are implemented. One is very fast and uses 'Rcpp' in conjunction with data from the 'Javascript' library (\url{https://github.com/darkskyapp/tz-lookup-oss/}). This method also works outside of countries' borders and in international waters, however speed comes at the cost of accuracy - near time zone borders away from populated centres there is a chance that it will return the incorrect time zone. The other method is slower but more accurate - it uses the 'sf' package to intersect points with a detailed map of time zones from here: \url{https://github.com/evansiroky/timezone-boundary-builder/}. The package also contains several utility functions for helping to understand and visualize time zones, such as listing of world time zones, including information about daylight savings times and their offsets from UTC. You can also plot a time zone to visualize the UTC offset over a year and when daylight savings times are in effect.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://andyteucher.ca/lutz}
+  \item \url{https://andyteucher.ca/lutz/}
   \item \url{https://github.com/ateucher/lutz}
   \item Report bugs at \url{https://github.com/ateucher/lutz/issues}
 }
