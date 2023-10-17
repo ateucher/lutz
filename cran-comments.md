@@ -19,7 +19,7 @@ Checking installed package size ... NOTE
 
 The spatial data for looking up time zones has been simplified as much as possible, 
 balancing size and accuracy. I cannot reduce the size further without sacrificing
-the accuracy of the time zone boundaries to an unacceptable level.
+the accuracy of the time zone boundaries to an unacceptable level. This has not changed since the previous release.
 
 ## revdepcheck results
 
