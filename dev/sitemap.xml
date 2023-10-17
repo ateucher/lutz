@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://andyteucher.ca/lutz/index.html</loc>
+    <loc>http://andyteucher.ca/lutz/dev/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://andyteucher.ca/lutz/reference/lutz-package.html</loc>
+    <loc>http://andyteucher.ca/lutz/dev/authors.html</loc>
   </url>
   <url>
-    <loc>https://andyteucher.ca/lutz/reference/plot_tz.html</loc>
+    <loc>http://andyteucher.ca/lutz/dev/index.html</loc>
   </url>
   <url>
-    <loc>https://andyteucher.ca/lutz/reference/tz_list.html</loc>
+    <loc>http://andyteucher.ca/lutz/dev/news/index.html</loc>
   </url>
   <url>
-    <loc>https://andyteucher.ca/lutz/reference/tz_lookup.html</loc>
+    <loc>http://andyteucher.ca/lutz/dev/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://andyteucher.ca/lutz/reference/tz_lookup_coords.html</loc>
+    <loc>http://andyteucher.ca/lutz/dev/reference/lutz-package.html</loc>
   </url>
   <url>
-    <loc>https://andyteucher.ca/lutz/reference/tz_offset.html</loc>
+    <loc>http://andyteucher.ca/lutz/dev/reference/tz_list.html</loc>
+  </url>
+  <url>
+    <loc>http://andyteucher.ca/lutz/dev/reference/tz_lookup.html</loc>
+  </url>
+  <url>
+    <loc>http://andyteucher.ca/lutz/dev/reference/tz_lookup_coords.html</loc>
+  </url>
+  <url>
+    <loc>http://andyteucher.ca/lutz/dev/reference/tz_offset.html</loc>
+  </url>
+  <url>
+    <loc>http://andyteucher.ca/lutz/dev/reference/tz_plot.html</loc>
   </url>
 </urlset>
